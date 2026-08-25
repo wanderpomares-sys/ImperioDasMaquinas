@@ -1092,6 +1092,7 @@ function renderHubExtras(){
 
 const MACHINES = {
   retro: {
+    tipoKey:"retro", idadeDias:640, diasDesdeUltimaManutencao:80,
     name: "Retroescavadeira NH B110B", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
     photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=500&fit=crop&w=800",
     thumb:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200",
@@ -1102,6 +1103,7 @@ const MACHINES = {
     inContract:true, task:"Parada — aguardando manutenção", location:"Base — Campinas, SP"
   },
   trator: {
+    tipoKey:"trator", idadeDias:310, diasDesdeUltimaManutencao:20,
     name: "Trator de Esteira D6T", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
     photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
     thumb:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
@@ -1112,6 +1114,7 @@ const MACHINES = {
     inContract:true, task:"Em operação — Aterro Sanitário Leste", location:"Suzano, SP"
   },
   escavadeira: {
+    tipoKey:"escavadeira", idadeDias:45, diasDesdeUltimaManutencao:10,
     name: "Escavadeira Hidráulica CAT 320D", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
     photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop",
@@ -1122,6 +1125,7 @@ const MACHINES = {
     inContract:false, task:"Disponível para novo contrato", location:"Base — Campinas, SP"
   },
   caminhao: {
+    tipoKey:"caminhao", idadeDias:95, diasDesdeUltimaManutencao:15,
     name: "Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
     photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop",
@@ -1132,6 +1136,7 @@ const MACHINES = {
     inContract:false, task:"Disponível para novo contrato", location:"Base — Campinas, SP"
   },
   pa: {
+    tipoKey:"pa", idadeDias:380, diasDesdeUltimaManutencao:50,
     name: "Pá Carregadeira WA200", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
     photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=70&w=200&auto=format&fit=crop",
@@ -1364,6 +1369,77 @@ const MARKET_BASE_PRICES = {
   motoniveladora: 280000, // Motoniveladora — grande, alta precisão
   trator:         340000  // Trator de Esteira — maior porte, mais potência
 };
+
+/* ===================== CICLO DE VIDA DA MÁQUINA (Fase 2) =====================
+   Idade -> Uso -> Desgaste -> Manutenção -> Condição -> Valor de mercado -> Decisão do jogador
+   (Manter / Reformar / Vender). Deliberadamente simples: só dois números por trás de tudo —
+   IDADE (dias desde a compra) e CONDIÇÃO (o `health` que já existe, 0-100) — sem desgaste
+   separado de motor/transmissão/pneu/hidráulico. O jogador só precisa sentir uma pergunta:
+   "essa máquina está velha, quanto vale, será que já é hora de trocar?" */
+const DEPRECIACAO_POR_DIA_PCT = 0.0007; // ~2%/mês de depreciação por idade
+const DEPRECIACAO_PISO_PCT = 0.30;      // nunca cai abaixo de 30% do preço de mercado (sempre tem valor de sucata/revenda)
+const DESGASTE_USO_MIN_POR_DIA = 0.3;   // condição cai entre 0,3 e 0,8 ponto por dia trabalhado
+const DESGASTE_USO_MAX_POR_DIA = 0.8;
+const DIAS_GRACA_MANUTENCAO_BASICA = 45; // dentro desse prazo desde a última manutenção, máquina parada não perde condição
+const DESGASTE_PARADA_MIN_POR_DIA = 0.05; // bem mais lento que o desgaste de uso — negligência, não trabalho
+const DESGASTE_PARADA_MAX_POR_DIA = 0.12;
+const VENDA_DESAGIO_PCT = 0.90;         // vender rápido não pega o valor cheio de mercado — negociação realista
+
+function valorMercadoAtual(machineKey){
+  const m = MACHINES[machineKey];
+  if(!m) return 0;
+  const precoBase = MARKET_BASE_PRICES[m.tipoKey] || 150000;
+  const fatorIdade = Math.max(DEPRECIACAO_PISO_PCT, 1 - (m.idadeDias||0) * DEPRECIACAO_POR_DIA_PCT);
+  const fatorCondicao = 0.5 + 0.5 * (m.health/100); // condição pesa até 50% do valor — nunca zera sozinha
+  return Math.round(precoBase * fatorIdade * fatorCondicao / 500) * 500;
+}
+
+function atualizarStatusMaquina(m){
+  if(m.health >= 70){ m.status='green'; m.statusLabel='🟢 OK'; }
+  else if(m.health >= 40){ m.status='amber'; m.statusLabel='🟡 Atenção'; }
+  else { m.status='red'; m.statusLabel='🔴 Crítico'; }
+}
+
+// Chamado toda vez que dias passam no relógio global — envelhece a frota inteira,
+// e desgasta (reduz condição) só as máquinas que estão trabalhando de verdade.
+function envelhecerFrota(diasNovos){
+  Object.values(MACHINES).forEach(m => {
+    m.idadeDias = (m.idadeDias||0) + diasNovos;
+    m.diasDesdeUltimaManutencao = (m.diasDesdeUltimaManutencao||0) + diasNovos;
+    if(m.inContract){
+      const desgastePorDia = DESGASTE_USO_MIN_POR_DIA + Math.random()*(DESGASTE_USO_MAX_POR_DIA-DESGASTE_USO_MIN_POR_DIA);
+      m.health = Math.round(Math.max(0, m.health - desgastePorDia*diasNovos));
+      atualizarStatusMaquina(m);
+    } else if(m.diasDesdeUltimaManutencao > DIAS_GRACA_MANUTENCAO_BASICA){
+      // Parada, mas sem manutenção básica há tempo demais — desgasta bem mais devagar que uso ativo,
+      // mas desgasta: ferrugem, vedação ressecando, bateria descarregando, isso existe de verdade.
+      const desgasteParado = DESGASTE_PARADA_MIN_POR_DIA + Math.random()*(DESGASTE_PARADA_MAX_POR_DIA-DESGASTE_PARADA_MIN_POR_DIA);
+      m.health = Math.round(Math.max(0, m.health - desgasteParado*diasNovos));
+      atualizarStatusMaquina(m);
+    }
+  });
+}
+
+function venderMaquina(machineKey){
+  const m = MACHINES[machineKey];
+  if(!m) return;
+  if(m.inContract){
+    showToast('🔒 Não é possível vender uma máquina em contrato ativo.');
+    return;
+  }
+  const valorBase = valorMercadoAtual(machineKey);
+  const valorVenda = Math.round(valorBase * VENDA_DESAGIO_PCT);
+  playerCash += valorVenda;
+  playerPatrimonio = Math.max(0, playerPatrimonio - valorBase);
+  registrarHistorico('💰', `Máquina vendida: ${m.name}`, `${fmt(valorVenda)} recebidos (valor de mercado ${fmt(valorBase)}, deságio de venda rápida de ${Math.round((1-VENDA_DESAGIO_PCT)*100)}%)`);
+  delete MACHINES[machineKey];
+  updateFinanceDisplays();
+  renderMaquinasList();
+  renderManutList();
+  recomputarDisponibilidadeContratos();
+  closeDetail('manutencao');
+  showResultModal('💰', 'Máquina vendida', `Você recebeu ${fmt(valorVenda)} pela venda.\n\nCaixa e patrimônio já foram atualizados.`);
+}
 
 const CATALOG = {
   escavadeira2: {
@@ -1932,6 +2008,7 @@ function avancarContrato(idx){
       ajustarReputacao(-3);
       ac.diasDecorridos += 3;
       processarParcelasDoTempo(3);
+      envelhecerFrota(3);
       ac.state = 'EM_ANDAMENTO';
       ac.eventoAtivo = null;
       registrarHistorico('🟡', `Risco administrado: ${ac.name}`, `Custo ${fmt(exp.impacto)} · +3 dias no prazo`);
@@ -1951,6 +2028,7 @@ function avancarContrato(idx){
     ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3));
     ac.diasDecorridos += 1;
     processarParcelasDoTempo(1);
+    envelhecerFrota(1);
   }
 
   if(ac.progress < 100 && ac.diasDecorridos > catalog.prazoDias && ac.state !== 'ATRASADO'){
@@ -2335,6 +2413,14 @@ function renderMaintDetail(){
       <div class="box-text">${m.cat} · <b style="color:var(--text);">${m.specs}</b></div>
       <div class="box-text" style="margin-top:5px;">📊 Utilização da frota: <b style="color:${m.utilizacao>=70?'var(--ok)':m.utilizacao>=30?'var(--amber-1)':'var(--text-faint)'};">${m.utilizacao}%</b> ${m.utilizacao<30 ? '<span style="color:var(--text-faint);">— capacidade ociosa</span>' : ''}</div>
     </div>
+    <div class="info-box" style="background:rgba(255,194,75,.06);border-color:rgba(255,194,75,.25);">
+      <div class="box-title" style="color:var(--amber-1);">💰 Ciclo de vida</div>
+      <div class="plan-row"><span class="plan-label">Idade</span><span class="plan-value">${Math.floor((m.idadeDias||0)/30)} meses (${m.idadeDias||0} dias)</span></div>
+      <div class="plan-row"><span class="plan-label">Condição atual</span><span class="plan-value" style="color:${m.health>=70?'var(--ok)':m.health>=40?'var(--amber-1)':'var(--danger)'};">${Math.round(m.health)}%</span></div>
+      <div class="plan-row"><span class="plan-label">Dias sem manutenção</span><span class="plan-value" style="color:${(m.diasDesdeUltimaManutencao||0)>DIAS_GRACA_MANUTENCAO_BASICA?'var(--danger)':'var(--text-dim)'};">${m.diasDesdeUltimaManutencao||0} dias</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:700;">Valor de mercado hoje</span><span class="plan-value" style="color:var(--ok);font-size:15px;">${fmt(valorMercadoAtual(currentMaintKey))}</span></div>
+      <div class="box-text" style="margin-top:8px;color:var(--text-faint);">Idade e condição juntas determinam o valor. ${!m.inContract ? `Parada, ela não perde condição por até ${DIAS_GRACA_MANUTENCAO_BASICA} dias sem manutenção — depois disso, começa a se deteriorar sozinha (bem mais devagar que uma máquina em uso, mas deteriora).` : ''}</div>
+    </div>
     <div class="info-box">
       <div class="box-title" style="color:var(--blue);">📍 Onde está / o que está fazendo</div>
       <div class="box-text"><b style="color:var(--text);">${m.task}</b><br>${m.location}</div>
@@ -2359,10 +2445,18 @@ function renderMaintDetail(){
     </div>
     <div class="action-zone">
       <button class="action-btn" onclick="scheduleMaint()">🔧 Agendar manutenção — ${fmt(part.price)}</button>
+      ${m.inContract
+        ? `<button class="action-btn locked" style="margin-top:9px;" disabled>🔒 Vender — indisponível (máquina em contrato)</button>`
+        : `<button onclick="confirmarVenda('${currentMaintKey}')" style="width:100%;margin-top:9px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,93,122,.35);color:var(--danger);font-weight:800;font-size:14.5px;border-radius:12px;padding:13px;">💰 Vender por ${fmt(valorMercadoAtual(currentMaintKey) * VENDA_DESAGIO_PCT)}</button>`}
     </div>
     <div style="height:6px;"></div>`;
 }
 let scheduledMaintenances = [];
+function confirmarVenda(machineKey){
+  const m = MACHINES[machineKey];
+  const valor = Math.round(valorMercadoAtual(machineKey) * VENDA_DESAGIO_PCT);
+  showResultModal('❓', 'Confirmar venda', `Vender ${m.name} por ${fmt(valor)}?\n\nEssa máquina sai da sua frota — se ela for a única disponível pra algum contrato, esse contrato pode ficar indisponível até você comprar outra.\n\nToque em "Entendi, continuar" para confirmar a venda agora.`, () => venderMaquina(machineKey));
+}
 
 function scheduleMaint(){
   const m = MACHINES[currentMaintKey];
@@ -2383,9 +2477,13 @@ function scheduleMaint(){
     downtime: part.downtime
   });
 
+  // Manutenção agora de fato melhora a condição da máquina — peça original recupera mais que alternativa.
+  const recuperacao = currentMaintPart === 'original' ? 45 : 25;
+  m.health = Math.min(100, m.health + recuperacao);
+  m.diasDesdeUltimaManutencao = 0;
+  atualizarStatusMaquina(m);
   m.task = `🔧 Em manutenção — pronta em ${part.downtime}`;
-  m.status = 'amber';
-  registrarHistorico('🔧', `Manutenção realizada: ${m.name}`, `${currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa'} · ${fmt(part.price)}`);
+  registrarHistorico('🔧', `Manutenção realizada: ${m.name}`, `${currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa'} · ${fmt(part.price)} · condição +${recuperacao}`);
   atualizarMissoes('manutencao', { maquinaKey: currentMaintKey });
   renderManutList();
   renderFinancas();
@@ -2501,6 +2599,7 @@ function buyMachine(){
   if(tpl){
     const novaChave = chooseMachineKey(tpl.tipoKey);
     MACHINES[novaChave] = {
+      tipoKey: tpl.tipoKey, idadeDias: 0, diasDesdeUltimaManutencao: 0,
       name: tpl.name, cat: tpl.cat, specs: tpl.specs, photo: tpl.photo, thumb: tpl.thumb,
       health:100, status:'green', statusLabel:'🟢 OK', hours:'0h (nova)', utilizacao:0,
       problem:'Nenhum problema detectado — máquina recém-adquirida.',
