@@ -945,8 +945,12 @@ function calcularExposicao(contractKey, seguroTipo){
   const tier = RISK_TIERS[c.risk];
   const seguro = SEGURO_OPTIONS[seguroTipo] || SEGURO_OPTIONS.nenhum;
 
-  const machineKeys = c.requiredMachineKeys || [];
-  const machines = machineKeys.map(k => MACHINES[k]).filter(Boolean);
+  const requisitos = c.requiredMachineKeys || [];
+  const machines = [];
+  requisitos.forEach(req => {
+    const doTipo = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).sort((a,b) => b.health - a.health);
+    for(let i=0; i<req.qtd && i<doTipo.length; i++) machines.push(doTipo[i]);
+  });
   const avgHealth = machines.length ? machines.reduce((s,m)=>s+m.health,0)/machines.length : 100;
   const manutBonus = avgHealth >= 80 ? -0.035 : (avgHealth < 50 ? 0.035 : 0);
 
@@ -1158,7 +1162,7 @@ const CONTRACTS = {
     prazo:"10 dias", prazoDias:10, km:"48 km",
     riskDesc:"Terreno com histórico de chuvas na região. Pode haver atrasos por condições climáticas.",
     penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
-    hasMachine:true, missing:"", requiredMachineKeys:["escavadeira","caminhao"], state:"DISPONIVEL"
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], state:"DISPONIVEL"
   },
   estrada: {
     name:"Abertura de Estrada", value:180000, company:"Prefeitura de Itupeva", location:"Itupeva, SP",
@@ -1169,7 +1173,7 @@ const CONTRACTS = {
     prazo:"14 dias", prazoDias:14, km:"22 km",
     riskDesc:"Terreno plano, acesso pavimentado e histórico estável na região.",
     penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
-    hasMachine:false, missing:"Motoniveladora (nenhuma na sua frota)", requiredMachineKeys:["motoniveladora"], state:"DISPONIVEL"
+    hasMachine:false, missing:"Motoniveladora (nenhuma na sua frota)", requiredMachineKeys:[{tipo:"motoniveladora",qtd:1}], state:"DISPONIVEL"
   },
   pedra: {
     name:"Extração de Pedra", value:525000, company:"Mineração Forte", location:"Mairinque, SP",
@@ -1180,7 +1184,7 @@ const CONTRACTS = {
     prazo:"21 dias", prazoDias:21, km:"63 km",
     riskDesc:"Área de mineração ativa, terreno instável e exigências regulatórias.",
     penalty:"Atraso: 0,8%/dia · Cancelamento: 15% do valor total.", penaltyPctDia:0.008,
-    hasMachine:false, missing:"Escavadeira 30t ou maior", requiredMachineKeys:[], state:"DISPONIVEL"
+    hasMachine:false, missing:"Escavadeira 30t ou maior", requiredMachineKeys:[{tipo:"escavadeira30",qtd:1}], state:"DISPONIVEL"
   },
   loteamento: {
     name:"Terraplenagem p/ Loteamento", value:210000, company:"Loteadora Nova Vida", location:"Sorocaba, SP",
@@ -1191,7 +1195,7 @@ const CONTRACTS = {
     prazo:"12 dias", prazoDias:12, km:"35 km",
     riskDesc:"Terreno recém-loteado com drenagem ainda não testada em chuva forte.",
     penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
-    hasMachine:true, missing:"", requiredMachineKeys:["trator"], state:"DISPONIVEL"
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"trator",qtd:1}], state:"DISPONIVEL"
   },
   desmatamento: {
     name:"Desmatamento Fazenda Boa Vista", value:95000, company:"Fazenda Boa Vista", location:"Itatiba, SP",
@@ -1202,7 +1206,7 @@ const CONTRACTS = {
     prazo:"15 dias", prazoDias:15, km:"18 km",
     riskDesc:"Área rural de baixa complexidade, sem histórico de intercorrências.",
     penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
-    hasMachine:true, missing:"", requiredMachineKeys:["retro"], state:"DISPONIVEL"
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"retro",qtd:1}], state:"DISPONIVEL"
   }
 };
 
@@ -1221,23 +1225,73 @@ const CIDADES_SP = [
 ];
 // Combinações alternativas de máquina por arquétipo — dá variedade sem quebrar a lógica de risco/valor
 const VARIANTES_MAQUINA = {
-  aterro:        [["escavadeira","caminhao"], ["trator","caminhao"], ["pa","caminhao"]],
-  estrada:       [["motoniveladora"]], // exige motoniveladora de verdade — compre uma na Loja pra liberar
-  pedra:         [[]], // sempre escavadeira 30t+ (fora de alcance) — mantém o gargalo proposital
-  loteamento:    [["trator"], ["pa"], ["escavadeira"]],
-  desmatamento:  [["retro"], ["trator"]]
+  // Cada variante agora é uma lista de {tipo, qtd} — algumas obras exigem mais de 1 unidade do mesmo tipo.
+  aterro:        [
+    [{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}],
+    [{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}],       // obra maior — 2 caminhões escoando material
+    [{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}]
+  ],
+  estrada:       [[{tipo:"motoniveladora",qtd:1}]], // exige motoniveladora de verdade — compre uma na Loja pra liberar
+  pedra:         [[{tipo:"escavadeira30",qtd:1}]],  // sempre escavadeira 30t+ (fora de alcance) — mantém o gargalo proposital
+  loteamento:    [
+    [{tipo:"trator",qtd:1}],
+    [{tipo:"pa",qtd:1}],
+    [{tipo:"escavadeira",qtd:1}],
+    [{tipo:"trator",qtd:2}]                                // loteamento grande — 2 tratores nivelando junto
+  ],
+  desmatamento:  [
+    [{tipo:"retro",qtd:1}],
+    [{tipo:"trator",qtd:1}],
+    [{tipo:"retro",qtd:2}]                                 // área maior de desmatamento — 2 retros
+  ]
 };
 const REQ_LABELS = {
-  escavadeira:"🚜 Escavadeira 20t ou maior", caminhao:"🚛 Caminhão basc. mín. 10m³",
-  trator:"🚜 Trator de Esteira", pa:"🚜 Pá Carregadeira", retro:"🚜 Retroescavadeira",
-  motoniveladora:"🚜 Motoniveladora"
+  escavadeira:"Escavadeira 20t ou maior", caminhao:"Caminhão basc. mín. 10m³",
+  trator:"Trator de Esteira", pa:"Pá Carregadeira", retro:"Retroescavadeira",
+  motoniveladora:"Motoniveladora", escavadeira30:"Escavadeira 30t ou maior"
+};
+const REQ_ICONS = {
+  escavadeira:"🚜", caminhao:"🚛", trator:"🚜", pa:"🚜", retro:"🚜", motoniveladora:"🚜", escavadeira30:"🚜"
 };
 
-function calcularHasMachine(machineKeys){
-  if(machineKeys.length === 0) return { ok:false, missing:"Máquina fora da sua frota atual" };
-  const faltando = machineKeys.filter(k => !MACHINES[k]);
-  if(faltando.length) return { ok:false, missing: REQ_LABELS[faltando[0]] || "Máquina não disponível" };
+// Checa se o jogador POSSUI (não necessariamente livre agora) máquinas suficientes de cada tipo exigido.
+function calcularHasMachine(requisitos){
+  if(!requisitos || requisitos.length === 0) return { ok:false, missing:"Máquina fora da sua frota atual" };
+  for(const req of requisitos){
+    const possuidas = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).length;
+    if(possuidas < req.qtd){
+      const label = REQ_LABELS[req.tipo] || "Máquina não disponível";
+      const falta = req.qtd - possuidas;
+      return { ok:false, missing: req.qtd > 1 ? `${label} — precisa de ${req.qtd}, você tem ${possuidas}` : label };
+    }
+  }
   return { ok:true, missing:"" };
+}
+
+// Checa se as máquinas exigidas estão LIVRES agora (não só na garagem) — usado na hora de aceitar de verdade.
+function maquinasDisponiveisAgora(requisitos){
+  for(const req of requisitos){
+    const livres = Object.entries(MACHINES).filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract).length;
+    if(livres < req.qtd){
+      const label = REQ_LABELS[req.tipo] || "máquina";
+      return { ok:false, motivo: `${label}: precisa de ${req.qtd} livre(s), só ${livres} disponível(is) agora (o resto já está em outro contrato).` };
+    }
+  }
+  return { ok:true, motivo:"" };
+}
+
+// Escolhe QUAIS instâncias específicas de máquina vão trabalhar nesse contrato, entre as livres.
+function selecionarMaquinasParaContrato(requisitos){
+  const escolhidas = [];
+  requisitos.forEach(req => {
+    const livres = Object.entries(MACHINES)
+      .filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract)
+      .sort((a,b) => b[1].health - a[1].health); // prioriza as mais saudáveis primeiro
+    for(let i=0; i<req.qtd && i<livres.length; i++){
+      escolhidas.push(livres[i][0]);
+    }
+  });
+  return escolhidas;
 }
 
 /* ===================== NÍVEIS DE REPUTAÇÃO — a dinâmica central do jogo =====================
@@ -1273,8 +1327,11 @@ function regenerarContrato(key){
   c.requiredMachineKeys = novaVariante;
   c.hasMachine = ok;
   c.missing = missing;
-  c.req = [...novaVariante.map(k => REQ_LABELS[k] || k), "👷 Operador habilitado"];
-  if(novaVariante.length === 0) c.req = ["🚜 " + (key==='estrada' ? "Motoniveladora" : "Escavadeira 30t+"), "👷 Operador habilitado"];
+  c.req = [...novaVariante.map(req => {
+    const label = REQ_LABELS[req.tipo] || req.tipo;
+    const icone = REQ_ICONS[req.tipo] || "🚜";
+    return req.qtd > 1 ? `${icone} ${label} — 2 unidades` : `${icone} ${label}`;
+  }), "👷 Operador habilitado"];
   c.state = 'DISPONIVEL';
   c.accepted = false;
   c.isNovo = true;
@@ -1394,10 +1451,44 @@ function valorMercadoAtual(machineKey){
   return Math.round(precoBase * fatorIdade * fatorCondicao / 500) * 500;
 }
 
+/* ===================== FASE 3 — PATRIMÔNIO COMO VALOR DERIVADO, NÃO ACUMULADO =====================
+   Antes, patrimônio só somava em pontos soltos (compra, bônus de contrato) e nunca refletia a
+   depreciação real das máquinas — dois "patrimônios" diferentes coexistiam sem se falar. Agora
+   patrimônio é sempre recalculado a partir do valor de mercado de verdade da frota inteira —
+   uma única fonte, sempre atualizada, sem precisar lembrar de ajustar em cada evento novo. */
+function recalcularPatrimonio(){
+  const valorMaquinas = Object.keys(MACHINES).reduce((soma, k) => soma + valorMercadoAtual(k), 0);
+  const dividaFinanciamentos = financiamentosAtivos.reduce((soma, f) => soma + f.parcela*f.parcelasRestantes, 0);
+  playerPatrimonio = Math.max(0, valorMaquinas - dividaFinanciamentos);
+  return playerPatrimonio;
+}
+
 function atualizarStatusMaquina(m){
   if(m.health >= 70){ m.status='green'; m.statusLabel='🟢 OK'; }
   else if(m.health >= 40){ m.status='amber'; m.statusLabel='🟡 Atenção'; }
   else { m.status='red'; m.statusLabel='🔴 Crítico'; }
+}
+
+// Libera de volta pro pátio as máquinas que estavam num contrato que acabou de concluir ou ser perdido.
+function liberarMaquinas(machineKeys){
+  (machineKeys||[]).forEach(k => {
+    const m = MACHINES[k];
+    if(!m) return;
+    m.inContract = false;
+    m.task = 'Disponível para novo contrato';
+    m.location = 'Base — Campinas, SP';
+  });
+}
+
+// Agrupa "Caminhão + Caminhão" em "2x Caminhão" pra lista de máquinas de um contrato não ficar redundante.
+function resumoMaquinas(machineKeys){
+  const contagem = {};
+  (machineKeys||[]).forEach(k => {
+    const nome = MACHINES[k]?.name.split(' ')[0] || '?';
+    contagem[nome] = (contagem[nome]||0) + 1;
+  });
+  const partes = Object.entries(contagem).map(([nome,qtd]) => qtd > 1 ? `${qtd}x ${nome}` : nome);
+  return partes.join(' + ') || 'Sem máquina vinculada';
 }
 
 // Chamado toda vez que dias passam no relógio global — envelhece a frota inteira,
@@ -1430,7 +1521,6 @@ function venderMaquina(machineKey){
   const valorBase = valorMercadoAtual(machineKey);
   const valorVenda = Math.round(valorBase * VENDA_DESAGIO_PCT);
   playerCash += valorVenda;
-  playerPatrimonio = Math.max(0, playerPatrimonio - valorBase);
   registrarHistorico('💰', `Máquina vendida: ${m.name}`, `${fmt(valorVenda)} recebidos (valor de mercado ${fmt(valorBase)}, deságio de venda rápida de ${Math.round((1-VENDA_DESAGIO_PCT)*100)}%)`);
   delete MACHINES[machineKey];
   updateFinanceDisplays();
@@ -1650,6 +1740,7 @@ function calcularDiasOperacao(cash){
   return cash > 0 ? Math.max(3, Math.round(cash / 1200)) : 0;
 }
 function updateFinanceDisplays(){
+  recalcularPatrimonio(); // fonte única — sempre soma o valor de mercado real da frota antes de mostrar
   document.querySelectorAll('.js-cash').forEach(el => el.textContent = fmt(playerCash));
   document.querySelectorAll('.js-patrimonio').forEach(el => el.textContent = fmt(playerPatrimonio));
   document.querySelectorAll('.js-poder').forEach(el => el.textContent = fmt(Math.round(playerCash * 3)));
@@ -1687,7 +1778,15 @@ function confirmStartMachine(){
   if(!selectedStartMachine) return;
   const econ = START_MACHINE_ECONOMICS[selectedStartMachine];
   playerCash = econ.cashAfter;
-  playerPatrimonio = econ.patrimonio;
+  // ACHADO DA FASE 3: antes, as 5 máquinas iniciais ficavam todas na frota, não importa qual o
+  // jogador escolhesse aqui — a "escolha" nunca tinha efeito real. Agora remove de verdade as
+  // que não foram escolhidas, e o patrimônio é recalculado a partir da máquina que sobrou.
+  Object.keys(MACHINES).forEach(k => { if(k !== selectedStartMachine) delete MACHINES[k]; });
+  // A máquina que sobrou começa livre de verdade — sem contrato fictício vinculado do texto de mockup original.
+  MACHINES[selectedStartMachine].inContract = false;
+  MACHINES[selectedStartMachine].task = 'Disponível para novo contrato';
+  MACHINES[selectedStartMachine].location = 'Base — Campinas, SP';
+  recalcularPatrimonio();
   historicoCaixa = [{ label:'Início', valor: playerCash }];
   updateFinanceDisplays();
   showToast('✅ Máquina adquirida! Bem-vindo ao seu império.');
@@ -1888,6 +1987,11 @@ function acceptContract(){
     showToast('🔒 Você precisa da máquina exigida antes de aceitar.');
     return;
   }
+  const disponibilidade = maquinasDisponiveisAgora(c.requiredMachineKeys);
+  if(!disponibilidade.ok){
+    showResultModal('🔒', 'Máquina ocupada', disponibilidade.motivo);
+    return;
+  }
   const exp = calcularExposicao(currentContractKey, selectedSeguro);
   if(playerCash < exp.custoSeguro){
     showToast('🔒 Caixa insuficiente para pagar o seguro escolhido.');
@@ -1896,13 +2000,20 @@ function acceptContract(){
   playerCash -= exp.custoSeguro;
   updateFinanceDisplays();
 
+  const maquinasEscolhidas = selecionarMaquinasParaContrato(c.requiredMachineKeys);
+  maquinasEscolhidas.forEach(k => {
+    MACHINES[k].inContract = true;
+    MACHINES[k].task = `🚧 Em operação — ${c.name}`;
+  });
+
   c.state = 'EM_ANDAMENTO'; c.accepted = true;
   acceptedContracts.push({
     key: currentContractKey, name: c.name, value: c.value, prazo: c.prazo, prazoDias: c.prazoDias,
-    diasDecorridos: 0, progress: 0, machineKeys: c.requiredMachineKeys,
+    diasDecorridos: 0, progress: 0, machineKeys: maquinasEscolhidas,
     seguro: selectedSeguro, custoSeguroPago: exp.custoSeguro, custoRiscoAdministrado: 0, custoAtraso: 0, state: 'EM_ANDAMENTO', eventoAtivo: null
   });
   registrarHistorico('🔵', `Contrato aceito: ${c.name}`, selectedSeguro !== 'nenhum' ? `${SEGURO_OPTIONS[selectedSeguro].label} contratada por ${fmt(exp.custoSeguro)}` : 'Sem seguro contratado');
+  renderMaquinasList(); renderManutList();
   renderContratosList();
   renderContratosAndamento();
   renderFinancas();
@@ -1950,13 +2061,17 @@ function renderContratosAndamento(){
     const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
     const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
     const btnLabel = ac.state === 'EM_RISCO' ? '⚠️ Resolver situação de risco' : '▶ Avançar 1 dia de obra';
+    const maquinasAtivas = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
+    const avgHealthAtivo = maquinasAtivas.length ? maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length : 100;
+    const produtividadePct = Math.round((0.6 + 0.4*(avgHealthAtivo/100))*100);
     return `
     <div style="background:rgba(255,255,255,.03);border:1.5px solid ${ac.state==='EM_RISCO'?'rgba(255,138,61,.4)':ac.state==='ATRASADO'?'rgba(255,93,122,.4)':'rgba(255,194,75,.25)'};border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 ${ac.state==='EM_RISCO'?'rgba(255,138,61,.3)':ac.state==='ATRASADO'?'rgba(255,93,122,.3)':'rgba(255,194,75,.22)'};">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
           <div style="font-size:18.5px;font-weight:800;">${ac.name}</div>
           <div style="font-size:13.5px;color:${ev.color};font-weight:700;margin-top:2px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
-          <div style="font-size:13px;color:var(--text-faint);margin-top:3px;">🚜 ${ac.machineKeys.map(k => MACHINES[k]?.name.split(' ')[0]).join(' + ') || 'Sem máquina vinculada'} · 🛡️ ${SEGURO_OPTIONS[ac.seguro].label}</div>
+          <div style="font-size:13px;color:var(--text-faint);margin-top:3px;">🚜 ${resumoMaquinas(ac.machineKeys)} · 🛡️ ${SEGURO_OPTIONS[ac.seguro].label}</div>
+          <div style="font-size:12px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};margin-top:2px;">⚙️ Produtividade da frota: ${produtividadePct}% ${produtividadePct<85?'— máquina desgastada rendendo menos por dia':''}</div>
           ${ac.state === 'EM_RISCO' ? `<div style="font-size:13.5px;color:var(--amber-2);margin-top:5px;background:rgba(255,150,50,.1);border-radius:7px;padding:5px 7px;">⚠️ ${ac.eventoAtivo}</div>` : ''}
         </div>
         <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,194,75,.15);color:var(--amber-1);white-space:nowrap;">${ac.progress}%</div>
@@ -1992,6 +2107,7 @@ function avancarContrato(idx){
       playerCash -= multa;
       ajustarReputacao(-8);
       registrarHistorico('🔴', `Contrato perdido: ${ac.name}`, `O risco escalou. Multa de cancelamento: ${fmt(multa)}`);
+      liberarMaquinas(ac.machineKeys);
       acceptedContracts.splice(idx,1);
       lostContracts.push({ name: ac.name, value: ac.value, machineKeys: ac.machineKeys, multa });
       historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
@@ -1999,6 +2115,7 @@ function avancarContrato(idx){
       atualizarMissoes('perdido');
       updateFinanceDisplays();
       renderContratosAndamento(); renderContratosConcluidos(); renderFinancas(); renderContratosList();
+      renderMaquinasList(); renderManutList();
       switchContratoTab('concluidos');
       showResultModal('💥', 'Contrato perdido', `O risco escalou em "${ac.name}". Multa de cancelamento: ${fmt(multa)}.`);
       return;
@@ -2025,7 +2142,11 @@ function avancarContrato(idx){
       showResultModal('🟠', 'Situação de risco', `${catalog.riskDesc}\n\nO contrato "${ac.name}" entrou em estado de risco — veja o painel "Em andamento" pra decidir o que fazer.`);
       return;
     }
-    ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3));
+    // Desgaste agora afeta velocidade, não só risco: máquina malcuidada rende menos por dia trabalhado.
+    const maquinasDoContrato = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
+    const avgHealthContrato = maquinasDoContrato.length ? maquinasDoContrato.reduce((s,m)=>s+m.health,0)/maquinasDoContrato.length : 100;
+    const fatorProdutividade = 0.6 + 0.4 * (avgHealthContrato/100); // de 60% (saúde 0) a 100% (saúde cheia)
+    ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3) * fatorProdutividade);
     ac.diasDecorridos += 1;
     processarParcelasDoTempo(1);
     envelhecerFrota(1);
@@ -2066,12 +2187,12 @@ function avancarContrato(idx){
     const impostoContrato = resultadoOperacional > 0 ? Math.round(resultadoOperacional * aliquota) : 0;
     impostosProvisionados += impostoContrato;
 
-    playerPatrimonio += Math.round(ac.value * 0.1);
     ajustarReputacao(noPrazo ? 2 : 1);
     custosAdministrativosTotal += custosAdmin.total;
     custosAdministrativosLog.unshift({ contrato: ac.name, dias: ac.diasDecorridos, total: custosAdmin.total, itens: custosAdmin.itens });
     updateFinanceDisplays();
     renderTaxDisplays();
+    liberarMaquinas(ac.machineKeys);
     acceptedContracts.splice(idx,1);
     completedContracts.push({
       name: ac.name, value: ac.value, machineKeys: ac.machineKeys,
@@ -2088,6 +2209,7 @@ function avancarContrato(idx){
     registrarHistorico('🟢', `Contrato concluído: ${ac.name}`, `${noPrazo?'No prazo':'Com atraso'} · Faturamento ${fmt(ac.value)} · Imposto provisionado ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`);
     switchContratoTab('concluidos');
     renderContratosList();
+    renderMaquinasList(); renderManutList();
     showResultModal('🎉', 'Sucesso! Contrato concluído!', `${ac.name} — ${noPrazo?'entregue no prazo':'entregue com atraso'}.\n\nLíquido de custos operacionais: +${fmt(ac.value - custos.total)}\nImposto provisionado: ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`, null, 'success');
   }
 
@@ -2585,7 +2707,8 @@ function buyMachine(){
     return;
   }
   playerCash -= custo;
-  playerPatrimonio += currentLojaMode === 'vista' ? c.vista : fin.totalFinanciado;
+  // Patrimônio não é mais incrementado manualmente aqui — a máquina nova entra em MACHINES
+  // logo abaixo, e o valor dela já conta sozinho na próxima vez que recalcularPatrimonio() rodar.
 
   if(currentLojaMode === 'financiado'){
     financiamentosAtivos.push({
