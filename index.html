@@ -530,18 +530,7 @@
           <div style="padding:0 16px;" id="missoesLista"></div>
 
           <div class="section-label">⚠️ Alertas pendentes</div>
-          <div class="alerts-row">
-            <div class="alert-card" onclick="openEvento()">
-              <div class="alert-title">⚠️ Chuva forte</div>
-              <div class="alert-desc">Aterro Industrial afetado</div>
-              <button class="alert-btn">Ver evento</button>
-            </div>
-            <div class="alert-card" onclick="goTo('manutencao'); openMaintDetail('retro');">
-              <div class="alert-title">🔧 Retro crítica</div>
-              <div class="alert-desc">22% de saúde</div>
-              <button class="alert-btn">Ver manutenção</button>
-            </div>
-          </div>
+          <div class="alerts-row" id="alertasPendentesRow"></div>
 
           <div class="section-label">🚜 Minhas máquinas</div>
           <div class="machines-row">
@@ -1109,6 +1098,7 @@ function renderTierBanner(){
 function renderHubExtras(){
   const repEl = document.getElementById('hubReputacao');
   if(repEl) repEl.textContent = `${reputacao} / 150`;
+  renderAlertasPendentes();
   const histEl = document.getElementById('hubHistorico');
   if(!histEl) return;
   histEl.innerHTML = historico.length === 0
@@ -1518,6 +1508,19 @@ function liberarMaquinas(machineKeys){
   });
 }
 
+// Rede de segurança: nenhuma máquina deveria ficar marcada como "ocupada" sem um contrato ativo de
+// verdade por trás. Se isso acontecer (por qualquer motivo), corrige sozinho antes de travar o jogador.
+function corrigirMaquinasOrfas(){
+  const ocupadasDeVerdade = new Set();
+  acceptedContracts.forEach(ac => (ac.machineKeys||[]).forEach(k => ocupadasDeVerdade.add(k)));
+  Object.entries(MACHINES).forEach(([k, m]) => {
+    if(m.inContract && !ocupadasDeVerdade.has(k)){
+      m.inContract = false;
+      m.task = 'Disponível para novo contrato';
+    }
+  });
+}
+
 /* ===================== REALOCAÇÃO DE MÁQUINA ENTRE CONTRATOS =====================
    O dono pode puxar uma máquina de um contrato ativo pra reforçar outro — assumindo o
    atraso que isso pode causar na origem, e pagando o custo de mobilização/desmobilização
@@ -1727,6 +1730,15 @@ function goTo(screen){
   document.getElementById('bottomNav').style.display = (screen === 'start') ? 'none' : 'flex';
   closeEvento();
   closeRegimeTributario();
+  // Rede de segurança: sempre recarrega a tela de destino com o estado mais atual, em vez de
+  // confiar que algum código anterior já lembrou de chamar o render certo antes de navegar aqui.
+  corrigirMaquinasOrfas();
+  if(screen === 'maquinas') renderMaquinasList();
+  if(screen === 'manutencao') renderManutList();
+  if(screen === 'contratos') renderContratosList();
+  if(screen === 'loja') renderLojaList();
+  if(screen === 'financas') renderFinancas();
+  if(screen === 'hub'){ renderHubExtras(); renderMissoes(); renderTierBanner(); }
 }
 document.getElementById('bottomNav').style.display = 'none'; // hidden until a machine is chosen
 
@@ -2103,6 +2115,7 @@ function acceptContract(){
     showToast('🔒 Você precisa da máquina exigida antes de aceitar.');
     return;
   }
+  corrigirMaquinasOrfas();
   const disponibilidade = maquinasDisponiveisAgora(c.requiredMachineKeys);
   if(!disponibilidade.ok){
     showResultModal('🔒', 'Máquina ocupada', disponibilidade.motivo);
@@ -2787,6 +2800,7 @@ function scheduleMaint(){
   registrarHistorico('🔧', `Manutenção realizada: ${m.name}`, `${currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa'} · ${fmt(part.price)} · condição +${recuperacao}`);
   atualizarMissoes('manutencao', { maquinaKey: currentMaintKey });
   renderManutList();
+  renderMaquinasList();
   renderFinancas();
 
   showToast(`✅ Manutenção paga (${fmt(part.price)}) — pronta em ${part.downtime}.`);
@@ -2999,11 +3013,50 @@ function pagarImpostos(){
   openRegimeTributario();
 }
 
-function openEvento(){
+function openEvento(contratoIdx){
+  if(acceptedContracts.length === 0 || contratoIdx === undefined){
+    showToast('Nenhum contrato ativo agora para esse evento afetar.');
+    return;
+  }
+  eventoContratoAfetadoIdx = contratoIdx;
+  const ac = acceptedContracts[contratoIdx];
+  const subEl = document.querySelector('#eventoOverlay .eb-sub');
+  if(subEl && ac) subEl.textContent = `Afetando: ${ac.name}`;
   document.getElementById('eventoOverlay').classList.add('show');
 }
 function closeEvento(){
   document.getElementById('eventoOverlay').classList.remove('show');
+}
+
+let eventoContratoAfetadoIdx = null;
+function renderAlertasPendentes(){
+  const el = document.getElementById('alertasPendentesRow');
+  if(!el) return;
+  const cards = [];
+
+  // "Chuva forte" só existe se houver contrato ativo de verdade pra ser afetado — antes esse
+  // cartão era fixo e podia ser "resolvido" mesmo sem nenhuma obra em andamento.
+  if(acceptedContracts.length > 0){
+    const idx = 0;
+    const ac = acceptedContracts[idx];
+    cards.push(`<div class="alert-card" onclick="openEvento(${idx})">
+      <div class="alert-title">⚠️ Chuva forte</div>
+      <div class="alert-desc">${ac.name} afetado</div>
+      <button class="alert-btn">Ver evento</button>
+    </div>`);
+  }
+
+  const maquinaCritica = Object.entries(MACHINES).find(([k,m]) => m.status === 'red');
+  if(maquinaCritica){
+    const [key, m] = maquinaCritica;
+    cards.push(`<div class="alert-card" onclick="goTo('manutencao'); openMaintDetail('${key}');">
+      <div class="alert-title">🔧 ${m.name.split(' ')[0]} crítica</div>
+      <div class="alert-desc">${Math.round(m.health)}% de saúde</div>
+      <button class="alert-btn">Ver manutenção</button>
+    </div>`);
+  }
+
+  el.innerHTML = cards.length ? cards.join('') : '<div style="padding:8px 2px;color:var(--text-faint);font-size:13.5px;">Nenhum alerta pendente agora — tudo sob controle.</div>';
 }
 let selectedEventChoice = null;
 function selectEventChoice(el){
@@ -3022,10 +3075,15 @@ const EVENTO_CONSEQUENCIAS = {
 function confirmEvento(){
   if(!selectedEventChoice) return;
   const cons = EVENTO_CONSEQUENCIAS[selectedEventChoice];
+  const ac = acceptedContracts[eventoContratoAfetadoIdx];
   playerCash -= cons.custo;
   ajustarReputacao(cons.reputacao);
+  if(ac && selectedEventChoice === '2'){
+    ac.diasDecorridos += 3; // "aceitar atraso" agora atrasa o contrato de verdade, não só o texto
+  }
   updateFinanceDisplays();
-  registrarHistorico(cons.reputacao >= 0 ? '🟡' : '🔴', `Evento administrado: Chuva forte`, `${cons.label} — ${cons.texto} Custo: ${fmt(cons.custo)}`);
+  renderContratosAndamento();
+  registrarHistorico(cons.reputacao >= 0 ? '🟡' : '🔴', `Evento administrado: Chuva forte${ac ? ` (${ac.name})` : ''}`, `${cons.label} — ${cons.texto} Custo: ${fmt(cons.custo)}`);
   showResultModal('✅', 'Escolha confirmada', `${cons.label} — ${cons.texto}\n\nCusto: ${fmt(cons.custo)}\nReputação: ${cons.reputacao>=0?'+':''}${cons.reputacao}`, closeEvento);
 }
 
