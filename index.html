@@ -192,6 +192,14 @@
 
   /* ===== MODAL DE RESULTADO (exige toque pra continuar — não some sozinho) ===== */
   /* ===== CELEBRAÇÃO DE COMPRA DE MÁQUINA (flash + brilho + confete) ===== */
+  /* ===== TELA "VER OBRA" — vídeo tipo GIF + dashboard ===== */
+  .obra-overlay{position:absolute;inset:0;z-index:65;background:var(--bg-1);display:none;flex-direction:column;}
+  .obra-overlay.show{display:flex;}
+  .obra-video-wrap{position:relative;width:100%;height:230px;background:#000;overflow:hidden;flex-shrink:0;}
+  .obra-video-wrap video{width:100%;height:100%;object-fit:cover;pointer-events:none;}
+  .obra-video-label{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:16px;font-weight:800;color:#fff;}
+  .obra-sem-video{width:100%;height:150px;background:linear-gradient(135deg,#241C3D,#1A1330);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;flex-shrink:0;}
+
   .compra-overlay{
     position:absolute;inset:0;z-index:70;background:radial-gradient(circle at 50% 30%, #241C3D, #0A0712);
     display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow:hidden;
@@ -693,7 +701,7 @@
             <div class="finance-panel" style="grid-template-columns:1fr;">
               <div class="fin-col"><div class="fin-label">Total pago (todos os contratos)</div><div class="fin-value" style="color:#B03A2E;" id="finCustosAdmin">R$ 0</div></div>
             </div>
-            <div style="padding:10px 16px 0;color:var(--text-faint);font-size:14.5px;">Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou.</div>
+            <div style="padding:10px 16px 0;color:var(--text-faint);font-size:14.5px;" id="financasCustosAdminExplicacao">Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou.</div>
             <div style="padding:10px 16px 0;" id="financasCustosAdminList"></div>
 
             <div class="section-label" id="financasDespesasSection">💸 Despesas (manutenção)</div>
@@ -830,6 +838,12 @@
       </div>
     </div>
 
+    <div class="obra-overlay" id="obraOverlay">
+      <div class="topbar"><button class="tb-back" onclick="fecharObra()">←</button><div class="tb-spacer"></div></div>
+      <div id="obraVideoWrap"></div>
+      <div class="screen-scroll" id="obraDashboard"></div>
+    </div>
+
     <div class="compra-overlay" id="compraOverlay">
       <div class="compra-flash" id="compraFlash"></div>
       <div class="confete-container" id="confeteContainer"></div>
@@ -901,14 +915,26 @@ function calcularCustosOperacionais(valor){
    contrato, são um valor fixo por dia — a empresa gasta isso pra existir, contrato rendendo muito
    ou pouco. Cobrado pelos dias que o contrato levou pra ser executado (diasDecorridos), que é a
    melhor aproximação de "tempo passando" que o protótipo tem hoje (não existe um relógio global). */
+/* ===================== FASE 3 — CUSTO ADMINISTRATIVO ESCALA COM O TAMANHO DA FROTA =====================
+   Antes, o custo fixo diário era sempre o mesmo, não importa se a empresa tinha 1 ou 10 máquinas —
+   não fazia sentido: mais máquina significa mais logística, mais gente pra coordenar, sede maior.
+   Agora cada máquina extra na frota soma um valor por dia aos 3 componentes administrativos,
+   proporcionalmente — "Expansão → maior custo fixo", fechando mais um elo do ciclo. */
 const CUSTOS_ADMINISTRATIVOS_COMPONENTES = [
   { label:"Aluguel da sede",             icon:"🏢", valorDia:400 },
   { label:"Equipe administrativa",       icon:"🧑‍💼", valorDia:350 },
   { label:"Pró-labore dos sócios",       icon:"💼", valorDia:500 }
 ];
-const CUSTO_ADMINISTRATIVO_DIARIO = CUSTOS_ADMINISTRATIVOS_COMPONENTES.reduce((s,c)=>s+c.valorDia,0); // R$1.250/dia — derivado, não duplicado
+const CUSTO_ADMINISTRATIVO_DIARIO_BASE = CUSTOS_ADMINISTRATIVOS_COMPONENTES.reduce((s,c)=>s+c.valorDia,0); // R$1.250/dia com 1 máquina
+const CUSTO_ADICIONAL_POR_MAQUINA_DIA = 150; // cada máquina extra na frota soma isso ao custo fixo diário
+
+function custoAdministrativoDiarioAtual(){
+  const numMaquinas = Math.max(1, Object.keys(MACHINES).length);
+  return CUSTO_ADMINISTRATIVO_DIARIO_BASE + (numMaquinas - 1) * CUSTO_ADICIONAL_POR_MAQUINA_DIA;
+}
 function calcularCustosAdministrativos(dias){
-  const itens = CUSTOS_ADMINISTRATIVOS_COMPONENTES.map(c => ({ label:c.label, icon:c.icon, valor:c.valorDia*dias }));
+  const fatorEscala = custoAdministrativoDiarioAtual() / CUSTO_ADMINISTRATIVO_DIARIO_BASE;
+  const itens = CUSTOS_ADMINISTRATIVOS_COMPONENTES.map(c => ({ label:c.label, icon:c.icon, valor: Math.round(c.valorDia*fatorEscala*dias) }));
   return { total: itens.reduce((s,i)=>s+i.valor,0), itens };
 }
 
@@ -1150,6 +1176,18 @@ const MACHINES = {
     alt:{price:1900, downtime:"2 dias", impact:0, contract:null},
     inContract:false, task:"Em pátio — revisão recomendada", location:"Base — Campinas, SP"
   }
+};
+
+/* ===================== VÍDEOS "TIPO GIF" DA OBRA — só entra vídeo que bate com a cena de verdade =====================
+   Cada vídeo precisa mostrar exatamente o tipo de trabalho daquele contrato. Contratos sem vídeo
+   confirmado aqui mostram só o dashboard, sem forçar uma cena que não corresponde à obra real. */
+const VIDEO_POR_CONTRATO = {
+  desmatamento: {
+    url: "video-desmatamento.mp4",
+    poster: "https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=400&fit=crop&w=400"
+  }
+  // aterro, estrada, pedra, loteamento: ainda sem vídeo que combine de verdade com a cena —
+  // pendente de geração/busca melhor, não forçamos vídeo genérico só pra preencher.
 };
 
 const CONTRACTS = {
@@ -1480,6 +1518,83 @@ function liberarMaquinas(machineKeys){
   });
 }
 
+/* ===================== REALOCAÇÃO DE MÁQUINA ENTRE CONTRATOS =====================
+   O dono pode puxar uma máquina de um contrato ativo pra reforçar outro — assumindo o
+   atraso que isso pode causar na origem, e pagando o custo de mobilização/desmobilização
+   pra levar a máquina até o novo canteiro. Só compensa se o destino comportar mais de
+   uma unidade daquele tipo (senão a máquina extra não acelera nada). */
+const CUSTO_MOBILIZACAO_PCT = 0.025; // 2,5% do valor de mercado da máquina, ida + volta
+
+function calcularFatorProdutividade(ac, catalog){
+  const maquinasAtivas = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
+  const avgHealth = maquinasAtivas.length ? maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length : 0;
+  const fatorSaude = 0.6 + 0.4 * (avgHealth/100);
+
+  const qtdMinima = (catalog.requiredMachineKeys||[]).reduce((s,r)=>s+r.qtd, 0) || 1;
+  const qtdAtual = ac.machineKeys.length;
+  // Menos máquina que o exigido = obra capenga (piso 15%, nunca trava 100%). Mais que o exigido = reforço, com teto.
+  const fatorQuantidade = Math.max(0.15, Math.min(1.5, qtdAtual/qtdMinima));
+
+  return fatorSaude * fatorQuantidade;
+}
+
+function opcoesDeRealocacao(origemIdx){
+  const origem = acceptedContracts[origemIdx];
+  if(!origem) return [];
+  const opcoes = [];
+  origem.machineKeys.forEach(machineKey => {
+    const tipo = MACHINES[machineKey]?.tipoKey;
+    if(!tipo) return;
+    acceptedContracts.forEach((destino, destinoIdx) => {
+      if(destinoIdx === origemIdx) return;
+      const catalogDestino = CONTRACTS[destino.key];
+      const precisaDesseTipo = (catalogDestino.requiredMachineKeys||[]).some(r => r.tipo === tipo);
+      if(precisaDesseTipo){
+        opcoes.push({ machineKey, origemIdx, destinoIdx, nomeMaquina: MACHINES[machineKey].name, nomeDestino: destino.name });
+      }
+    });
+  });
+  return opcoes;
+}
+
+function realocarMaquina(machineKey, origemIdx, destinoIdx){
+  const origem = acceptedContracts[origemIdx];
+  const destino = acceptedContracts[destinoIdx];
+  if(!origem || !destino || !origem.machineKeys.includes(machineKey)) return;
+
+  const custoMobilizacao = Math.round(valorMercadoAtual(machineKey) * CUSTO_MOBILIZACAO_PCT);
+  if(playerCash < custoMobilizacao){
+    showToast('🔒 Caixa insuficiente para o custo de mobilização.');
+    return;
+  }
+  playerCash -= custoMobilizacao;
+  origem.machineKeys = origem.machineKeys.filter(k => k !== machineKey);
+  destino.machineKeys.push(machineKey);
+  registrarHistorico('🔀', 'Máquina realocada', `${MACHINES[machineKey].name}: "${origem.name}" → "${destino.name}" · mobilização ${fmt(custoMobilizacao)}`);
+  updateFinanceDisplays();
+  renderContratosAndamento();
+  closeResultModal();
+  showResultModal('🔀', 'Máquina realocada', `${MACHINES[machineKey].name} agora reforça "${destino.name}".\n\nCusto de mobilização: ${fmt(custoMobilizacao)}\n\n"${origem.name}" vai render mais devagar até você repor uma máquina lá ou concluir antes.`);
+}
+
+function abrirRealocacao(origemIdx){
+  const opcoes = opcoesDeRealocacao(origemIdx);
+  if(opcoes.length === 0){
+    showResultModal('🔀', 'Nenhum destino disponível', 'Não há outro contrato em andamento que aproveite alguma das máquinas desse contrato agora.');
+    return;
+  }
+  const lista = opcoes.map((o,i) =>
+    `<div onclick="realocarMaquina('${o.machineKey}',${o.origemIdx},${o.destinoIdx})" style="text-align:left;background:var(--surface);border:1.5px solid var(--surface-border);border-radius:10px;padding:10px 12px;margin-top:8px;cursor:pointer;">
+      <b>${o.nomeMaquina}</b><br><span style="font-size:12px;color:var(--text-faint);">enviar para "${o.nomeDestino}" — custo ${fmt(Math.round(valorMercadoAtual(o.machineKey)*CUSTO_MOBILIZACAO_PCT))}</span>
+    </div>`
+  ).join('');
+  document.getElementById('resultModalIcon').textContent = '🔀';
+  document.getElementById('resultModalTitle').textContent = 'Realocar máquina';
+  document.getElementById('resultModalText').innerHTML = `Escolha o que enviar e para onde:${lista}`;
+  document.querySelector('.result-modal-box').classList.remove('success');
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+
 // Agrupa "Caminhão + Caminhão" em "2x Caminhão" pra lista de máquinas de um contrato não ficar redundante.
 function resumoMaquinas(machineKeys){
   const contagem = {};
@@ -1524,6 +1639,7 @@ function venderMaquina(machineKey){
   registrarHistorico('💰', `Máquina vendida: ${m.name}`, `${fmt(valorVenda)} recebidos (valor de mercado ${fmt(valorBase)}, deságio de venda rápida de ${Math.round((1-VENDA_DESAGIO_PCT)*100)}%)`);
   delete MACHINES[machineKey];
   updateFinanceDisplays();
+  renderFinancas();
   renderMaquinasList();
   renderManutList();
   recomputarDisponibilidadeContratos();
@@ -2055,15 +2171,14 @@ function renderContratosAndamento(){
     return;
   }
   el.innerHTML = acceptedContracts.map((ac, idx) => {
+    const catalog = CONTRACTS[ac.key];
     const desp = despesasDoContrato(ac.machineKeys);
     const custos = calcularCustosOperacionais(ac.value);
     const custosAdmin = calcularCustosAdministrativos(Math.max(1, ac.diasDecorridos)); // estimativa corrente, cresce a cada dia decorrido
     const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
     const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
     const btnLabel = ac.state === 'EM_RISCO' ? '⚠️ Resolver situação de risco' : '▶ Avançar 1 dia de obra';
-    const maquinasAtivas = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
-    const avgHealthAtivo = maquinasAtivas.length ? maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length : 100;
-    const produtividadePct = Math.round((0.6 + 0.4*(avgHealthAtivo/100))*100);
+    const produtividadePct = Math.round(calcularFatorProdutividade(ac, catalog)*100);
     return `
     <div style="background:rgba(255,255,255,.03);border:1.5px solid ${ac.state==='EM_RISCO'?'rgba(255,138,61,.4)':ac.state==='ATRASADO'?'rgba(255,93,122,.4)':'rgba(255,194,75,.25)'};border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 ${ac.state==='EM_RISCO'?'rgba(255,138,61,.3)':ac.state==='ATRASADO'?'rgba(255,93,122,.3)':'rgba(255,194,75,.22)'};">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
@@ -2086,8 +2201,68 @@ function renderContratosAndamento(){
       </div>
       <div style="font-size:12.5px;color:var(--text-faint);margin-top:7px;">${custos.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(custosAdmin.total)} administrativo${desp.total>0?` · 🔧 ${fmt(desp.total)} manutenção`:''}${ac.custoSeguroPago>0?` · 🛡️ ${fmt(ac.custoSeguroPago)} seguro`:''}${ac.custoRiscoAdministrado>0?` · ⚠️ ${fmt(ac.custoRiscoAdministrado)} risco administrado`:''}${ac.custoAtraso>0?` · 🔴 ${fmt(ac.custoAtraso)} multa de atraso`:''}</div>
       <button onclick="avancarContrato(${idx})" style="width:100%;margin-top:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);color:var(--amber-1);font-weight:800;font-size:15px;border-radius:9px;padding:8px 0;">${btnLabel}</button>
+      <button onclick="abrirObra(${idx})" style="width:100%;margin-top:7px;background:rgba(51,224,160,.1);border:1px solid rgba(51,224,160,.3);color:var(--ok);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🎥 Ver obra</button>
+      ${acceptedContracts.length > 1 && ac.machineKeys.length > 0 ? `<button onclick="abrirRealocacao(${idx})" style="width:100%;margin-top:7px;background:rgba(90,168,255,.1);border:1px solid rgba(90,168,255,.3);color:var(--blue);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🔀 Realocar uma máquina daqui</button>` : ''}
     </div>`;
   }).join('');
+}
+
+function abrirObra(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac) return;
+  const catalog = CONTRACTS[ac.key];
+  const video = VIDEO_POR_CONTRATO[ac.key];
+  const videoWrap = document.getElementById('obraVideoWrap');
+
+  if(video){
+    videoWrap.innerHTML = `<div class="obra-video-wrap">
+      <video autoplay muted loop playsinline poster="${video.poster}">
+        <source src="${video.url}" type="video/mp4">
+      </video>
+      <div class="obra-video-label">${ac.name}</div>
+    </div>`;
+  } else {
+    videoWrap.innerHTML = `<div class="obra-sem-video">
+      <div style="font-size:32px;">🎬</div>
+      <div style="font-size:13px;color:var(--text-faint);text-align:center;padding:0 30px;">Vídeo específico dessa obra ainda não disponível — em produção.</div>
+    </div>`;
+  }
+
+  const desp = despesasDoContrato(ac.machineKeys);
+  const custos = calcularCustosOperacionais(ac.value);
+  const custosAdmin = calcularCustosAdministrativos(Math.max(1, ac.diasDecorridos));
+  const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
+  const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
+  const produtividadePct = Math.round(calcularFatorProdutividade(ac, catalog)*100);
+
+  document.getElementById('obraDashboard').innerHTML = `
+    <div style="padding:16px;">
+      <div style="font-size:20px;font-weight:800;">${ac.name}</div>
+      <div style="font-size:14px;color:${ev.color};font-weight:700;margin-top:3px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
+      <div style="height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:12px;">
+        <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:4px;"></div>
+      </div>
+      <div style="font-size:13px;color:var(--text-faint);margin-top:6px;">${Math.round(ac.progress)}% concluído</div>
+
+      <div class="info-box" style="margin-top:16px;margin-left:0;margin-right:0;">
+        <div class="box-title">🚜 Frota nessa obra</div>
+        <div class="box-text">${resumoMaquinas(ac.machineKeys)}</div>
+        <div class="box-text" style="margin-top:5px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};">⚙️ Produtividade: ${produtividadePct}%${produtividadePct<85?' — rendendo abaixo do normal':''}</div>
+      </div>
+
+      <div class="finance-panel" style="margin-left:0;margin-right:0;margin-top:12px;">
+        <div class="fin-col"><div class="fin-label">Receita</div><div class="fin-value ok">${fmt(ac.value)}</div></div>
+        <div class="fin-col"><div class="fin-label">Custos+Despesas</div><div class="fin-value" style="color:#B03A2E;">${fmt(custos.total+custosAdmin.total+ac.custoSeguroPago+desp.total+ac.custoRiscoAdministrado+ac.custoAtraso)}</div></div>
+        <div class="fin-col"><div class="fin-label">Margem</div><div class="fin-value" style="color:${lucro>=0?'#1E7A45':'#B03A2E'};">${fmt(lucro)}</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('obraOverlay').classList.add('show');
+}
+
+function fecharObra(){
+  document.getElementById('obraOverlay').classList.remove('show');
+  document.getElementById('obraVideoWrap').innerHTML = ''; // pausa o vídeo de verdade, não só esconde
 }
 
 function avancarContrato(idx){
@@ -2142,10 +2317,9 @@ function avancarContrato(idx){
       showResultModal('🟠', 'Situação de risco', `${catalog.riskDesc}\n\nO contrato "${ac.name}" entrou em estado de risco — veja o painel "Em andamento" pra decidir o que fazer.`);
       return;
     }
-    // Desgaste agora afeta velocidade, não só risco: máquina malcuidada rende menos por dia trabalhado.
-    const maquinasDoContrato = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
-    const avgHealthContrato = maquinasDoContrato.length ? maquinasDoContrato.reduce((s,m)=>s+m.health,0)/maquinasDoContrato.length : 100;
-    const fatorProdutividade = 0.6 + 0.4 * (avgHealthContrato/100); // de 60% (saúde 0) a 100% (saúde cheia)
+    // Desgaste afeta velocidade, e agora QUANTIDADE de máquina também — puxar uma máquina pra outra
+    // obra deixa a origem com menos gente trabalhando, entregando mais devagar.
+    const fatorProdutividade = calcularFatorProdutividade(ac, catalog);
     ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3) * fatorProdutividade);
     ac.diasDecorridos += 1;
     processarParcelasDoTempo(1);
@@ -2388,6 +2562,11 @@ function renderFinancas(){
   document.getElementById('finTotalReceber').textContent = fmt(totalReceber);
   document.getElementById('finImpostosProvisionados').textContent = fmt(impostosProvisionados);
   document.getElementById('finCustosAdmin').textContent = fmt(custosAdministrativosTotal);
+  const custoDiarioEl = document.getElementById('financasCustosAdminExplicacao');
+  if(custoDiarioEl){
+    const numMaquinas = Object.keys(MACHINES).length;
+    custoDiarioEl.innerHTML = `Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou. <b style="color:var(--amber-1);">Hoje: ${fmt(custoAdministrativoDiarioAtual())}/dia</b> (frota de ${numMaquinas} máquina${numMaquinas!==1?'s':''}${numMaquinas>1?` — cada uma além da 1ª soma ${fmt(CUSTO_ADICIONAL_POR_MAQUINA_DIA)}/dia`:''}).`;
+  }
 
   const finTotalParcelasEl = document.getElementById('finTotalParcelas');
   if(finTotalParcelasEl) finTotalParcelasEl.textContent = fmt(totalParcelasPagas);
@@ -2737,6 +2916,7 @@ function buyMachine(){
   }
 
   updateFinanceDisplays();
+  renderFinancas();
   registrarHistorico('🛒', `Máquina adquirida: ${nomeMaquina}`, `${currentLojaMode === 'vista' ? 'À vista' : `Financiado (juro de ${fmt(fin.jurosValor)})`} · ${fmt(custo)}`);
   showCompraCelebration(nomeMaquina, fotoCelebracao);
 }

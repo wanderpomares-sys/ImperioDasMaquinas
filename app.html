@@ -31,16 +31,16 @@
     display:flex;flex-direction:column;
   }
   .app-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;min-height:0;}
-  .statusbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:17.5px;font-weight:600;color:var(--text-dim);flex-shrink:0;}
-  .statusbar-brand{font-family:'Fredoka',sans-serif;font-weight:700;font-size:14.5px;color:#FFC947;letter-spacing:.01em;text-shadow:1px 1.5px 0 #C17710;}
+  .statusbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:19.5px;font-weight:600;color:var(--text-dim);flex-shrink:0;}
+  .statusbar-brand{font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;color:#FFC947;letter-spacing:.01em;text-shadow:1px 1.5px 0 #C17710;}
 
   .topbar{display:flex;align-items:center;gap:8px;padding:8px 14px 8px;flex-shrink:0;}
-  .tb-back{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);border:none;color:var(--text);font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+  .tb-back{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);border:none;color:var(--text);font-size:21.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
   .tb-back.hidden{visibility:hidden;}
-  .tb-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:6px 9px;font-size:14px;font-weight:800;}
+  .tb-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:6px 9px;font-size:15.5px;font-weight:800;}
   .tb-cash{color:var(--ok);}
   .tb-spacer{flex:1;}
-  .tb-settings{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.06);border:none;color:var(--text-dim);font-size:18px;display:flex;align-items:center;justify-content:center;}
+  .tb-settings{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.06);border:none;color:var(--text-dim);font-size:20px;display:flex;align-items:center;justify-content:center;}
 
   /* ===== SCREEN SWITCHING ===== */
   .app-body{flex:1;min-height:0;position:relative;}
@@ -51,17 +51,17 @@
   .subview.active{display:flex;flex-direction:column;height:100%;min-height:0;}
 
   /* ===== SHARED COMPONENTS ===== */
-  .section-label{padding:14px 16px 8px;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-1);}
+  .section-label{padding:14px 16px 8px;font-size:15.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-1);}
   .finance-panel{
     margin:12px 16px 0;background:linear-gradient(135deg,var(--light-card),var(--light-card-2));border:1.5px solid var(--amber-1);
     border-radius:16px;padding:12px 4px;display:grid;grid-template-columns:1fr 1fr 1fr;box-shadow:3px 3px 0 rgba(255,194,75,.35);
   }
   .fin-col{padding:0 8px;border-left:1px solid rgba(58,42,15,.15);}
   .fin-col:first-child{border-left:none;}
-  .fin-label{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--light-text-dim);}
-  .fin-value{font-size:18.5px;font-weight:800;margin-top:4px;color:var(--light-text);}
+  .fin-label{font-size:12.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--light-text-dim);}
+  .fin-value{font-size:20.5px;font-weight:800;margin-top:4px;color:var(--light-text);}
   .fin-value.ok{color:#1E7A45;} .fin-value.amber{color:#B45309;}
-  .risk-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding:3px 8px;border-radius:7px;width:fit-content;}
+  .risk-badge{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:800;padding:3px 8px;border-radius:7px;width:fit-content;}
   .risk-badge.low{background:rgba(51,224,160,.12);color:var(--ok);border:1px solid rgba(51,224,160,.3);}
   .risk-badge.mid{background:rgba(255,194,75,.12);color:var(--amber-1);border:1px solid rgba(255,194,75,.3);}
   .risk-badge.high{background:rgba(255,93,122,.12);color:var(--danger);border:1px solid rgba(255,93,122,.3);}
@@ -75,7 +75,7 @@
   }
   .hub-cover-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.15) 0%, rgba(9,7,15,.55) 65%, rgba(9,7,15,.92) 100%);}
   .hub-cover-content{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px;}
-  .hub-cover-eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-1);}
+  .hub-cover-eyebrow{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-1);}
   .screen-hero{
     margin:2px 16px 12px;height:120px;border-radius:16px;background-color:#241C3B;background-size:cover;background-position:center;
     position:relative;overflow:hidden;
@@ -86,27 +86,27 @@
   .screen-hero.hero-teal::after{background:linear-gradient(105deg, rgba(8,30,25,.75) 30%, rgba(51,224,160,.2) 100%);}
   .screen-hero.hero-red::after{background:linear-gradient(105deg, rgba(35,10,15,.75) 30%, rgba(255,93,122,.2) 100%);}
   .screen-hero-text{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:0 16px;}
-  .sh-title{font-size:18px;font-weight:800;color:var(--text);}
-  .sh-sub{font-size:12px;color:var(--text-faint);margin-top:3px;max-width:220px;line-height:1.4;}
-  .hub-title{font-size:24.5px;font-weight:800;}
+  .sh-title{font-size:20px;font-weight:800;color:var(--text);}
+  .sh-sub{font-size:13.5px;color:var(--text-faint);margin-top:3px;max-width:220px;line-height:1.4;}
+  .hub-title{font-size:27.5px;font-weight:800;}
   .hub-company{display:flex;align-items:center;gap:9px;margin-top:8px;}
-  .hub-company-icon{width:34px;height:34px;border-radius:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
-  .hub-company-name{font-size:17.5px;font-weight:800;}
-  .hub-company-sub{font-size:12px;color:var(--text-faint);}
+  .hub-company-icon{width:34px;height:34px;border-radius:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);display:flex;align-items:center;justify-content:center;font-size:21.5px;flex-shrink:0;}
+  .hub-company-name{font-size:19.5px;font-weight:800;}
+  .hub-company-sub{font-size:13.5px;color:var(--text-faint);}
   .alerts-row{display:flex;gap:10px;overflow-x:auto;padding:0 16px 2px;scrollbar-width:none;}
   .alerts-row::-webkit-scrollbar{display:none;}
   .alert-card{flex:0 0 190px;border-radius:16px;overflow:hidden;background:linear-gradient(160deg, #3A2230, #241830);border:1.5px solid rgba(255,93,122,.3);padding:10px 11px;cursor:pointer;box-shadow:3px 3px 0 rgba(255,93,122,.25);}
-  .alert-title{font-size:14.5px;font-weight:800;}
-  .alert-desc{font-size:12px;color:var(--text-faint);margin-top:3px;}
-  .alert-btn{margin-top:8px;background:var(--danger);color:#fff;border:none;border-radius:8px;padding:6px 0;font-size:12px;font-weight:800;text-align:center;width:100%;}
+  .alert-title{font-size:16px;font-weight:800;}
+  .alert-desc{font-size:13.5px;color:var(--text-faint);margin-top:3px;}
+  .alert-btn{margin-top:8px;background:var(--danger);color:#fff;border:none;border-radius:8px;padding:6px 0;font-size:13.5px;font-weight:800;text-align:center;width:100%;}
   .machines-row{display:flex;gap:10px;overflow-x:auto;padding:0 16px 2px;scrollbar-width:none;}
   .machines-row::-webkit-scrollbar{display:none;}
   .machine-card{flex:0 0 130px;}
   .machine-photo{height:80px;border-radius:12px;background-color:#241C3B;background-size:cover;background-position:center;position:relative;border:1px solid rgba(255,255,255,.1);}
   .status-dot{position:absolute;top:6px;right:6px;width:11px;height:11px;border-radius:50%;border:2px solid var(--bg-1);}
   .status-dot.green{background:var(--ok);} .status-dot.amber{background:var(--amber-1);} .status-dot.red{background:var(--danger);}
-  .machine-name{font-size:13.5px;font-weight:800;margin-top:6px;line-height:1.2;}
-  .status-chip{display:inline-block;font-size:11px;font-weight:800;padding:2px 6px;border-radius:6px;margin-top:3px;}
+  .machine-name{font-size:15px;font-weight:800;margin-top:6px;line-height:1.2;}
+  .status-chip{display:inline-block;font-size:12.5px;font-weight:800;padding:2px 6px;border-radius:6px;margin-top:3px;}
   .status-chip.green{background:rgba(51,224,160,.15);color:var(--ok);}
   .status-chip.amber{background:rgba(255,194,75,.15);color:var(--amber-1);}
   .status-chip.red{background:rgba(255,93,122,.15);color:var(--danger);}
@@ -114,8 +114,8 @@
   .hub-cc{display:flex;gap:11px;background:linear-gradient(135deg,rgba(90,168,255,.06),rgba(255,255,255,.02));border:1.5px solid rgba(90,168,255,.25);border-radius:14px;padding:9px;margin-bottom:11px;cursor:pointer;box-shadow:3px 3px 0 rgba(90,168,255,.2);}
   .hub-cc-photo{width:60px;height:60px;border-radius:10px;background-color:#241C3B;background-size:cover;background-position:center;flex-shrink:0;}
   .hub-cc-body{flex:1;min-width:0;}
-  .hub-cc-name{font-size:14.5px;font-weight:800;}
-  .hub-cc-value{font-size:14px;font-weight:800;color:var(--ok);margin-top:2px;}
+  .hub-cc-name{font-size:16px;font-weight:800;}
+  .hub-cc-value{font-size:15.5px;font-weight:800;color:var(--ok);margin-top:2px;}
 
   /* ===== LIST/DETAIL PATTERN (contratos, manutencao, loja) ===== */
   .cat-card, .m-card{
@@ -134,57 +134,57 @@
   .card-accent-teal:active{box-shadow:1px 1px 0 rgba(51,224,160,.22);}
   .cat-photo, .m-photo{width:70px;height:70px;border-radius:11px;background-color:#241C3B;background-size:cover;background-position:center;flex-shrink:0;position:relative;}
   .cat-body, .m-body{flex:1;min-width:0;}
-  .cat-cat{font-size:11.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--text-faint);}
-  .cat-name, .m-name{font-size:16.5px;font-weight:800;margin-top:2px;}
-  .cat-meta, .m-meta{font-size:12px;color:var(--text-faint);margin-top:2px;}
-  .cat-value{font-size:16.5px;font-weight:800;color:var(--ok);}
+  .cat-cat{font-size:13px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--text-faint);}
+  .cat-name, .m-name{font-size:18.5px;font-weight:800;margin-top:2px;}
+  .cat-meta, .m-meta{font-size:13.5px;color:var(--text-faint);margin-top:2px;}
+  .cat-value{font-size:18.5px;font-weight:800;color:var(--ok);}
   .m-health-row{display:flex;align-items:center;gap:7px;margin-top:6px;}
   .m-bar{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
   .m-bar-fill{height:100%;border-radius:3px;}
   .m-bar-fill.green{background:linear-gradient(90deg,#33E0A0,#1FB8A8);}
   .m-bar-fill.amber{background:linear-gradient(90deg,var(--amber-1),var(--amber-2));}
   .m-bar-fill.red{background:linear-gradient(90deg,#FF5D7A,#C43856);}
-  .m-health-pct{font-size:13px;font-weight:800;width:30px;text-align:right;}
+  .m-health-pct{font-size:14.5px;font-weight:800;width:30px;text-align:right;}
 
   .d-photo{margin:2px 16px 0;height:150px;min-height:150px;flex-shrink:0;border-radius:16px;background-color:#241C3B;background-size:cover;background-position:center;position:relative;overflow:hidden;}
   .d-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,0) 45%, rgba(9,7,15,.8) 100%);}
   .d-title-row{padding:12px 16px 0;}
-  .d-name{font-size:23px;font-weight:800;}
-  .d-value{font-size:22px;font-weight:800;color:var(--ok);}
-  .d-status-chip{display:inline-block;margin-top:6px;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px;}
+  .d-name{font-size:26px;font-weight:800;}
+  .d-value{font-size:24.5px;font-weight:800;color:var(--ok);}
+  .d-status-chip{display:inline-block;margin-top:6px;font-size:14.5px;font-weight:800;padding:4px 10px;border-radius:8px;}
 
   .info-box, .plan-box{
     margin:12px 16px 0;padding:12px 13px;border-radius:14px;
     background:var(--surface);border:1px solid var(--surface-border);
   }
-  .box-title{font-size:14px;font-weight:800;color:var(--amber-1);display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+  .box-title{font-size:15.5px;font-weight:800;color:var(--amber-1);display:flex;align-items:center;gap:6px;margin-bottom:6px;}
   .box-title.danger{color:var(--danger);}
-  .box-text{font-size:14.5px;color:var(--text-dim);line-height:1.55;}
+  .box-text{font-size:16px;color:var(--text-dim);line-height:1.55;}
   .plan-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);}
   .plan-row:last-child{border-bottom:none;}
-  .plan-label{font-size:14px;color:var(--text-faint);}
-  .plan-value{font-size:15.5px;font-weight:800;}
+  .plan-label{font-size:15.5px;color:var(--text-faint);}
+  .plan-value{font-size:17.5px;font-weight:800;}
 
   .toggle-row{display:flex;gap:8px;padding:12px 16px 0;}
-  .toggle-btn{flex:1;text-align:center;padding:9px 6px;border-radius:11px;font-size:14.5px;font-weight:800;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;}
+  .toggle-btn{flex:1;text-align:center;padding:9px 6px;border-radius:11px;font-size:16px;font-weight:800;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;}
   .toggle-btn.active{background:rgba(255,194,75,.1);border-color:var(--amber-1);color:var(--amber-1);}
 
-  .warn-box{margin:12px 16px 0;padding:10px 12px;border-radius:12px;background:rgba(255,93,122,0.18);border:1px solid rgba(255,93,122,.3);font-size:13.5px;color:var(--danger);line-height:1.5;}
+  .warn-box{margin:12px 16px 0;padding:10px 12px;border-radius:12px;background:rgba(255,93,122,0.18);border:1px solid rgba(255,93,122,.3);font-size:15px;color:var(--danger);line-height:1.5;}
   .warn-box b{display:block;margin-bottom:2px;}
   .warn-box.hidden{display:none;}
 
   .action-zone{padding:14px 16px 18px;}
   .action-btn{
-    width:100%;border:none;border-radius:14px;padding:15px;font-size:17.5px;font-weight:800;
+    width:100%;border:none;border-radius:14px;padding:15px;font-size:19.5px;font-weight:800;
     background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
     box-shadow:0 8px 22px rgba(255,150,50,.35);cursor:pointer;
   }
   .action-btn.locked{background:rgba(255,255,255,.06);color:var(--text-faint);box-shadow:none;}
   .action-btn.risky{background:linear-gradient(160deg,#FF8A65,var(--danger));}
-  .action-btn .sub{display:block;font-size:12px;font-weight:700;margin-top:2px;opacity:.85;}
+  .action-btn .sub{display:block;font-size:13.5px;font-weight:700;margin-top:2px;opacity:.85;}
   .toast{
     position:absolute;left:16px;right:16px;bottom:90px;z-index:20;
-    background:var(--ok);color:var(--bg-1);font-weight:800;font-size:15.5px;text-align:center;
+    background:var(--ok);color:var(--bg-1);font-weight:800;font-size:17.5px;text-align:center;
     padding:11px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.4);
     opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;transform:translateY(8px);
   }
@@ -192,6 +192,14 @@
 
   /* ===== MODAL DE RESULTADO (exige toque pra continuar — não some sozinho) ===== */
   /* ===== CELEBRAÇÃO DE COMPRA DE MÁQUINA (flash + brilho + confete) ===== */
+  /* ===== TELA "VER OBRA" — vídeo tipo GIF + dashboard ===== */
+  .obra-overlay{position:absolute;inset:0;z-index:65;background:var(--bg-1);display:none;flex-direction:column;}
+  .obra-overlay.show{display:flex;}
+  .obra-video-wrap{position:relative;width:100%;height:230px;background:#000;overflow:hidden;flex-shrink:0;}
+  .obra-video-wrap video{width:100%;height:100%;object-fit:cover;pointer-events:none;}
+  .obra-video-label{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:16px;font-weight:800;color:#fff;}
+  .obra-sem-video{width:100%;height:150px;background:linear-gradient(135deg,#241C3D,#1A1330);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;flex-shrink:0;}
+
   .compra-overlay{
     position:absolute;inset:0;z-index:70;background:radial-gradient(circle at 50% 30%, #241C3D, #0A0712);
     display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow:hidden;
@@ -209,8 +217,8 @@
   @keyframes confeteCair{
     to{transform:translateY(760px) rotate(680deg);opacity:0;}
   }
-  .compra-eyebrow{position:relative;z-index:1;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-1);margin-bottom:6px;}
-  .compra-title{position:relative;z-index:1;font-family:'Fredoka',sans-serif;font-size:26px;font-weight:700;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;text-align:center;margin-bottom:18px;}
+  .compra-eyebrow{position:relative;z-index:1;font-size:14.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-1);margin-bottom:6px;}
+  .compra-title{position:relative;z-index:1;font-family:'Fredoka',sans-serif;font-size:29px;font-weight:700;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;text-align:center;margin-bottom:18px;}
   .compra-photo-wrap{
     position:relative;z-index:1;width:100%;max-width:280px;height:210px;border-radius:20px;overflow:hidden;
     border:3px solid var(--amber-1);box-shadow:0 0 45px rgba(255,194,75,.5), 7px 7px 0 rgba(255,150,50,.4);
@@ -224,14 +232,14 @@
     transform:skewX(-20deg);animation:shineSweep 2.1s ease-in-out infinite;
   }
   @keyframes shineSweep{0%{left:-60%;}45%{left:130%;}100%{left:130%;}}
-  .compra-sparkles{position:absolute;inset:0;pointer-events:none;font-size:20px;}
+  .compra-sparkles{position:absolute;inset:0;pointer-events:none;font-size:22.5px;}
   .compra-sparkle{position:absolute;animation:sparkleFloat 2.4s ease-in-out infinite;}
   @keyframes sparkleFloat{0%,100%{transform:translateY(0) scale(1);opacity:.7;}50%{transform:translateY(-8px) scale(1.25);opacity:1;}}
-  .compra-nome{position:relative;z-index:1;font-size:19px;font-weight:800;color:var(--text);text-align:center;margin-top:18px;}
-  .compra-sub{position:relative;z-index:1;font-size:13px;color:var(--text-faint);text-align:center;margin-top:5px;max-width:260px;line-height:1.5;}
+  .compra-nome{position:relative;z-index:1;font-size:21.5px;font-weight:800;color:var(--text);text-align:center;margin-top:18px;}
+  .compra-sub{position:relative;z-index:1;font-size:14.5px;color:var(--text-faint);text-align:center;margin-top:5px;max-width:260px;line-height:1.5;}
   .compra-btn{
     position:relative;z-index:1;margin-top:22px;width:100%;max-width:280px;border:none;border-radius:14px;padding:15px;
-    font-size:15px;font-weight:800;background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
+    font-size:17px;font-weight:800;background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
     box-shadow:0 8px 22px rgba(255,150,50,.4);
   }
 
@@ -256,18 +264,18 @@
     100%{transform:scale(1);opacity:1;}
   }
   .result-modal-box.success .result-modal-icon{
-    font-size:56px;filter:drop-shadow(3px 3px 0 rgba(255,150,50,.35));
+    font-size:62.5px;filter:drop-shadow(3px 3px 0 rgba(255,150,50,.35));
   }
   .result-modal-box.success .result-modal-title{color:var(--light-text);}
   .result-modal-box.success .result-modal-text{color:var(--light-text-dim);}
   .result-modal-box.success .result-modal-btn{
     box-shadow:3px 3px 0 rgba(58,42,15,.3);
   }
-  .result-modal-icon{font-size:48.5px;margin-bottom:10px;}
-  .result-modal-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:8px;}
-  .result-modal-text{font-size:16px;color:var(--text-dim);line-height:1.6;margin-bottom:18px;white-space:pre-line;}
+  .result-modal-icon{font-size:54.5px;margin-bottom:10px;}
+  .result-modal-title{font-size:21.5px;font-weight:800;color:var(--text);margin-bottom:8px;}
+  .result-modal-text{font-size:18px;color:var(--text-dim);line-height:1.6;margin-bottom:18px;white-space:pre-line;}
   .result-modal-btn{
-    width:100%;border:none;border-radius:12px;padding:13px;font-size:16.5px;font-weight:800;
+    width:100%;border:none;border-radius:12px;padding:13px;font-size:18.5px;font-weight:800;
     background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
     box-shadow:0 6px 16px rgba(255,150,50,.3);
   }
@@ -282,7 +290,7 @@
   .nav-icon{font-size:19px;color:var(--text-faint);}
   .nav-label{font-size:9px;font-weight:700;color:var(--text-faint);letter-spacing:0;white-space:nowrap;}
   .nav-item.active .nav-icon, .nav-item.active .nav-label{color:var(--amber-1);}
-  .nav-badge{position:absolute;top:0;right:14%;min-width:14px;height:14px;border-radius:999px;background:var(--danger);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+  .nav-badge{position:absolute;top:0;right:14%;min-width:14px;height:14px;border-radius:999px;background:var(--danger);color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;}
   .nav-item{position:relative;}
 
   /* ===== EVENTO MODAL ===== */
@@ -290,24 +298,24 @@
   .evento-overlay.show{display:flex;}
   .event-banner{margin:2px 14px 0;padding:14px;border-radius:16px;background:linear-gradient(160deg, rgba(255,93,122,.16), rgba(58,20,30,.5));border:1px solid rgba(255,93,122,.35);}
   .eb-top{display:flex;align-items:flex-start;gap:11px;}
-  .eb-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,93,122,.18);border:1px solid rgba(255,93,122,.4);display:flex;align-items:center;justify-content:center;font-size:25.5px;flex-shrink:0;}
-  .eb-name{font-size:20.5px;font-weight:800;}
-  .eb-sub{font-size:13.5px;color:var(--text-faint);margin-top:2px;}
-  .eb-risk{background:rgba(255,93,122,.16);border:1px solid rgba(255,93,122,.45);color:var(--danger);font-size:12px;font-weight:800;padding:5px 8px;border-radius:9px;white-space:nowrap;}
+  .eb-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,93,122,.18);border:1px solid rgba(255,93,122,.4);display:flex;align-items:center;justify-content:center;font-size:28.5px;flex-shrink:0;}
+  .eb-name{font-size:23px;font-weight:800;}
+  .eb-sub{font-size:15px;color:var(--text-faint);margin-top:2px;}
+  .eb-risk{background:rgba(255,93,122,.16);border:1px solid rgba(255,93,122,.45);color:var(--danger);font-size:13.5px;font-weight:800;padding:5px 8px;border-radius:9px;white-space:nowrap;}
   .event-photo{margin-top:10px;height:110px;border-radius:12px;background-color:#241C3B;background-size:cover;background-position:center;}
   .choices{padding:10px 14px 0;display:flex;flex-direction:column;gap:9px;}
   .choice-card{border-radius:14px;padding:11px 12px;cursor:pointer;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);}
   .choice-card.selected{border-color:var(--amber-1);background:rgba(255,194,75,0.15);}
-  .ch-name{font-size:16px;font-weight:800;}
-  .ch-desc{font-size:13px;color:var(--text-faint);margin-top:3px;}
+  .ch-name{font-size:18px;font-weight:800;}
+  .ch-desc{font-size:14.5px;color:var(--text-faint);margin-top:3px;}
   .impacts{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px;margin-top:8px;padding-top:7px;border-top:1px solid rgba(255,255,255,.06);}
-  .impact-val{font-size:12px;font-weight:800;text-align:center;}
+  .impact-val{font-size:13.5px;font-weight:800;text-align:center;}
   .impact-val.neg{color:var(--danger);} .impact-val.pos{color:var(--ok);} .impact-val.neutral{color:var(--text-dim);}
-  .impact-label{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--text-faint);text-align:center;margin-bottom:2px;}
+  .impact-label{font-size:12.5px;font-weight:800;text-transform:uppercase;color:var(--text-faint);text-align:center;margin-bottom:2px;}
 
   .empty-state{padding:60px 30px;text-align:center;}
-  .empty-icon{font-size:46px;margin-bottom:14px;opacity:.6;}
-  .empty-text{font-size:15.5px;color:var(--text-faint);line-height:1.6;}
+  .empty-icon{font-size:51.5px;margin-bottom:14px;opacity:.6;}
+  .empty-text{font-size:17.5px;color:var(--text-faint);line-height:1.6;}
 
   /* ===== TELA INICIAL (3.1 — primeira máquina) ===== */
   .start-hero{
@@ -318,15 +326,15 @@
   .start-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.25) 0%, rgba(9,7,15,.55) 45%, var(--bg-1) 100%);}
   .start-hero > *{position:relative;z-index:1;}
   .start-logo{display:flex;flex-direction:column;align-items:center;padding:26px 20px 6px;text-align:center;}
-  .start-logo .l1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:30.5px;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;white-space:nowrap;}
-  .start-logo .l2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16.5px;color:var(--text-dim);margin-top:2px;}
-  .start-narrative{font-size:14.5px;color:var(--text-dim);text-align:center;padding:10px 26px 4px;line-height:1.6;}
+  .start-logo .l1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:34px;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;white-space:nowrap;}
+  .start-logo .l2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18.5px;color:var(--text-dim);margin-top:2px;}
+  .start-narrative{font-size:16px;color:var(--text-dim);text-align:center;padding:10px 26px 4px;line-height:1.6;}
   .start-capital{
     margin:12px 20px 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,194,75,.3);
     border-radius:14px;padding:10px 14px;text-align:center;
   }
-  .start-capital-label{font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);}
-  .start-capital-value{font-size:24.5px;font-weight:800;color:var(--amber-1);margin-top:2px;}
+  .start-capital-label{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);}
+  .start-capital-value{font-size:27.5px;font-weight:800;color:var(--amber-1);margin-top:2px;}
 
   .start-list{padding:16px 16px 0;}
   .start-card{
@@ -337,9 +345,9 @@
   .start-card-top{display:flex;gap:11px;}
   .start-card-photo{width:78px;height:78px;border-radius:12px;background-color:#241C3B;background-size:cover;background-position:center;flex-shrink:0;}
   .start-card-body{flex:1;min-width:0;}
-  .start-card-name{font-size:17.5px;font-weight:800;}
-  .start-card-price{font-size:18px;font-weight:800;color:var(--ok);margin-top:4px;}
-  .start-card-finance{font-size:12px;color:var(--text-faint);margin-top:2px;}
+  .start-card-name{font-size:19.5px;font-weight:800;}
+  .start-card-price{font-size:20px;font-weight:800;color:var(--ok);margin-top:4px;}
+  .start-card-finance{font-size:13.5px;color:var(--text-faint);margin-top:2px;}
   .start-zone{padding:6px 16px 20px;}
 
   /* ===== TELA DE CADASTRO (login/signup) ===== */
@@ -350,31 +358,31 @@
   }
   .signup-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.35) 0%, rgba(9,7,15,.6) 55%, var(--bg-1) 100%);}
   .signup-hero > *{position:relative;z-index:1;}
-  .signup-logo .l1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:33.5px;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;white-space:nowrap;}
-  .signup-logo .l2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16.5px;color:var(--text-dim);margin-top:3px;}
-  .signup-tag{font-size:14.5px;color:var(--text-faint);margin-top:10px;line-height:1.5;}
+  .signup-logo .l1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:37.5px;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;white-space:nowrap;}
+  .signup-logo .l2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18.5px;color:var(--text-dim);margin-top:3px;}
+  .signup-tag{font-size:16px;color:var(--text-faint);margin-top:10px;line-height:1.5;}
 
   .signup-form{padding:22px 22px 0;}
   .field-group{margin-bottom:16px;}
-  .field-label{font-size:13.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--amber-1);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
-  .field-label .opt{color:var(--text-faint);font-weight:600;text-transform:none;letter-spacing:0;font-size:12px;}
+  .field-label{font-size:15px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--amber-1);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+  .field-label .opt{color:var(--text-faint);font-weight:600;text-transform:none;letter-spacing:0;font-size:13.5px;}
   .field-input{
     width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);
-    border-radius:12px;padding:13px 14px;font-size:17.5px;color:var(--text);font-family:inherit;
+    border-radius:12px;padding:13px 14px;font-size:19.5px;color:var(--text);font-family:inherit;
     outline:none;transition:border-color .15s ease;
   }
   .field-input::placeholder{color:var(--text-faint);}
   .field-input:focus{border-color:var(--amber-1);}
   .field-input.error{border-color:var(--danger);}
-  .field-error{font-size:13px;color:var(--danger);margin-top:5px;display:none;}
+  .field-error{font-size:14.5px;color:var(--danger);margin-top:5px;display:none;}
   .field-error.show{display:block;}
   .signup-zone{padding:10px 22px 22px;}
-  .signup-note{font-size:12px;color:var(--text-faint);text-align:center;margin-top:12px;line-height:1.5;}
+  .signup-note{font-size:13.5px;color:var(--text-faint);text-align:center;margin-top:12px;line-height:1.5;}
 
   .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;}
   .logo-option{
     aspect-ratio:1;border-radius:13px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);
-    display:flex;align-items:center;justify-content:center;font-size:25.5px;cursor:pointer;transition:all .15s ease;
+    display:flex;align-items:center;justify-content:center;font-size:28.5px;cursor:pointer;transition:all .15s ease;
   }
   .logo-option.selected{border-color:var(--amber-1);background:rgba(255,194,75,.12);box-shadow:0 0 0 1px rgba(255,194,75,.3);}
 
@@ -389,15 +397,15 @@
   .login-icon{
     width:74px;height:74px;border-radius:20px;margin:0 auto 16px;
     background:rgba(255,194,75,.14);border:1.5px solid rgba(255,194,75,.4);
-    display:flex;align-items:center;justify-content:center;font-size:43.5px;
+    display:flex;align-items:center;justify-content:center;font-size:48.5px;
   }
-  .login-welcome{font-size:14px;color:var(--text-faint);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
-  .login-company{font-family:'Fredoka',sans-serif;font-size:27px;font-weight:700;color:#FFC947;text-shadow:1.5px 2px 0 #C17710;margin-top:6px;}
-  .login-owner{font-size:15.5px;color:var(--text-dim);margin-top:5px;}
+  .login-welcome{font-size:15.5px;color:var(--text-faint);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+  .login-company{font-family:'Fredoka',sans-serif;font-size:30px;font-weight:700;color:#FFC947;text-shadow:1.5px 2px 0 #C17710;margin-top:6px;}
+  .login-owner{font-size:17.5px;color:var(--text-dim);margin-top:5px;}
   .login-zone{padding:26px 24px 0;}
-  .login-note{font-size:12px;color:var(--text-faint);text-align:center;margin-top:14px;}
+  .login-note{font-size:13.5px;color:var(--text-faint);text-align:center;margin-top:14px;}
   .login-switch{
-    display:block;text-align:center;margin-top:18px;font-size:13.5px;color:var(--text-faint);
+    display:block;text-align:center;margin-top:18px;font-size:15px;color:var(--text-faint);
     text-decoration:underline;cursor:pointer;background:none;border:none;
   }
 </style>
@@ -607,9 +615,9 @@
               </div>
             </div>
             <div class="tabs" style="display:flex;gap:8px;padding:0 16px 12px;">
-              <div class="tab" data-tab="disponiveis" onclick="switchContratoTab('disponiveis')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:14px;font-weight:800;background:var(--amber-1);color:var(--bg-1);cursor:pointer;">Disponíveis</div>
-              <div class="tab" data-tab="andamento" onclick="switchContratoTab('andamento')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:14px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Em andamento</div>
-              <div class="tab" data-tab="concluidos" onclick="switchContratoTab('concluidos')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:14px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Concluídos</div>
+              <div class="tab" data-tab="disponiveis" onclick="switchContratoTab('disponiveis')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:var(--amber-1);color:var(--bg-1);cursor:pointer;">Disponíveis</div>
+              <div class="tab" data-tab="andamento" onclick="switchContratoTab('andamento')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Em andamento</div>
+              <div class="tab" data-tab="concluidos" onclick="switchContratoTab('concluidos')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Concluídos</div>
             </div>
             <div id="tabContentDisponiveis">
               <div class="section-label">Disponíveis</div>
@@ -693,7 +701,7 @@
             <div class="finance-panel" style="grid-template-columns:1fr;">
               <div class="fin-col"><div class="fin-label">Total pago (todos os contratos)</div><div class="fin-value" style="color:#B03A2E;" id="finCustosAdmin">R$ 0</div></div>
             </div>
-            <div style="padding:10px 16px 0;color:var(--text-faint);font-size:13px;">Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou.</div>
+            <div style="padding:10px 16px 0;color:var(--text-faint);font-size:14.5px;" id="financasCustosAdminExplicacao">Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou.</div>
             <div style="padding:10px 16px 0;" id="financasCustosAdminList"></div>
 
             <div class="section-label" id="financasDespesasSection">💸 Despesas (manutenção)</div>
@@ -714,7 +722,7 @@
               <div class="fin-col"><div class="fin-label">Pagos (total)</div><div class="fin-value" style="color:#6B5530;" id="finImpostosPagos">R$ 0</div></div>
             </div>
             <div style="padding:10px 16px 0;">
-              <button onclick="openRegimeTributario()" style="width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--text-dim);font-weight:800;font-size:14px;border-radius:11px;padding:9px 0;">🧾 Ver Regime Tributário</button>
+              <button onclick="openRegimeTributario()" style="width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--text-dim);font-weight:800;font-size:15.5px;border-radius:11px;padding:9px 0;">🧾 Ver Regime Tributário</button>
             </div>
 
             <div class="section-label">📜 Histórico de decisões</div>
@@ -830,6 +838,12 @@
       </div>
     </div>
 
+    <div class="obra-overlay" id="obraOverlay">
+      <div class="topbar"><button class="tb-back" onclick="fecharObra()">←</button><div class="tb-spacer"></div></div>
+      <div id="obraVideoWrap"></div>
+      <div class="screen-scroll" id="obraDashboard"></div>
+    </div>
+
     <div class="compra-overlay" id="compraOverlay">
       <div class="compra-flash" id="compraFlash"></div>
       <div class="confete-container" id="confeteContainer"></div>
@@ -901,14 +915,26 @@ function calcularCustosOperacionais(valor){
    contrato, são um valor fixo por dia — a empresa gasta isso pra existir, contrato rendendo muito
    ou pouco. Cobrado pelos dias que o contrato levou pra ser executado (diasDecorridos), que é a
    melhor aproximação de "tempo passando" que o protótipo tem hoje (não existe um relógio global). */
+/* ===================== FASE 3 — CUSTO ADMINISTRATIVO ESCALA COM O TAMANHO DA FROTA =====================
+   Antes, o custo fixo diário era sempre o mesmo, não importa se a empresa tinha 1 ou 10 máquinas —
+   não fazia sentido: mais máquina significa mais logística, mais gente pra coordenar, sede maior.
+   Agora cada máquina extra na frota soma um valor por dia aos 3 componentes administrativos,
+   proporcionalmente — "Expansão → maior custo fixo", fechando mais um elo do ciclo. */
 const CUSTOS_ADMINISTRATIVOS_COMPONENTES = [
   { label:"Aluguel da sede",             icon:"🏢", valorDia:400 },
   { label:"Equipe administrativa",       icon:"🧑‍💼", valorDia:350 },
   { label:"Pró-labore dos sócios",       icon:"💼", valorDia:500 }
 ];
-const CUSTO_ADMINISTRATIVO_DIARIO = CUSTOS_ADMINISTRATIVOS_COMPONENTES.reduce((s,c)=>s+c.valorDia,0); // R$1.250/dia — derivado, não duplicado
+const CUSTO_ADMINISTRATIVO_DIARIO_BASE = CUSTOS_ADMINISTRATIVOS_COMPONENTES.reduce((s,c)=>s+c.valorDia,0); // R$1.250/dia com 1 máquina
+const CUSTO_ADICIONAL_POR_MAQUINA_DIA = 150; // cada máquina extra na frota soma isso ao custo fixo diário
+
+function custoAdministrativoDiarioAtual(){
+  const numMaquinas = Math.max(1, Object.keys(MACHINES).length);
+  return CUSTO_ADMINISTRATIVO_DIARIO_BASE + (numMaquinas - 1) * CUSTO_ADICIONAL_POR_MAQUINA_DIA;
+}
 function calcularCustosAdministrativos(dias){
-  const itens = CUSTOS_ADMINISTRATIVOS_COMPONENTES.map(c => ({ label:c.label, icon:c.icon, valor:c.valorDia*dias }));
+  const fatorEscala = custoAdministrativoDiarioAtual() / CUSTO_ADMINISTRATIVO_DIARIO_BASE;
+  const itens = CUSTOS_ADMINISTRATIVOS_COMPONENTES.map(c => ({ label:c.label, icon:c.icon, valor: Math.round(c.valorDia*fatorEscala*dias) }));
   return { total: itens.reduce((s,i)=>s+i.valor,0), itens };
 }
 
@@ -945,8 +971,12 @@ function calcularExposicao(contractKey, seguroTipo){
   const tier = RISK_TIERS[c.risk];
   const seguro = SEGURO_OPTIONS[seguroTipo] || SEGURO_OPTIONS.nenhum;
 
-  const machineKeys = c.requiredMachineKeys || [];
-  const machines = machineKeys.map(k => MACHINES[k]).filter(Boolean);
+  const requisitos = c.requiredMachineKeys || [];
+  const machines = [];
+  requisitos.forEach(req => {
+    const doTipo = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).sort((a,b) => b.health - a.health);
+    for(let i=0; i<req.qtd && i<doTipo.length; i++) machines.push(doTipo[i]);
+  });
   const avgHealth = machines.length ? machines.reduce((s,m)=>s+m.health,0)/machines.length : 100;
   const manutBonus = avgHealth >= 80 ? -0.035 : (avgHealth < 50 ? 0.035 : 0);
 
@@ -1019,17 +1049,17 @@ function renderMissoes(){
     const pct = Math.min(100, Math.round(m.progresso/m.meta*100));
     const isDesafio = m.tipo === 'desafio';
     return `<div style="background:${isDesafio?'linear-gradient(135deg,rgba(255,93,122,.1),rgba(255,255,255,.02))':'var(--surface)'};border:1.5px solid ${isDesafio?'rgba(255,93,122,.4)':'var(--surface-border)'};border-radius:14px;padding:11px 12px;margin-bottom:9px;">
-      <div style="font-size:13px;font-weight:800;color:${isDesafio?'var(--danger)':'var(--text)'};">${m.titulo}</div>
-      <div style="font-size:11px;color:var(--text-faint);margin-top:3px;">${m.desc}</div>
+      <div style="font-size:14.5px;font-weight:800;color:${isDesafio?'var(--danger)':'var(--text)'};">${m.titulo}</div>
+      <div style="font-size:12.5px;color:var(--text-faint);margin-top:3px;">${m.desc}</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
         <div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;">
           <div style="height:100%;width:${pct}%;background:${isDesafio?'var(--danger)':'var(--amber-1)'};border-radius:4px;"></div>
         </div>
-        <span style="font-size:10.5px;font-weight:700;color:var(--text-dim);">${pct}%</span>
+        <span style="font-size:12px;font-weight:700;color:var(--text-dim);">${pct}%</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;">
-        <span style="font-size:11px;font-weight:700;color:var(--ok);">🎁 ${m.recompensaTexto}</span>
-        ${m.concluida && !m.resgatada ? `<button onclick="resgatarMissao('${m.id}')" style="background:var(--ok);color:var(--bg-1);border:none;border-radius:8px;padding:7px 13px;font-size:11px;font-weight:800;">Resgatar</button>` : m.resgatada ? '<span style="font-size:10.5px;color:var(--text-faint);">✅ Resgatada</span>' : ''}
+        <span style="font-size:12.5px;font-weight:700;color:var(--ok);">🎁 ${m.recompensaTexto}</span>
+        ${m.concluida && !m.resgatada ? `<button onclick="resgatarMissao('${m.id}')" style="background:var(--ok);color:var(--bg-1);border:none;border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:800;">Resgatar</button>` : m.resgatada ? '<span style="font-size:12px;color:var(--text-faint);">✅ Resgatada</span>' : ''}
       </div>
     </div>`;
   }).join('');
@@ -1061,15 +1091,15 @@ function renderTierBanner(){
   el.style.background = `linear-gradient(135deg, ${tier.cor}22, rgba(255,255,255,.02))`;
   el.style.border = `1.5px solid ${tier.cor}66`;
   el.innerHTML = `
-    <div style="font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${tier.cor};">Objetivo principal</div>
+    <div style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${tier.cor};">Objetivo principal</div>
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;">
-      <div style="font-size:16px;font-weight:800;">🏆 ${tier.nome}</div>
-      <div style="font-size:11px;font-weight:700;color:var(--text-faint);">contratos valem ${tier.multiplicador>1?'+':''}${Math.round((tier.multiplicador-1)*100)||0}%</div>
+      <div style="font-size:18px;font-weight:800;">🏆 ${tier.nome}</div>
+      <div style="font-size:12.5px;font-weight:700;color:var(--text-faint);">contratos valem ${tier.multiplicador>1?'+':''}${Math.round((tier.multiplicador-1)*100)||0}%</div>
     </div>
     <div style="height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:9px;">
       <div style="height:100%;width:${pctNoTier}%;background:${tier.cor};border-radius:4px;"></div>
     </div>
-    <div style="font-size:10.5px;color:var(--text-faint);margin-top:7px;line-height:1.5;">
+    <div style="font-size:12px;color:var(--text-faint);margin-top:7px;line-height:1.5;">
       ${proximo
         ? `Faça obras dentro do prazo pra subir de nível — faltam <b style="color:${tier.cor};">${proximo.min - reputacao} pontos</b> de reputação pra virar <b>${proximo.nome}</b> (contratos ${Math.round((proximo.multiplicador-1)*100)}% mais valiosos).`
         : `Você chegou ao topo — <b style="color:${tier.cor};">Referência no mercado</b>. Contratos regenerados agora valem o máximo possível.`}
@@ -1082,16 +1112,17 @@ function renderHubExtras(){
   const histEl = document.getElementById('hubHistorico');
   if(!histEl) return;
   histEl.innerHTML = historico.length === 0
-    ? '<div style="font-size:14px;color:var(--text-faint);padding:6px 2px;">Nenhuma decisão registrada ainda.</div>'
+    ? '<div style="font-size:15.5px;color:var(--text-faint);padding:6px 2px;">Nenhuma decisão registrada ainda.</div>'
     : historico.slice(0,6).map(h => `
       <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:9px 11px;margin-bottom:7px;">
-        <div style="font-size:14px;font-weight:800;">${h.icon} ${h.titulo}</div>
-        <div style="font-size:12px;color:var(--text-faint);margin-top:2px;">${h.detalhe}</div>
+        <div style="font-size:15.5px;font-weight:800;">${h.icon} ${h.titulo}</div>
+        <div style="font-size:13.5px;color:var(--text-faint);margin-top:2px;">${h.detalhe}</div>
       </div>`).join('');
 }
 
 const MACHINES = {
   retro: {
+    tipoKey:"retro", idadeDias:640, diasDesdeUltimaManutencao:80,
     name: "Retroescavadeira NH B110B", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
     photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=500&fit=crop&w=800",
     thumb:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200",
@@ -1102,6 +1133,7 @@ const MACHINES = {
     inContract:true, task:"Parada — aguardando manutenção", location:"Base — Campinas, SP"
   },
   trator: {
+    tipoKey:"trator", idadeDias:310, diasDesdeUltimaManutencao:20,
     name: "Trator de Esteira D6T", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
     photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
     thumb:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
@@ -1112,6 +1144,7 @@ const MACHINES = {
     inContract:true, task:"Em operação — Aterro Sanitário Leste", location:"Suzano, SP"
   },
   escavadeira: {
+    tipoKey:"escavadeira", idadeDias:45, diasDesdeUltimaManutencao:10,
     name: "Escavadeira Hidráulica CAT 320D", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
     photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop",
@@ -1122,6 +1155,7 @@ const MACHINES = {
     inContract:false, task:"Disponível para novo contrato", location:"Base — Campinas, SP"
   },
   caminhao: {
+    tipoKey:"caminhao", idadeDias:95, diasDesdeUltimaManutencao:15,
     name: "Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
     photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop",
@@ -1132,6 +1166,7 @@ const MACHINES = {
     inContract:false, task:"Disponível para novo contrato", location:"Base — Campinas, SP"
   },
   pa: {
+    tipoKey:"pa", idadeDias:380, diasDesdeUltimaManutencao:50,
     name: "Pá Carregadeira WA200", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
     photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=70&w=200&auto=format&fit=crop",
@@ -1141,6 +1176,18 @@ const MACHINES = {
     alt:{price:1900, downtime:"2 dias", impact:0, contract:null},
     inContract:false, task:"Em pátio — revisão recomendada", location:"Base — Campinas, SP"
   }
+};
+
+/* ===================== VÍDEOS "TIPO GIF" DA OBRA — só entra vídeo que bate com a cena de verdade =====================
+   Cada vídeo precisa mostrar exatamente o tipo de trabalho daquele contrato. Contratos sem vídeo
+   confirmado aqui mostram só o dashboard, sem forçar uma cena que não corresponde à obra real. */
+const VIDEO_POR_CONTRATO = {
+  desmatamento: {
+    url: "video-desmatamento.mp4",
+    poster: "https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=400&fit=crop&w=400"
+  }
+  // aterro, estrada, pedra, loteamento: ainda sem vídeo que combine de verdade com a cena —
+  // pendente de geração/busca melhor, não forçamos vídeo genérico só pra preencher.
 };
 
 const CONTRACTS = {
@@ -1153,7 +1200,7 @@ const CONTRACTS = {
     prazo:"10 dias", prazoDias:10, km:"48 km",
     riskDesc:"Terreno com histórico de chuvas na região. Pode haver atrasos por condições climáticas.",
     penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
-    hasMachine:true, missing:"", requiredMachineKeys:["escavadeira","caminhao"], state:"DISPONIVEL"
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], state:"DISPONIVEL"
   },
   estrada: {
     name:"Abertura de Estrada", value:180000, company:"Prefeitura de Itupeva", location:"Itupeva, SP",
@@ -1164,7 +1211,7 @@ const CONTRACTS = {
     prazo:"14 dias", prazoDias:14, km:"22 km",
     riskDesc:"Terreno plano, acesso pavimentado e histórico estável na região.",
     penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
-    hasMachine:false, missing:"Motoniveladora (nenhuma na sua frota)", requiredMachineKeys:["motoniveladora"], state:"DISPONIVEL"
+    hasMachine:false, missing:"Motoniveladora (nenhuma na sua frota)", requiredMachineKeys:[{tipo:"motoniveladora",qtd:1}], state:"DISPONIVEL"
   },
   pedra: {
     name:"Extração de Pedra", value:525000, company:"Mineração Forte", location:"Mairinque, SP",
@@ -1175,7 +1222,7 @@ const CONTRACTS = {
     prazo:"21 dias", prazoDias:21, km:"63 km",
     riskDesc:"Área de mineração ativa, terreno instável e exigências regulatórias.",
     penalty:"Atraso: 0,8%/dia · Cancelamento: 15% do valor total.", penaltyPctDia:0.008,
-    hasMachine:false, missing:"Escavadeira 30t ou maior", requiredMachineKeys:[], state:"DISPONIVEL"
+    hasMachine:false, missing:"Escavadeira 30t ou maior", requiredMachineKeys:[{tipo:"escavadeira30",qtd:1}], state:"DISPONIVEL"
   },
   loteamento: {
     name:"Terraplenagem p/ Loteamento", value:210000, company:"Loteadora Nova Vida", location:"Sorocaba, SP",
@@ -1186,7 +1233,7 @@ const CONTRACTS = {
     prazo:"12 dias", prazoDias:12, km:"35 km",
     riskDesc:"Terreno recém-loteado com drenagem ainda não testada em chuva forte.",
     penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
-    hasMachine:true, missing:"", requiredMachineKeys:["trator"], state:"DISPONIVEL"
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"trator",qtd:1}], state:"DISPONIVEL"
   },
   desmatamento: {
     name:"Desmatamento Fazenda Boa Vista", value:95000, company:"Fazenda Boa Vista", location:"Itatiba, SP",
@@ -1197,7 +1244,7 @@ const CONTRACTS = {
     prazo:"15 dias", prazoDias:15, km:"18 km",
     riskDesc:"Área rural de baixa complexidade, sem histórico de intercorrências.",
     penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
-    hasMachine:true, missing:"", requiredMachineKeys:["retro"], state:"DISPONIVEL"
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"retro",qtd:1}], state:"DISPONIVEL"
   }
 };
 
@@ -1216,23 +1263,73 @@ const CIDADES_SP = [
 ];
 // Combinações alternativas de máquina por arquétipo — dá variedade sem quebrar a lógica de risco/valor
 const VARIANTES_MAQUINA = {
-  aterro:        [["escavadeira","caminhao"], ["trator","caminhao"], ["pa","caminhao"]],
-  estrada:       [["motoniveladora"]], // exige motoniveladora de verdade — compre uma na Loja pra liberar
-  pedra:         [[]], // sempre escavadeira 30t+ (fora de alcance) — mantém o gargalo proposital
-  loteamento:    [["trator"], ["pa"], ["escavadeira"]],
-  desmatamento:  [["retro"], ["trator"]]
+  // Cada variante agora é uma lista de {tipo, qtd} — algumas obras exigem mais de 1 unidade do mesmo tipo.
+  aterro:        [
+    [{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}],
+    [{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}],       // obra maior — 2 caminhões escoando material
+    [{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}]
+  ],
+  estrada:       [[{tipo:"motoniveladora",qtd:1}]], // exige motoniveladora de verdade — compre uma na Loja pra liberar
+  pedra:         [[{tipo:"escavadeira30",qtd:1}]],  // sempre escavadeira 30t+ (fora de alcance) — mantém o gargalo proposital
+  loteamento:    [
+    [{tipo:"trator",qtd:1}],
+    [{tipo:"pa",qtd:1}],
+    [{tipo:"escavadeira",qtd:1}],
+    [{tipo:"trator",qtd:2}]                                // loteamento grande — 2 tratores nivelando junto
+  ],
+  desmatamento:  [
+    [{tipo:"retro",qtd:1}],
+    [{tipo:"trator",qtd:1}],
+    [{tipo:"retro",qtd:2}]                                 // área maior de desmatamento — 2 retros
+  ]
 };
 const REQ_LABELS = {
-  escavadeira:"🚜 Escavadeira 20t ou maior", caminhao:"🚛 Caminhão basc. mín. 10m³",
-  trator:"🚜 Trator de Esteira", pa:"🚜 Pá Carregadeira", retro:"🚜 Retroescavadeira",
-  motoniveladora:"🚜 Motoniveladora"
+  escavadeira:"Escavadeira 20t ou maior", caminhao:"Caminhão basc. mín. 10m³",
+  trator:"Trator de Esteira", pa:"Pá Carregadeira", retro:"Retroescavadeira",
+  motoniveladora:"Motoniveladora", escavadeira30:"Escavadeira 30t ou maior"
+};
+const REQ_ICONS = {
+  escavadeira:"🚜", caminhao:"🚛", trator:"🚜", pa:"🚜", retro:"🚜", motoniveladora:"🚜", escavadeira30:"🚜"
 };
 
-function calcularHasMachine(machineKeys){
-  if(machineKeys.length === 0) return { ok:false, missing:"Máquina fora da sua frota atual" };
-  const faltando = machineKeys.filter(k => !MACHINES[k]);
-  if(faltando.length) return { ok:false, missing: REQ_LABELS[faltando[0]] || "Máquina não disponível" };
+// Checa se o jogador POSSUI (não necessariamente livre agora) máquinas suficientes de cada tipo exigido.
+function calcularHasMachine(requisitos){
+  if(!requisitos || requisitos.length === 0) return { ok:false, missing:"Máquina fora da sua frota atual" };
+  for(const req of requisitos){
+    const possuidas = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).length;
+    if(possuidas < req.qtd){
+      const label = REQ_LABELS[req.tipo] || "Máquina não disponível";
+      const falta = req.qtd - possuidas;
+      return { ok:false, missing: req.qtd > 1 ? `${label} — precisa de ${req.qtd}, você tem ${possuidas}` : label };
+    }
+  }
   return { ok:true, missing:"" };
+}
+
+// Checa se as máquinas exigidas estão LIVRES agora (não só na garagem) — usado na hora de aceitar de verdade.
+function maquinasDisponiveisAgora(requisitos){
+  for(const req of requisitos){
+    const livres = Object.entries(MACHINES).filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract).length;
+    if(livres < req.qtd){
+      const label = REQ_LABELS[req.tipo] || "máquina";
+      return { ok:false, motivo: `${label}: precisa de ${req.qtd} livre(s), só ${livres} disponível(is) agora (o resto já está em outro contrato).` };
+    }
+  }
+  return { ok:true, motivo:"" };
+}
+
+// Escolhe QUAIS instâncias específicas de máquina vão trabalhar nesse contrato, entre as livres.
+function selecionarMaquinasParaContrato(requisitos){
+  const escolhidas = [];
+  requisitos.forEach(req => {
+    const livres = Object.entries(MACHINES)
+      .filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract)
+      .sort((a,b) => b[1].health - a[1].health); // prioriza as mais saudáveis primeiro
+    for(let i=0; i<req.qtd && i<livres.length; i++){
+      escolhidas.push(livres[i][0]);
+    }
+  });
+  return escolhidas;
 }
 
 /* ===================== NÍVEIS DE REPUTAÇÃO — a dinâmica central do jogo =====================
@@ -1268,8 +1365,11 @@ function regenerarContrato(key){
   c.requiredMachineKeys = novaVariante;
   c.hasMachine = ok;
   c.missing = missing;
-  c.req = [...novaVariante.map(k => REQ_LABELS[k] || k), "👷 Operador habilitado"];
-  if(novaVariante.length === 0) c.req = ["🚜 " + (key==='estrada' ? "Motoniveladora" : "Escavadeira 30t+"), "👷 Operador habilitado"];
+  c.req = [...novaVariante.map(req => {
+    const label = REQ_LABELS[req.tipo] || req.tipo;
+    const icone = REQ_ICONS[req.tipo] || "🚜";
+    return req.qtd > 1 ? `${icone} ${label} — 2 unidades` : `${icone} ${label}`;
+  }), "👷 Operador habilitado"];
   c.state = 'DISPONIVEL';
   c.accepted = false;
   c.isNovo = true;
@@ -1364,6 +1464,188 @@ const MARKET_BASE_PRICES = {
   motoniveladora: 280000, // Motoniveladora — grande, alta precisão
   trator:         340000  // Trator de Esteira — maior porte, mais potência
 };
+
+/* ===================== CICLO DE VIDA DA MÁQUINA (Fase 2) =====================
+   Idade -> Uso -> Desgaste -> Manutenção -> Condição -> Valor de mercado -> Decisão do jogador
+   (Manter / Reformar / Vender). Deliberadamente simples: só dois números por trás de tudo —
+   IDADE (dias desde a compra) e CONDIÇÃO (o `health` que já existe, 0-100) — sem desgaste
+   separado de motor/transmissão/pneu/hidráulico. O jogador só precisa sentir uma pergunta:
+   "essa máquina está velha, quanto vale, será que já é hora de trocar?" */
+const DEPRECIACAO_POR_DIA_PCT = 0.0007; // ~2%/mês de depreciação por idade
+const DEPRECIACAO_PISO_PCT = 0.30;      // nunca cai abaixo de 30% do preço de mercado (sempre tem valor de sucata/revenda)
+const DESGASTE_USO_MIN_POR_DIA = 0.3;   // condição cai entre 0,3 e 0,8 ponto por dia trabalhado
+const DESGASTE_USO_MAX_POR_DIA = 0.8;
+const DIAS_GRACA_MANUTENCAO_BASICA = 45; // dentro desse prazo desde a última manutenção, máquina parada não perde condição
+const DESGASTE_PARADA_MIN_POR_DIA = 0.05; // bem mais lento que o desgaste de uso — negligência, não trabalho
+const DESGASTE_PARADA_MAX_POR_DIA = 0.12;
+const VENDA_DESAGIO_PCT = 0.90;         // vender rápido não pega o valor cheio de mercado — negociação realista
+
+function valorMercadoAtual(machineKey){
+  const m = MACHINES[machineKey];
+  if(!m) return 0;
+  const precoBase = MARKET_BASE_PRICES[m.tipoKey] || 150000;
+  const fatorIdade = Math.max(DEPRECIACAO_PISO_PCT, 1 - (m.idadeDias||0) * DEPRECIACAO_POR_DIA_PCT);
+  const fatorCondicao = 0.5 + 0.5 * (m.health/100); // condição pesa até 50% do valor — nunca zera sozinha
+  return Math.round(precoBase * fatorIdade * fatorCondicao / 500) * 500;
+}
+
+/* ===================== FASE 3 — PATRIMÔNIO COMO VALOR DERIVADO, NÃO ACUMULADO =====================
+   Antes, patrimônio só somava em pontos soltos (compra, bônus de contrato) e nunca refletia a
+   depreciação real das máquinas — dois "patrimônios" diferentes coexistiam sem se falar. Agora
+   patrimônio é sempre recalculado a partir do valor de mercado de verdade da frota inteira —
+   uma única fonte, sempre atualizada, sem precisar lembrar de ajustar em cada evento novo. */
+function recalcularPatrimonio(){
+  const valorMaquinas = Object.keys(MACHINES).reduce((soma, k) => soma + valorMercadoAtual(k), 0);
+  const dividaFinanciamentos = financiamentosAtivos.reduce((soma, f) => soma + f.parcela*f.parcelasRestantes, 0);
+  playerPatrimonio = Math.max(0, valorMaquinas - dividaFinanciamentos);
+  return playerPatrimonio;
+}
+
+function atualizarStatusMaquina(m){
+  if(m.health >= 70){ m.status='green'; m.statusLabel='🟢 OK'; }
+  else if(m.health >= 40){ m.status='amber'; m.statusLabel='🟡 Atenção'; }
+  else { m.status='red'; m.statusLabel='🔴 Crítico'; }
+}
+
+// Libera de volta pro pátio as máquinas que estavam num contrato que acabou de concluir ou ser perdido.
+function liberarMaquinas(machineKeys){
+  (machineKeys||[]).forEach(k => {
+    const m = MACHINES[k];
+    if(!m) return;
+    m.inContract = false;
+    m.task = 'Disponível para novo contrato';
+    m.location = 'Base — Campinas, SP';
+  });
+}
+
+/* ===================== REALOCAÇÃO DE MÁQUINA ENTRE CONTRATOS =====================
+   O dono pode puxar uma máquina de um contrato ativo pra reforçar outro — assumindo o
+   atraso que isso pode causar na origem, e pagando o custo de mobilização/desmobilização
+   pra levar a máquina até o novo canteiro. Só compensa se o destino comportar mais de
+   uma unidade daquele tipo (senão a máquina extra não acelera nada). */
+const CUSTO_MOBILIZACAO_PCT = 0.025; // 2,5% do valor de mercado da máquina, ida + volta
+
+function calcularFatorProdutividade(ac, catalog){
+  const maquinasAtivas = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
+  const avgHealth = maquinasAtivas.length ? maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length : 0;
+  const fatorSaude = 0.6 + 0.4 * (avgHealth/100);
+
+  const qtdMinima = (catalog.requiredMachineKeys||[]).reduce((s,r)=>s+r.qtd, 0) || 1;
+  const qtdAtual = ac.machineKeys.length;
+  // Menos máquina que o exigido = obra capenga (piso 15%, nunca trava 100%). Mais que o exigido = reforço, com teto.
+  const fatorQuantidade = Math.max(0.15, Math.min(1.5, qtdAtual/qtdMinima));
+
+  return fatorSaude * fatorQuantidade;
+}
+
+function opcoesDeRealocacao(origemIdx){
+  const origem = acceptedContracts[origemIdx];
+  if(!origem) return [];
+  const opcoes = [];
+  origem.machineKeys.forEach(machineKey => {
+    const tipo = MACHINES[machineKey]?.tipoKey;
+    if(!tipo) return;
+    acceptedContracts.forEach((destino, destinoIdx) => {
+      if(destinoIdx === origemIdx) return;
+      const catalogDestino = CONTRACTS[destino.key];
+      const precisaDesseTipo = (catalogDestino.requiredMachineKeys||[]).some(r => r.tipo === tipo);
+      if(precisaDesseTipo){
+        opcoes.push({ machineKey, origemIdx, destinoIdx, nomeMaquina: MACHINES[machineKey].name, nomeDestino: destino.name });
+      }
+    });
+  });
+  return opcoes;
+}
+
+function realocarMaquina(machineKey, origemIdx, destinoIdx){
+  const origem = acceptedContracts[origemIdx];
+  const destino = acceptedContracts[destinoIdx];
+  if(!origem || !destino || !origem.machineKeys.includes(machineKey)) return;
+
+  const custoMobilizacao = Math.round(valorMercadoAtual(machineKey) * CUSTO_MOBILIZACAO_PCT);
+  if(playerCash < custoMobilizacao){
+    showToast('🔒 Caixa insuficiente para o custo de mobilização.');
+    return;
+  }
+  playerCash -= custoMobilizacao;
+  origem.machineKeys = origem.machineKeys.filter(k => k !== machineKey);
+  destino.machineKeys.push(machineKey);
+  registrarHistorico('🔀', 'Máquina realocada', `${MACHINES[machineKey].name}: "${origem.name}" → "${destino.name}" · mobilização ${fmt(custoMobilizacao)}`);
+  updateFinanceDisplays();
+  renderContratosAndamento();
+  closeResultModal();
+  showResultModal('🔀', 'Máquina realocada', `${MACHINES[machineKey].name} agora reforça "${destino.name}".\n\nCusto de mobilização: ${fmt(custoMobilizacao)}\n\n"${origem.name}" vai render mais devagar até você repor uma máquina lá ou concluir antes.`);
+}
+
+function abrirRealocacao(origemIdx){
+  const opcoes = opcoesDeRealocacao(origemIdx);
+  if(opcoes.length === 0){
+    showResultModal('🔀', 'Nenhum destino disponível', 'Não há outro contrato em andamento que aproveite alguma das máquinas desse contrato agora.');
+    return;
+  }
+  const lista = opcoes.map((o,i) =>
+    `<div onclick="realocarMaquina('${o.machineKey}',${o.origemIdx},${o.destinoIdx})" style="text-align:left;background:var(--surface);border:1.5px solid var(--surface-border);border-radius:10px;padding:10px 12px;margin-top:8px;cursor:pointer;">
+      <b>${o.nomeMaquina}</b><br><span style="font-size:12px;color:var(--text-faint);">enviar para "${o.nomeDestino}" — custo ${fmt(Math.round(valorMercadoAtual(o.machineKey)*CUSTO_MOBILIZACAO_PCT))}</span>
+    </div>`
+  ).join('');
+  document.getElementById('resultModalIcon').textContent = '🔀';
+  document.getElementById('resultModalTitle').textContent = 'Realocar máquina';
+  document.getElementById('resultModalText').innerHTML = `Escolha o que enviar e para onde:${lista}`;
+  document.querySelector('.result-modal-box').classList.remove('success');
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+
+// Agrupa "Caminhão + Caminhão" em "2x Caminhão" pra lista de máquinas de um contrato não ficar redundante.
+function resumoMaquinas(machineKeys){
+  const contagem = {};
+  (machineKeys||[]).forEach(k => {
+    const nome = MACHINES[k]?.name.split(' ')[0] || '?';
+    contagem[nome] = (contagem[nome]||0) + 1;
+  });
+  const partes = Object.entries(contagem).map(([nome,qtd]) => qtd > 1 ? `${qtd}x ${nome}` : nome);
+  return partes.join(' + ') || 'Sem máquina vinculada';
+}
+
+// Chamado toda vez que dias passam no relógio global — envelhece a frota inteira,
+// e desgasta (reduz condição) só as máquinas que estão trabalhando de verdade.
+function envelhecerFrota(diasNovos){
+  Object.values(MACHINES).forEach(m => {
+    m.idadeDias = (m.idadeDias||0) + diasNovos;
+    m.diasDesdeUltimaManutencao = (m.diasDesdeUltimaManutencao||0) + diasNovos;
+    if(m.inContract){
+      const desgastePorDia = DESGASTE_USO_MIN_POR_DIA + Math.random()*(DESGASTE_USO_MAX_POR_DIA-DESGASTE_USO_MIN_POR_DIA);
+      m.health = Math.round(Math.max(0, m.health - desgastePorDia*diasNovos));
+      atualizarStatusMaquina(m);
+    } else if(m.diasDesdeUltimaManutencao > DIAS_GRACA_MANUTENCAO_BASICA){
+      // Parada, mas sem manutenção básica há tempo demais — desgasta bem mais devagar que uso ativo,
+      // mas desgasta: ferrugem, vedação ressecando, bateria descarregando, isso existe de verdade.
+      const desgasteParado = DESGASTE_PARADA_MIN_POR_DIA + Math.random()*(DESGASTE_PARADA_MAX_POR_DIA-DESGASTE_PARADA_MIN_POR_DIA);
+      m.health = Math.round(Math.max(0, m.health - desgasteParado*diasNovos));
+      atualizarStatusMaquina(m);
+    }
+  });
+}
+
+function venderMaquina(machineKey){
+  const m = MACHINES[machineKey];
+  if(!m) return;
+  if(m.inContract){
+    showToast('🔒 Não é possível vender uma máquina em contrato ativo.');
+    return;
+  }
+  const valorBase = valorMercadoAtual(machineKey);
+  const valorVenda = Math.round(valorBase * VENDA_DESAGIO_PCT);
+  playerCash += valorVenda;
+  registrarHistorico('💰', `Máquina vendida: ${m.name}`, `${fmt(valorVenda)} recebidos (valor de mercado ${fmt(valorBase)}, deságio de venda rápida de ${Math.round((1-VENDA_DESAGIO_PCT)*100)}%)`);
+  delete MACHINES[machineKey];
+  updateFinanceDisplays();
+  renderFinancas();
+  renderMaquinasList();
+  renderManutList();
+  recomputarDisponibilidadeContratos();
+  closeDetail('manutencao');
+  showResultModal('💰', 'Máquina vendida', `Você recebeu ${fmt(valorVenda)} pela venda.\n\nCaixa e patrimônio já foram atualizados.`);
+}
 
 const CATALOG = {
   escavadeira2: {
@@ -1574,6 +1856,7 @@ function calcularDiasOperacao(cash){
   return cash > 0 ? Math.max(3, Math.round(cash / 1200)) : 0;
 }
 function updateFinanceDisplays(){
+  recalcularPatrimonio(); // fonte única — sempre soma o valor de mercado real da frota antes de mostrar
   document.querySelectorAll('.js-cash').forEach(el => el.textContent = fmt(playerCash));
   document.querySelectorAll('.js-patrimonio').forEach(el => el.textContent = fmt(playerPatrimonio));
   document.querySelectorAll('.js-poder').forEach(el => el.textContent = fmt(Math.round(playerCash * 3)));
@@ -1611,7 +1894,15 @@ function confirmStartMachine(){
   if(!selectedStartMachine) return;
   const econ = START_MACHINE_ECONOMICS[selectedStartMachine];
   playerCash = econ.cashAfter;
-  playerPatrimonio = econ.patrimonio;
+  // ACHADO DA FASE 3: antes, as 5 máquinas iniciais ficavam todas na frota, não importa qual o
+  // jogador escolhesse aqui — a "escolha" nunca tinha efeito real. Agora remove de verdade as
+  // que não foram escolhidas, e o patrimônio é recalculado a partir da máquina que sobrou.
+  Object.keys(MACHINES).forEach(k => { if(k !== selectedStartMachine) delete MACHINES[k]; });
+  // A máquina que sobrou começa livre de verdade — sem contrato fictício vinculado do texto de mockup original.
+  MACHINES[selectedStartMachine].inContract = false;
+  MACHINES[selectedStartMachine].task = 'Disponível para novo contrato';
+  MACHINES[selectedStartMachine].location = 'Base — Campinas, SP';
+  recalcularPatrimonio();
   historicoCaixa = [{ label:'Início', valor: playerCash }];
   updateFinanceDisplays();
   showToast('✅ Máquina adquirida! Bem-vindo ao seu império.');
@@ -1734,7 +2025,7 @@ function renderContratosList(){
   el.innerHTML = available.map(key => {
     const c = CONTRACTS[key];
     return `<div class="cat-card card-accent-amber" onclick="openContractDetail('${key}')" style="position:relative;">
-      ${c.isNovo ? '<span style="position:absolute;top:-8px;right:10px;background:linear-gradient(160deg,var(--ok),#1FB8A8);color:var(--bg-1);font-size:9px;font-weight:800;padding:3px 9px;border-radius:8px;box-shadow:2px 2px 0 rgba(0,0,0,.25);">🆕 Novo</span>' : ''}
+      ${c.isNovo ? '<span style="position:absolute;top:-8px;right:10px;background:linear-gradient(160deg,var(--ok),#1FB8A8);color:var(--bg-1);font-size:12px;font-weight:800;padding:3px 9px;border-radius:8px;box-shadow:2px 2px 0 rgba(0,0,0,.25);">🆕 Novo</span>' : ''}
       <div class="cat-photo" style="background-image:url('${c.photo}');"></div>
       <div class="cat-body">
         <div style="display:flex;justify-content:space-between;"><div class="cat-name">${c.name}</div><div class="cat-value">${fmt(c.value)}</div></div>
@@ -1781,8 +2072,8 @@ function renderContractRiskBlock(){
         ${['nenhum','basica','completa'].map(tipo => {
           const opt = SEGURO_OPTIONS[tipo];
           const active = selectedSeguro === tipo;
-          return `<div onclick="selectSeguro('${tipo}')" style="flex:1;text-align:center;padding:8px 4px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:800;background:${active?'rgba(255,194,75,.12)':'rgba(255,255,255,.04)'};border:2px solid ${active?'var(--amber-1)':'rgba(255,255,255,.08)'};color:${active?'var(--amber-1)':'var(--text-faint)'};">
-            ${opt.label}<div style="font-size:11.5px;font-weight:700;margin-top:3px;color:${active?'var(--ok)':'var(--text-faint)'};">${opt.custoPct===0?'Grátis':fmt(Math.round(c.value*opt.custoPct))}</div>
+          return `<div onclick="selectSeguro('${tipo}')" style="flex:1;text-align:center;padding:8px 4px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:800;background:${active?'rgba(255,194,75,.12)':'rgba(255,255,255,.04)'};border:2px solid ${active?'var(--amber-1)':'rgba(255,255,255,.08)'};color:${active?'var(--amber-1)':'var(--text-faint)'};">
+            ${opt.label}<div style="font-size:13px;font-weight:700;margin-top:3px;color:${active?'var(--ok)':'var(--text-faint)'};">${opt.custoPct===0?'Grátis':fmt(Math.round(c.value*opt.custoPct))}</div>
           </div>`;
         }).join('')}
       </div>
@@ -1792,12 +2083,12 @@ function renderContractRiskBlock(){
       <div class="box-title">💰 Receita, custos e margem</div>
       <div class="plan-row"><span class="plan-label">Receita do contrato</span><span class="plan-value" style="color:var(--ok);">${fmt(c.value)}</span></div>
       <div style="padding:4px 0 4px 4px;border-left:2px solid rgba(255,93,122,.25);margin:2px 0 2px 2px;">
-        ${custos.itens.map(i => `<div class="plan-row" style="padding:4px 0;"><span class="plan-label">${i.icon} ${i.label}</span><span class="plan-value" style="color:var(--danger);font-size:14px;">-${fmt(i.valor)}</span></div>`).join('')}
+        ${custos.itens.map(i => `<div class="plan-row" style="padding:4px 0;"><span class="plan-label">${i.icon} ${i.label}</span><span class="plan-value" style="color:var(--danger);font-size:15.5px;">-${fmt(i.valor)}</span></div>`).join('')}
       </div>
       <div class="plan-row"><span class="plan-label" style="font-weight:700;">Custos operacionais previstos</span><span class="plan-value" style="color:var(--danger);">-${fmt(custos.total)}</span></div>
       <div class="plan-row"><span class="plan-label">Custo do seguro</span><span class="plan-value" style="color:var(--danger);">-${fmt(exp.custoSeguro)}</span></div>
-      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:800;">Margem prevista</span><span class="plan-value" style="color:${margem>=0?'var(--ok)':'var(--danger)'};font-size:16.5px;">${fmt(margem)}</span></div>
-      <div class="box-text" style="margin-top:6px;color:var(--text-faint);font-size:12px;">Despesas de manutenção vinculadas entram à parte, conforme forem pagas — acompanhe no painel "Em andamento".</div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:800;">Margem prevista</span><span class="plan-value" style="color:${margem>=0?'var(--ok)':'var(--danger)'};font-size:18.5px;">${fmt(margem)}</span></div>
+      <div class="box-text" style="margin-top:6px;color:var(--text-faint);font-size:13.5px;">Despesas de manutenção vinculadas entram à parte, conforme forem pagas — acompanhe no painel "Em andamento".</div>
     </div>
   `;
 }
@@ -1812,6 +2103,11 @@ function acceptContract(){
     showToast('🔒 Você precisa da máquina exigida antes de aceitar.');
     return;
   }
+  const disponibilidade = maquinasDisponiveisAgora(c.requiredMachineKeys);
+  if(!disponibilidade.ok){
+    showResultModal('🔒', 'Máquina ocupada', disponibilidade.motivo);
+    return;
+  }
   const exp = calcularExposicao(currentContractKey, selectedSeguro);
   if(playerCash < exp.custoSeguro){
     showToast('🔒 Caixa insuficiente para pagar o seguro escolhido.');
@@ -1820,13 +2116,20 @@ function acceptContract(){
   playerCash -= exp.custoSeguro;
   updateFinanceDisplays();
 
+  const maquinasEscolhidas = selecionarMaquinasParaContrato(c.requiredMachineKeys);
+  maquinasEscolhidas.forEach(k => {
+    MACHINES[k].inContract = true;
+    MACHINES[k].task = `🚧 Em operação — ${c.name}`;
+  });
+
   c.state = 'EM_ANDAMENTO'; c.accepted = true;
   acceptedContracts.push({
     key: currentContractKey, name: c.name, value: c.value, prazo: c.prazo, prazoDias: c.prazoDias,
-    diasDecorridos: 0, progress: 0, machineKeys: c.requiredMachineKeys,
+    diasDecorridos: 0, progress: 0, machineKeys: maquinasEscolhidas,
     seguro: selectedSeguro, custoSeguroPago: exp.custoSeguro, custoRiscoAdministrado: 0, custoAtraso: 0, state: 'EM_ANDAMENTO', eventoAtivo: null
   });
   registrarHistorico('🔵', `Contrato aceito: ${c.name}`, selectedSeguro !== 'nenhum' ? `${SEGURO_OPTIONS[selectedSeguro].label} contratada por ${fmt(exp.custoSeguro)}` : 'Sem seguro contratado');
+  renderMaquinasList(); renderManutList();
   renderContratosList();
   renderContratosAndamento();
   renderFinancas();
@@ -1864,39 +2167,102 @@ const ESTADO_VISUAL = {
 function renderContratosAndamento(){
   const el = document.getElementById('contratosAndamentoList');
   if(acceptedContracts.length === 0){
-    el.innerHTML = '<div style="font-size:14px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato em andamento. Aceite um contrato na aba Disponíveis.</div>';
+    el.innerHTML = '<div style="font-size:15.5px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato em andamento. Aceite um contrato na aba Disponíveis.</div>';
     return;
   }
   el.innerHTML = acceptedContracts.map((ac, idx) => {
+    const catalog = CONTRACTS[ac.key];
     const desp = despesasDoContrato(ac.machineKeys);
     const custos = calcularCustosOperacionais(ac.value);
     const custosAdmin = calcularCustosAdministrativos(Math.max(1, ac.diasDecorridos)); // estimativa corrente, cresce a cada dia decorrido
     const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
     const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
     const btnLabel = ac.state === 'EM_RISCO' ? '⚠️ Resolver situação de risco' : '▶ Avançar 1 dia de obra';
+    const produtividadePct = Math.round(calcularFatorProdutividade(ac, catalog)*100);
     return `
     <div style="background:rgba(255,255,255,.03);border:1.5px solid ${ac.state==='EM_RISCO'?'rgba(255,138,61,.4)':ac.state==='ATRASADO'?'rgba(255,93,122,.4)':'rgba(255,194,75,.25)'};border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 ${ac.state==='EM_RISCO'?'rgba(255,138,61,.3)':ac.state==='ATRASADO'?'rgba(255,93,122,.3)':'rgba(255,194,75,.22)'};">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
-          <div style="font-size:16.5px;font-weight:800;">${ac.name}</div>
-          <div style="font-size:12px;color:${ev.color};font-weight:700;margin-top:2px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
-          <div style="font-size:11.5px;color:var(--text-faint);margin-top:3px;">🚜 ${ac.machineKeys.map(k => MACHINES[k]?.name.split(' ')[0]).join(' + ') || 'Sem máquina vinculada'} · 🛡️ ${SEGURO_OPTIONS[ac.seguro].label}</div>
-          ${ac.state === 'EM_RISCO' ? `<div style="font-size:12px;color:var(--amber-2);margin-top:5px;background:rgba(255,150,50,.1);border-radius:7px;padding:5px 7px;">⚠️ ${ac.eventoAtivo}</div>` : ''}
+          <div style="font-size:18.5px;font-weight:800;">${ac.name}</div>
+          <div style="font-size:13.5px;color:${ev.color};font-weight:700;margin-top:2px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
+          <div style="font-size:13px;color:var(--text-faint);margin-top:3px;">🚜 ${resumoMaquinas(ac.machineKeys)} · 🛡️ ${SEGURO_OPTIONS[ac.seguro].label}</div>
+          <div style="font-size:12px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};margin-top:2px;">⚙️ Produtividade da frota: ${produtividadePct}% ${produtividadePct<85?'— máquina desgastada rendendo menos por dia':''}</div>
+          ${ac.state === 'EM_RISCO' ? `<div style="font-size:13.5px;color:var(--amber-2);margin-top:5px;background:rgba(255,150,50,.1);border-radius:7px;padding:5px 7px;">⚠️ ${ac.eventoAtivo}</div>` : ''}
         </div>
-        <div style="font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,194,75,.15);color:var(--amber-1);white-space:nowrap;">${ac.progress}%</div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,194,75,.15);color:var(--amber-1);white-space:nowrap;">${ac.progress}%</div>
       </div>
       <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:9px;">
         <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:3px;"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07);">
-        <div><div style="font-size:11px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Receita</div><div style="font-size:13.5px;font-weight:800;color:var(--ok);margin-top:2px;">${fmt(ac.value)}</div></div>
-        <div><div style="font-size:11px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Custos+Despesas</div><div style="font-size:13.5px;font-weight:800;color:var(--danger);margin-top:2px;">${fmt(custos.total+custosAdmin.total+ac.custoSeguroPago+desp.total+ac.custoRiscoAdministrado+ac.custoAtraso)}</div></div>
-        <div><div style="font-size:11px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Margem prevista</div><div style="font-size:13.5px;font-weight:800;color:${lucro>=0?'var(--ok)':'var(--danger)'};margin-top:2px;">${fmt(lucro)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Receita</div><div style="font-size:15px;font-weight:800;color:var(--ok);margin-top:2px;">${fmt(ac.value)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Custos+Despesas</div><div style="font-size:15px;font-weight:800;color:var(--danger);margin-top:2px;">${fmt(custos.total+custosAdmin.total+ac.custoSeguroPago+desp.total+ac.custoRiscoAdministrado+ac.custoAtraso)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Margem prevista</div><div style="font-size:15px;font-weight:800;color:${lucro>=0?'var(--ok)':'var(--danger)'};margin-top:2px;">${fmt(lucro)}</div></div>
       </div>
-      <div style="font-size:11px;color:var(--text-faint);margin-top:7px;">${custos.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(custosAdmin.total)} administrativo${desp.total>0?` · 🔧 ${fmt(desp.total)} manutenção`:''}${ac.custoSeguroPago>0?` · 🛡️ ${fmt(ac.custoSeguroPago)} seguro`:''}${ac.custoRiscoAdministrado>0?` · ⚠️ ${fmt(ac.custoRiscoAdministrado)} risco administrado`:''}${ac.custoAtraso>0?` · 🔴 ${fmt(ac.custoAtraso)} multa de atraso`:''}</div>
-      <button onclick="avancarContrato(${idx})" style="width:100%;margin-top:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);color:var(--amber-1);font-weight:800;font-size:13.5px;border-radius:9px;padding:8px 0;">${btnLabel}</button>
+      <div style="font-size:12.5px;color:var(--text-faint);margin-top:7px;">${custos.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(custosAdmin.total)} administrativo${desp.total>0?` · 🔧 ${fmt(desp.total)} manutenção`:''}${ac.custoSeguroPago>0?` · 🛡️ ${fmt(ac.custoSeguroPago)} seguro`:''}${ac.custoRiscoAdministrado>0?` · ⚠️ ${fmt(ac.custoRiscoAdministrado)} risco administrado`:''}${ac.custoAtraso>0?` · 🔴 ${fmt(ac.custoAtraso)} multa de atraso`:''}</div>
+      <button onclick="avancarContrato(${idx})" style="width:100%;margin-top:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);color:var(--amber-1);font-weight:800;font-size:15px;border-radius:9px;padding:8px 0;">${btnLabel}</button>
+      <button onclick="abrirObra(${idx})" style="width:100%;margin-top:7px;background:rgba(51,224,160,.1);border:1px solid rgba(51,224,160,.3);color:var(--ok);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🎥 Ver obra</button>
+      ${acceptedContracts.length > 1 && ac.machineKeys.length > 0 ? `<button onclick="abrirRealocacao(${idx})" style="width:100%;margin-top:7px;background:rgba(90,168,255,.1);border:1px solid rgba(90,168,255,.3);color:var(--blue);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🔀 Realocar uma máquina daqui</button>` : ''}
     </div>`;
   }).join('');
+}
+
+function abrirObra(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac) return;
+  const catalog = CONTRACTS[ac.key];
+  const video = VIDEO_POR_CONTRATO[ac.key];
+  const videoWrap = document.getElementById('obraVideoWrap');
+
+  if(video){
+    videoWrap.innerHTML = `<div class="obra-video-wrap">
+      <video autoplay muted loop playsinline poster="${video.poster}">
+        <source src="${video.url}" type="video/mp4">
+      </video>
+      <div class="obra-video-label">${ac.name}</div>
+    </div>`;
+  } else {
+    videoWrap.innerHTML = `<div class="obra-sem-video">
+      <div style="font-size:32px;">🎬</div>
+      <div style="font-size:13px;color:var(--text-faint);text-align:center;padding:0 30px;">Vídeo específico dessa obra ainda não disponível — em produção.</div>
+    </div>`;
+  }
+
+  const desp = despesasDoContrato(ac.machineKeys);
+  const custos = calcularCustosOperacionais(ac.value);
+  const custosAdmin = calcularCustosAdministrativos(Math.max(1, ac.diasDecorridos));
+  const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
+  const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
+  const produtividadePct = Math.round(calcularFatorProdutividade(ac, catalog)*100);
+
+  document.getElementById('obraDashboard').innerHTML = `
+    <div style="padding:16px;">
+      <div style="font-size:20px;font-weight:800;">${ac.name}</div>
+      <div style="font-size:14px;color:${ev.color};font-weight:700;margin-top:3px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
+      <div style="height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:12px;">
+        <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:4px;"></div>
+      </div>
+      <div style="font-size:13px;color:var(--text-faint);margin-top:6px;">${Math.round(ac.progress)}% concluído</div>
+
+      <div class="info-box" style="margin-top:16px;margin-left:0;margin-right:0;">
+        <div class="box-title">🚜 Frota nessa obra</div>
+        <div class="box-text">${resumoMaquinas(ac.machineKeys)}</div>
+        <div class="box-text" style="margin-top:5px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};">⚙️ Produtividade: ${produtividadePct}%${produtividadePct<85?' — rendendo abaixo do normal':''}</div>
+      </div>
+
+      <div class="finance-panel" style="margin-left:0;margin-right:0;margin-top:12px;">
+        <div class="fin-col"><div class="fin-label">Receita</div><div class="fin-value ok">${fmt(ac.value)}</div></div>
+        <div class="fin-col"><div class="fin-label">Custos+Despesas</div><div class="fin-value" style="color:#B03A2E;">${fmt(custos.total+custosAdmin.total+ac.custoSeguroPago+desp.total+ac.custoRiscoAdministrado+ac.custoAtraso)}</div></div>
+        <div class="fin-col"><div class="fin-label">Margem</div><div class="fin-value" style="color:${lucro>=0?'#1E7A45':'#B03A2E'};">${fmt(lucro)}</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('obraOverlay').classList.add('show');
+}
+
+function fecharObra(){
+  document.getElementById('obraOverlay').classList.remove('show');
+  document.getElementById('obraVideoWrap').innerHTML = ''; // pausa o vídeo de verdade, não só esconde
 }
 
 function avancarContrato(idx){
@@ -1916,6 +2282,7 @@ function avancarContrato(idx){
       playerCash -= multa;
       ajustarReputacao(-8);
       registrarHistorico('🔴', `Contrato perdido: ${ac.name}`, `O risco escalou. Multa de cancelamento: ${fmt(multa)}`);
+      liberarMaquinas(ac.machineKeys);
       acceptedContracts.splice(idx,1);
       lostContracts.push({ name: ac.name, value: ac.value, machineKeys: ac.machineKeys, multa });
       historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
@@ -1923,6 +2290,7 @@ function avancarContrato(idx){
       atualizarMissoes('perdido');
       updateFinanceDisplays();
       renderContratosAndamento(); renderContratosConcluidos(); renderFinancas(); renderContratosList();
+      renderMaquinasList(); renderManutList();
       switchContratoTab('concluidos');
       showResultModal('💥', 'Contrato perdido', `O risco escalou em "${ac.name}". Multa de cancelamento: ${fmt(multa)}.`);
       return;
@@ -1932,6 +2300,7 @@ function avancarContrato(idx){
       ajustarReputacao(-3);
       ac.diasDecorridos += 3;
       processarParcelasDoTempo(3);
+      envelhecerFrota(3);
       ac.state = 'EM_ANDAMENTO';
       ac.eventoAtivo = null;
       registrarHistorico('🟡', `Risco administrado: ${ac.name}`, `Custo ${fmt(exp.impacto)} · +3 dias no prazo`);
@@ -1948,9 +2317,13 @@ function avancarContrato(idx){
       showResultModal('🟠', 'Situação de risco', `${catalog.riskDesc}\n\nO contrato "${ac.name}" entrou em estado de risco — veja o painel "Em andamento" pra decidir o que fazer.`);
       return;
     }
-    ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3));
+    // Desgaste afeta velocidade, e agora QUANTIDADE de máquina também — puxar uma máquina pra outra
+    // obra deixa a origem com menos gente trabalhando, entregando mais devagar.
+    const fatorProdutividade = calcularFatorProdutividade(ac, catalog);
+    ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3) * fatorProdutividade);
     ac.diasDecorridos += 1;
     processarParcelasDoTempo(1);
+    envelhecerFrota(1);
   }
 
   if(ac.progress < 100 && ac.diasDecorridos > catalog.prazoDias && ac.state !== 'ATRASADO'){
@@ -1988,12 +2361,12 @@ function avancarContrato(idx){
     const impostoContrato = resultadoOperacional > 0 ? Math.round(resultadoOperacional * aliquota) : 0;
     impostosProvisionados += impostoContrato;
 
-    playerPatrimonio += Math.round(ac.value * 0.1);
     ajustarReputacao(noPrazo ? 2 : 1);
     custosAdministrativosTotal += custosAdmin.total;
     custosAdministrativosLog.unshift({ contrato: ac.name, dias: ac.diasDecorridos, total: custosAdmin.total, itens: custosAdmin.itens });
     updateFinanceDisplays();
     renderTaxDisplays();
+    liberarMaquinas(ac.machineKeys);
     acceptedContracts.splice(idx,1);
     completedContracts.push({
       name: ac.name, value: ac.value, machineKeys: ac.machineKeys,
@@ -2010,6 +2383,7 @@ function avancarContrato(idx){
     registrarHistorico('🟢', `Contrato concluído: ${ac.name}`, `${noPrazo?'No prazo':'Com atraso'} · Faturamento ${fmt(ac.value)} · Imposto provisionado ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`);
     switchContratoTab('concluidos');
     renderContratosList();
+    renderMaquinasList(); renderManutList();
     showResultModal('🎉', 'Sucesso! Contrato concluído!', `${ac.name} — ${noPrazo?'entregue no prazo':'entregue com atraso'}.\n\nLíquido de custos operacionais: +${fmt(ac.value - custos.total)}\nImposto provisionado: ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`, null, 'success');
   }
 
@@ -2020,7 +2394,7 @@ function avancarContrato(idx){
 function renderContratosConcluidos(){
   const el = document.getElementById('contratosConcluidosList');
   if(completedContracts.length === 0 && lostContracts.length === 0){
-    el.innerHTML = '<div style="font-size:14px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato concluído ainda.</div>';
+    el.innerHTML = '<div style="font-size:15.5px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato concluído ainda.</div>';
     return;
   }
   const concluidosHtml = completedContracts.map(cc => {
@@ -2029,22 +2403,22 @@ function renderContratosConcluidos(){
     return `
     <div style="background:rgba(51,224,160,0.11);border:1.5px solid rgba(51,224,160,.25);border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(51,224,160,.22);">
       <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="font-size:16.5px;font-weight:800;">${cc.name}</div>
-        <div style="font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(51,224,160,.15);color:var(--ok);">✅ ${cc.noPrazo?'Concluído no prazo':'Concluído com atraso'}</div>
+        <div style="font-size:18.5px;font-weight:800;">${cc.name}</div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(51,224,160,.15);color:var(--ok);">✅ ${cc.noPrazo?'Concluído no prazo':'Concluído com atraso'}</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07);">
-        <div><div style="font-size:11px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Faturado</div><div style="font-size:14px;font-weight:800;color:var(--ok);margin-top:2px;">${fmt(cc.value)}</div></div>
-        <div><div style="font-size:11px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Custos+Despesas</div><div style="font-size:14px;font-weight:800;color:var(--danger);margin-top:2px;">${fmt(totalCustos)}</div></div>
-        <div><div style="font-size:11px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Lucro real</div><div style="font-size:14px;font-weight:800;color:${lucro>=0?'var(--ok)':'var(--danger)'};margin-top:2px;">${fmt(lucro)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Faturado</div><div style="font-size:15.5px;font-weight:800;color:var(--ok);margin-top:2px;">${fmt(cc.value)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Custos+Despesas</div><div style="font-size:15.5px;font-weight:800;color:var(--danger);margin-top:2px;">${fmt(totalCustos)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Lucro real</div><div style="font-size:15.5px;font-weight:800;color:${lucro>=0?'var(--ok)':'var(--danger)'};margin-top:2px;">${fmt(lucro)}</div></div>
       </div>
-      <div style="font-size:11px;color:var(--text-faint);margin-top:7px;">${(cc.custosItens||[]).map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(cc.custosAdministrativos)} administrativo${cc.despesasManutencao>0?` · 🔧 ${fmt(cc.despesasManutencao)} manutenção`:''}${cc.custoSeguro>0?` · 🛡️ ${fmt(cc.custoSeguro)} seguro`:''}${cc.custoRiscoAdministrado>0?` · ⚠️ ${fmt(cc.custoRiscoAdministrado)} risco administrado`:''}${cc.custoAtraso>0?` · 🔴 ${fmt(cc.custoAtraso)} multa de atraso`:''}</div>
+      <div style="font-size:12.5px;color:var(--text-faint);margin-top:7px;">${(cc.custosItens||[]).map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(cc.custosAdministrativos)} administrativo${cc.despesasManutencao>0?` · 🔧 ${fmt(cc.despesasManutencao)} manutenção`:''}${cc.custoSeguro>0?` · 🛡️ ${fmt(cc.custoSeguro)} seguro`:''}${cc.custoRiscoAdministrado>0?` · ⚠️ ${fmt(cc.custoRiscoAdministrado)} risco administrado`:''}${cc.custoAtraso>0?` · 🔴 ${fmt(cc.custoAtraso)} multa de atraso`:''}</div>
     </div>`;
   }).join('');
   const perdidosHtml = lostContracts.map(lc => `
     <div style="background:rgba(255,93,122,0.11);border:1.5px solid rgba(255,93,122,.25);border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(255,93,122,.22);">
       <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="font-size:16.5px;font-weight:800;">${lc.name}</div>
-        <div style="font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,93,122,.15);color:var(--danger);">❌ Perdido</div>
+        <div style="font-size:18.5px;font-weight:800;">${lc.name}</div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,93,122,.15);color:var(--danger);">❌ Perdido</div>
       </div>
       <div class="box-text" style="margin-top:7px;">Multa de cancelamento paga: <b style="color:var(--danger);">${fmt(lc.multa)}</b> · Faturamento perdido: ${fmt(lc.value)}</div>
     </div>`).join('');
@@ -2054,7 +2428,7 @@ function renderContratosConcluidos(){
 /* ===================== GRÁFICOS (SVG puro, sem biblioteca — precisa funcionar offline) ===================== */
 function svgLineChart(pontos, {width=340, height=110, color='#FFC24B'} = {}){
   if(pontos.length < 2){
-    return `<div style="font-size:13.5px;color:var(--text-faint);padding:20px 0;text-align:center;">Conclua pelo menos 1 contrato pra ver a evolução do caixa.</div>`;
+    return `<div style="font-size:15px;color:var(--text-faint);padding:20px 0;text-align:center;">Conclua pelo menos 1 contrato pra ver a evolução do caixa.</div>`;
   }
   const pad = 22;
   const valores = pontos.map(p => p.valor);
@@ -2085,7 +2459,7 @@ function svgBarRow(itens){
   const max = Math.max(...itens.map(i => i.valor), 1);
   return itens.map(i => `
     <div style="margin-bottom:9px;">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">
+      <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:3px;">
         <span style="color:var(--text-dim);font-weight:700;">${i.icon} ${i.label}</span>
         <span style="color:${i.color};font-weight:800;">${fmt(i.valor)}</span>
       </div>
@@ -2098,7 +2472,7 @@ function svgBarRow(itens){
 function svgDonutSimples(fatias, {size=110} = {}){
   const total = fatias.reduce((s,f) => s+f.valor, 0);
   if(total <= 0){
-    return `<div style="font-size:13.5px;color:var(--text-faint);padding:16px 0;text-align:center;">Conclua contratos pra ver o resultado.</div>`;
+    return `<div style="font-size:15px;color:var(--text-faint);padding:16px 0;text-align:center;">Conclua contratos pra ver o resultado.</div>`;
   }
   const r = size/2 - 8, cx = size/2, cy = size/2, circ = 2*Math.PI*r;
   let acumulado = 0;
@@ -2117,8 +2491,8 @@ function svgDonutSimples(fatias, {size=110} = {}){
     <div style="flex:1;">
       ${fatias.map(f => `<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
         <span style="width:9px;height:9px;border-radius:3px;background:${f.color};flex-shrink:0;"></span>
-        <span style="font-size:13px;color:var(--text-dim);flex:1;">${f.label}</span>
-        <span style="font-size:13px;font-weight:800;color:${f.color};">${f.valor}</span>
+        <span style="font-size:14.5px;color:var(--text-dim);flex:1;">${f.label}</span>
+        <span style="font-size:14.5px;font-weight:800;color:${f.color};">${f.valor}</span>
       </div>`).join('')}
     </div>
   </div>`;
@@ -2168,7 +2542,7 @@ function renderVisaoGeral(){
     </div>
     <div class="info-box">
       <div class="box-title">🧩 Pra onde vai cada real faturado</div>
-      ${totalReceita > 0 ? composicao : '<div style="font-size:13.5px;color:var(--text-faint);padding:10px 0;text-align:center;">Conclua um contrato pra ver a composição.</div>'}
+      ${totalReceita > 0 ? composicao : '<div style="font-size:15px;color:var(--text-faint);padding:10px 0;text-align:center;">Conclua um contrato pra ver a composição.</div>'}
     </div>
     <div class="info-box">
       <div class="box-title">🎯 Resultado dos contratos</div>
@@ -2188,6 +2562,11 @@ function renderFinancas(){
   document.getElementById('finTotalReceber').textContent = fmt(totalReceber);
   document.getElementById('finImpostosProvisionados').textContent = fmt(impostosProvisionados);
   document.getElementById('finCustosAdmin').textContent = fmt(custosAdministrativosTotal);
+  const custoDiarioEl = document.getElementById('financasCustosAdminExplicacao');
+  if(custoDiarioEl){
+    const numMaquinas = Object.keys(MACHINES).length;
+    custoDiarioEl.innerHTML = `Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou. <b style="color:var(--amber-1);">Hoje: ${fmt(custoAdministrativoDiarioAtual())}/dia</b> (frota de ${numMaquinas} máquina${numMaquinas!==1?'s':''}${numMaquinas>1?` — cada uma além da 1ª soma ${fmt(CUSTO_ADICIONAL_POR_MAQUINA_DIA)}/dia`:''}).`;
+  }
 
   const finTotalParcelasEl = document.getElementById('finTotalParcelas');
   if(finTotalParcelasEl) finTotalParcelasEl.textContent = fmt(totalParcelasPagas);
@@ -2197,12 +2576,12 @@ function renderFinancas(){
       ? financiamentosAtivos.map(f => `
         <div style="background:var(--surface);border:1.5px solid var(--surface-border);border-radius:14px;padding:11px 12px;margin-bottom:9px;">
           <div style="display:flex;justify-content:space-between;">
-            <span style="font-size:13px;font-weight:800;">🏦 ${f.nome}</span>
-            <span style="font-size:13px;font-weight:800;color:var(--danger);">${fmt(f.parcela)}/parcela</span>
+            <span style="font-size:14.5px;font-weight:800;">🏦 ${f.nome}</span>
+            <span style="font-size:14.5px;font-weight:800;color:var(--danger);">${fmt(f.parcela)}/parcela</span>
           </div>
-          <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">Faltam ${f.parcelasRestantes} parcela(s) · próxima em ${Math.max(0,f.diasParaProxima)} dia(s) · total restante: ${fmt(f.parcela*f.parcelasRestantes)}</div>
+          <div style="font-size:12.5px;color:var(--text-faint);margin-top:4px;">Faltam ${f.parcelasRestantes} parcela(s) · próxima em ${Math.max(0,f.diasParaProxima)} dia(s) · total restante: ${fmt(f.parcela*f.parcelasRestantes)}</div>
         </div>`).join('')
-      : '<div style="font-size:14px;color:var(--text-faint);padding:4px 2px;">Nenhum financiamento ativo — tudo pago ou comprado à vista.</div>';
+      : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum financiamento ativo — tudo pago ou comprado à vista.</div>';
   }
   const custosAdminEl = document.getElementById('financasCustosAdminList');
   if(custosAdminEl){
@@ -2210,12 +2589,12 @@ function renderFinancas(){
       ? custosAdministrativosLog.slice(0,5).map(l => `
         <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px 11px;margin-bottom:7px;">
           <div style="display:flex;justify-content:space-between;">
-            <span style="font-size:14px;font-weight:800;">${l.contrato}</span>
-            <span style="font-size:14px;font-weight:800;color:var(--danger);">-${fmt(l.total)}</span>
+            <span style="font-size:15.5px;font-weight:800;">${l.contrato}</span>
+            <span style="font-size:15.5px;font-weight:800;color:var(--danger);">-${fmt(l.total)}</span>
           </div>
-          <div style="font-size:11.5px;color:var(--text-faint);margin-top:3px;">${l.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · ${l.dias} dia(s)</div>
+          <div style="font-size:13px;color:var(--text-faint);margin-top:3px;">${l.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · ${l.dias} dia(s)</div>
         </div>`).join('')
-      : '<div style="font-size:14px;color:var(--text-faint);padding:4px 2px;">Nenhum custo administrativo registrado ainda.</div>';
+      : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum custo administrativo registrado ainda.</div>';
   }
   document.getElementById('finImpostosPagos').textContent = fmt(impostosPagosTotal);
 
@@ -2224,19 +2603,19 @@ function renderFinancas(){
     <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:11px 13px;margin-bottom:9px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
-          <div style="font-size:16px;font-weight:800;">${ac.name}</div>
-          <div style="font-size:12px;color:var(--text-faint);margin-top:2px;">Prazo: ${ac.prazo}</div>
+          <div style="font-size:18px;font-weight:800;">${ac.name}</div>
+          <div style="font-size:13.5px;color:var(--text-faint);margin-top:2px;">Prazo: ${ac.prazo}</div>
         </div>
-        <div style="font-size:16px;font-weight:800;color:var(--ok);white-space:nowrap;">${fmt(ac.value)}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--ok);white-space:nowrap;">${fmt(ac.value)}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
         <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;">
           <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:3px;"></div>
         </div>
-        <span style="font-size:12px;font-weight:700;color:var(--text-dim);">${ac.progress}%</span>
+        <span style="font-size:13.5px;font-weight:700;color:var(--text-dim);">${ac.progress}%</span>
       </div>
     </div>`).join('')
-    : '<div style="font-size:14px;color:var(--text-faint);padding:4px 2px;">Nenhum contrato em andamento.</div>';
+    : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum contrato em andamento.</div>';
 
   const despesasSection = document.getElementById('financasDespesasSection');
   document.getElementById('finTotalDespesas').textContent = fmt(totalDespesas);
@@ -2245,13 +2624,13 @@ function renderFinancas(){
     <div style="background:rgba(255,93,122,0.11);border:1px solid rgba(255,93,122,.2);border-radius:14px;padding:11px 13px;margin-bottom:9px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
-          <div style="font-size:16px;font-weight:800;">🔧 ${sm.machineName}</div>
-          <div style="font-size:12px;color:var(--text-faint);margin-top:2px;">${sm.partLabel} · pronta em ${sm.downtime}</div>
+          <div style="font-size:18px;font-weight:800;">🔧 ${sm.machineName}</div>
+          <div style="font-size:13.5px;color:var(--text-faint);margin-top:2px;">${sm.partLabel} · pronta em ${sm.downtime}</div>
         </div>
-        <div style="font-size:16px;font-weight:800;color:var(--danger);white-space:nowrap;">-${fmt(sm.price)}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--danger);white-space:nowrap;">-${fmt(sm.price)}</div>
       </div>
     </div>`).join('')
-    : '<div style="font-size:14px;color:var(--text-faint);padding:4px 2px;">Nenhuma despesa registrada.</div>';
+    : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhuma despesa registrada.</div>';
 }
 
 function openContractDetail(key){
@@ -2263,7 +2642,7 @@ function openContractDetail(key){
     <div class="d-photo" style="background-image:url('${c.hero}');"></div>
     <div class="d-title-row">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;"><div class="d-name">${c.name}</div><div class="d-value">${fmt(c.value)}</div></div>
-      <div style="font-size:14px;color:var(--text-faint);margin-top:6px;">🏢 ${c.company} · 📍 ${c.location}</div>
+      <div style="font-size:15.5px;color:var(--text-faint);margin-top:6px;">🏢 ${c.company} · 📍 ${c.location}</div>
     </div>
     <div class="info-box">
       <div class="box-title">Requisitos</div>
@@ -2335,6 +2714,14 @@ function renderMaintDetail(){
       <div class="box-text">${m.cat} · <b style="color:var(--text);">${m.specs}</b></div>
       <div class="box-text" style="margin-top:5px;">📊 Utilização da frota: <b style="color:${m.utilizacao>=70?'var(--ok)':m.utilizacao>=30?'var(--amber-1)':'var(--text-faint)'};">${m.utilizacao}%</b> ${m.utilizacao<30 ? '<span style="color:var(--text-faint);">— capacidade ociosa</span>' : ''}</div>
     </div>
+    <div class="info-box" style="background:rgba(255,194,75,.06);border-color:rgba(255,194,75,.25);">
+      <div class="box-title" style="color:var(--amber-1);">💰 Ciclo de vida</div>
+      <div class="plan-row"><span class="plan-label">Idade</span><span class="plan-value">${Math.floor((m.idadeDias||0)/30)} meses (${m.idadeDias||0} dias)</span></div>
+      <div class="plan-row"><span class="plan-label">Condição atual</span><span class="plan-value" style="color:${m.health>=70?'var(--ok)':m.health>=40?'var(--amber-1)':'var(--danger)'};">${Math.round(m.health)}%</span></div>
+      <div class="plan-row"><span class="plan-label">Dias sem manutenção</span><span class="plan-value" style="color:${(m.diasDesdeUltimaManutencao||0)>DIAS_GRACA_MANUTENCAO_BASICA?'var(--danger)':'var(--text-dim)'};">${m.diasDesdeUltimaManutencao||0} dias</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:700;">Valor de mercado hoje</span><span class="plan-value" style="color:var(--ok);font-size:15px;">${fmt(valorMercadoAtual(currentMaintKey))}</span></div>
+      <div class="box-text" style="margin-top:8px;color:var(--text-faint);">Idade e condição juntas determinam o valor. ${!m.inContract ? `Parada, ela não perde condição por até ${DIAS_GRACA_MANUTENCAO_BASICA} dias sem manutenção — depois disso, começa a se deteriorar sozinha (bem mais devagar que uma máquina em uso, mas deteriora).` : ''}</div>
+    </div>
     <div class="info-box">
       <div class="box-title" style="color:var(--blue);">📍 Onde está / o que está fazendo</div>
       <div class="box-text"><b style="color:var(--text);">${m.task}</b><br>${m.location}</div>
@@ -2359,10 +2746,18 @@ function renderMaintDetail(){
     </div>
     <div class="action-zone">
       <button class="action-btn" onclick="scheduleMaint()">🔧 Agendar manutenção — ${fmt(part.price)}</button>
+      ${m.inContract
+        ? `<button class="action-btn locked" style="margin-top:9px;" disabled>🔒 Vender — indisponível (máquina em contrato)</button>`
+        : `<button onclick="confirmarVenda('${currentMaintKey}')" style="width:100%;margin-top:9px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,93,122,.35);color:var(--danger);font-weight:800;font-size:14.5px;border-radius:12px;padding:13px;">💰 Vender por ${fmt(valorMercadoAtual(currentMaintKey) * VENDA_DESAGIO_PCT)}</button>`}
     </div>
     <div style="height:6px;"></div>`;
 }
 let scheduledMaintenances = [];
+function confirmarVenda(machineKey){
+  const m = MACHINES[machineKey];
+  const valor = Math.round(valorMercadoAtual(machineKey) * VENDA_DESAGIO_PCT);
+  showResultModal('❓', 'Confirmar venda', `Vender ${m.name} por ${fmt(valor)}?\n\nEssa máquina sai da sua frota — se ela for a única disponível pra algum contrato, esse contrato pode ficar indisponível até você comprar outra.\n\nToque em "Entendi, continuar" para confirmar a venda agora.`, () => venderMaquina(machineKey));
+}
 
 function scheduleMaint(){
   const m = MACHINES[currentMaintKey];
@@ -2383,9 +2778,13 @@ function scheduleMaint(){
     downtime: part.downtime
   });
 
+  // Manutenção agora de fato melhora a condição da máquina — peça original recupera mais que alternativa.
+  const recuperacao = currentMaintPart === 'original' ? 45 : 25;
+  m.health = Math.min(100, m.health + recuperacao);
+  m.diasDesdeUltimaManutencao = 0;
+  atualizarStatusMaquina(m);
   m.task = `🔧 Em manutenção — pronta em ${part.downtime}`;
-  m.status = 'amber';
-  registrarHistorico('🔧', `Manutenção realizada: ${m.name}`, `${currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa'} · ${fmt(part.price)}`);
+  registrarHistorico('🔧', `Manutenção realizada: ${m.name}`, `${currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa'} · ${fmt(part.price)} · condição +${recuperacao}`);
   atualizarMissoes('manutencao', { maquinaKey: currentMaintKey });
   renderManutList();
   renderFinancas();
@@ -2487,7 +2886,8 @@ function buyMachine(){
     return;
   }
   playerCash -= custo;
-  playerPatrimonio += currentLojaMode === 'vista' ? c.vista : fin.totalFinanciado;
+  // Patrimônio não é mais incrementado manualmente aqui — a máquina nova entra em MACHINES
+  // logo abaixo, e o valor dela já conta sozinho na próxima vez que recalcularPatrimonio() rodar.
 
   if(currentLojaMode === 'financiado'){
     financiamentosAtivos.push({
@@ -2501,6 +2901,7 @@ function buyMachine(){
   if(tpl){
     const novaChave = chooseMachineKey(tpl.tipoKey);
     MACHINES[novaChave] = {
+      tipoKey: tpl.tipoKey, idadeDias: 0, diasDesdeUltimaManutencao: 0,
       name: tpl.name, cat: tpl.cat, specs: tpl.specs, photo: tpl.photo, thumb: tpl.thumb,
       health:100, status:'green', statusLabel:'🟢 OK', hours:'0h (nova)', utilizacao:0,
       problem:'Nenhum problema detectado — máquina recém-adquirida.',
@@ -2515,6 +2916,7 @@ function buyMachine(){
   }
 
   updateFinanceDisplays();
+  renderFinancas();
   registrarHistorico('🛒', `Máquina adquirida: ${nomeMaquina}`, `${currentLojaMode === 'vista' ? 'À vista' : `Financiado (juro de ${fmt(fin.jurosValor)})`} · ${fmt(custo)}`);
   showCompraCelebration(nomeMaquina, fotoCelebracao);
 }
@@ -2533,16 +2935,16 @@ function openRegimeTributario(){
 
   document.getElementById('regimeTributarioScroll').innerHTML = `
     <div class="hub-header" style="padding:6px 16px 10px;">
-      <div class="hub-title" style="font-size:24.5px;">🧾 Regime Tributário</div>
-      <div style="font-size:14px;color:var(--text-faint);margin-top:3px;">Entenda como os impostos afetam sua empresa.</div>
+      <div class="hub-title" style="font-size:27.5px;">🧾 Regime Tributário</div>
+      <div style="font-size:15.5px;color:var(--text-faint);margin-top:3px;">Entenda como os impostos afetam sua empresa.</div>
     </div>
 
     <div class="info-box">
       <div class="box-title">Seu regime atual</div>
       <div class="plan-row"><span class="plan-label">Faturamento acumulado</span><span class="plan-value" style="color:var(--ok);">${fmt(faturamentoAcumulado)}</span></div>
       <div class="plan-row"><span class="plan-label">Faixa atual</span><span class="plan-value">até ${faixaAtualLabel.ate===Infinity?'sem limite':fmt(faixaAtualLabel.ate)}</span></div>
-      <div class="plan-row"><span class="plan-label">Alíquota efetiva</span><span class="plan-value" style="color:var(--amber-1);font-size:16.5px;">${Math.round(aliquotaAtual*100)}%</span></div>
-      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:800;">Impostos provisionados</span><span class="plan-value" style="color:var(--danger);font-size:16.5px;">${fmt(impostosProvisionados)}</span></div>
+      <div class="plan-row"><span class="plan-label">Alíquota efetiva</span><span class="plan-value" style="color:var(--amber-1);font-size:18.5px;">${Math.round(aliquotaAtual*100)}%</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:800;">Impostos provisionados</span><span class="plan-value" style="color:var(--danger);font-size:18.5px;">${fmt(impostosProvisionados)}</span></div>
     </div>
 
     <div class="info-box">
@@ -2571,7 +2973,7 @@ function openRegimeTributario(){
       ${impostosProvisionados > 0
         ? `<button class="action-btn" onclick="pagarImpostos()">💸 Pagar impostos — ${fmt(impostosProvisionados)}</button>`
         : `<button class="action-btn locked">Nenhum imposto pendente<span class="sub">Conclua contratos para provisionar impostos</span></button>`}
-      <button onclick="closeRegimeTributario()" style="width:100%;margin-top:10px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.15);color:var(--text-dim);font-weight:800;font-size:15.5px;border-radius:12px;padding:12px 0;">← Fechar e voltar ao Hub</button>
+      <button onclick="closeRegimeTributario()" style="width:100%;margin-top:10px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.15);color:var(--text-dim);font-weight:800;font-size:17.5px;border-radius:12px;padding:12px 0;">← Fechar e voltar ao Hub</button>
     </div>
     <div style="height:6px;"></div>
   `;
