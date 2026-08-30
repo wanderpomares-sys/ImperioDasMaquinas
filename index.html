@@ -1180,6 +1180,49 @@ const VIDEO_POR_CONTRATO = {
   // pendente de geração/busca melhor, não forçamos vídeo genérico só pra preencher.
 };
 
+const CONTRACT_POOL = [
+  { nome:"Aterro Industrial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:240000, riscoDesc:"Terreno com hist\u00f3rico de chuvas na regi\u00e3o. Pode haver atrasos por condi\u00e7\u00f5es clim\u00e1ticas.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Aterro Industrial \u2014 Fase 2", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:260000, riscoDesc:"\u00c1rea maior exige mais caminh\u00f5es escoando material simultaneamente.", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Abertura de Estrada Rural", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:14, valorBase:180000, riscoDesc:"Trecho relativamente simples, mas exige motoniveladora pr\u00f3pria \u2014 nenhuma dispon\u00edvel de in\u00edcio.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Reforma de Estrada Vicinal", req:[{tipo:"motoniveladora",qtd:1},{tipo:"caminhao",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:12, valorBase:165000, riscoDesc:"Estrada j\u00e1 existente, s\u00f3 precisa de nivelamento e reposi\u00e7\u00e3o de material.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Extra\u00e7\u00e3o de Pedra", req:[{tipo:"escavadeira30",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:21, valorBase:525000, riscoDesc:"Pedreira a c\u00e9u aberto, exige escavadeira de grande porte \u2014 fora do alcance inicial.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem p/ Loteamento", req:[{tipo:"trator",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:210000, riscoDesc:"Nivelamento de terreno para condom\u00ednio residencial.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Terraplenagem de Loteamento Grande", req:[{tipo:"trator",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:15, valorBase:280000, riscoDesc:"Loteamento maior \u2014 dois tratores nivelando em paralelo.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Desmatamento Fazenda Boa Vista", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:15, valorBase:95000, riscoDesc:"\u00c1rea rural de baixa complexidade, sem hist\u00f3rico de intercorr\u00eancias.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Desmatamento de \u00c1rea Extensa", req:[{tipo:"retro",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:18, valorBase:130000, riscoDesc:"Propriedade maior \u2014 dois retros limpando o terreno.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Demoli\u00e7\u00e3o Controlada", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:310000, riscoDesc:"Estrutura antiga, risco real de colapso parcial imprevisto durante a demoli\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Demoli\u00e7\u00e3o de Galp\u00e3o Industrial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:2}], risk:"high", riskLabel:"Alto", prazoDias:16, valorBase:350000, riscoDesc:"Galp\u00e3o grande, escombro pesado exige mais de um caminh\u00e3o de remo\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Dragagem de Lago Artificial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:265000, riscoDesc:"Remo\u00e7\u00e3o de sedimento acumulado \u2014 solo encharcado aumenta o risco de atolamento.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Desassoreamento de Rio", req:[{tipo:"escavadeira",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:220000, riscoDesc:"Curso d'\u00e1gua com correnteza \u2014 trabalho mais lento que em terra firme.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Abertura de Vala p/ Tubula\u00e7\u00e3o", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:85000, riscoDesc:"Vala estreita e rasa, trabalho relativamente previs\u00edvel.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Rede de Drenagem Pluvial", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:175000, riscoDesc:"Tubula\u00e7\u00e3o enterrada exige escava\u00e7\u00e3o precisa perto de vias j\u00e1 pavimentadas.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Nivelamento de Campo Agr\u00edcola", req:[{tipo:"trator",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:110000, riscoDesc:"Terreno plano, poucas surpresas \u2014 trabalho de rotina para o setor rural.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Preparo de Solo p/ Plantio", req:[{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:90000, riscoDesc:"Remo\u00e7\u00e3o de ra\u00edzes e revolvimento do solo antes do plantio.", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Escava\u00e7\u00e3o de Funda\u00e7\u00e3o Predial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:255000, riscoDesc:"Risco de encontrar rocha ou len\u00e7ol fre\u00e1tico raso durante a escava\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Escava\u00e7\u00e3o de Funda\u00e7\u00e3o \u2014 Pr\u00e9dio Grande", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:16, valorBase:320000, riscoDesc:"Funda\u00e7\u00e3o de maior porte, mais material a remover do canteiro.", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Pavimenta\u00e7\u00e3o de Estacionamento", req:[{tipo:"motoniveladora",qtd:1},{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:10, valorBase:150000, riscoDesc:"\u00c1rea comercial plana, trabalho relativamente controlado.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Limpeza P\u00f3s-Inc\u00eandio", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:145000, riscoDesc:"Solo inst\u00e1vel e cinzas dificultam a tra\u00e7\u00e3o das m\u00e1quinas.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Nivelamento de Campo Esportivo", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:120000, riscoDesc:"Superf\u00edcie precisa ficar perfeitamente nivelada \u2014 exige aten\u00e7\u00e3o, mas baixo risco.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Amplia\u00e7\u00e3o de Cemit\u00e9rio Municipal", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:78000, riscoDesc:"Trabalho pontual e de baixo volume, mas exige cuidado redobrado.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Cobertura de Aterro Sanit\u00e1rio", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:230000, riscoDesc:"Compacta\u00e7\u00e3o de camada de cobertura sobre res\u00edduos \u2014 cheiro forte, terreno inst\u00e1vel.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Limpeza de Faixa de Servid\u00e3o", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:88000, riscoDesc:"Faixa estreita ao longo de linha de transmiss\u00e3o, vegeta\u00e7\u00e3o leve.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Acesso p/ Parque E\u00f3lico", req:[{tipo:"motoniveladora",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:15, valorBase:275000, riscoDesc:"Estrada de acesso em terreno acidentado at\u00e9 o canteiro de montagem das turbinas.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Acesso p/ Usina Solar", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:11, valorBase:155000, riscoDesc:"Terreno relativamente plano, projeto de baixa complexidade.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Lastro de Ferrovia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:14, valorBase:240000, riscoDesc:"Distribui\u00e7\u00e3o de brita ao longo do trecho \u2014 exige precis\u00e3o e ritmo constante.", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem de P\u00e1tio Industrial", req:[{tipo:"trator",qtd:1},{tipo:"pa",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:235000, riscoDesc:"P\u00e1tio de armazenamento de grande porte, terreno j\u00e1 parcialmente compactado.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Escava\u00e7\u00e3o de Piscina de Conten\u00e7\u00e3o", req:[{tipo:"escavadeira",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:195000, riscoDesc:"Bacia de conten\u00e7\u00e3o de \u00e1gua pluvial \u2014 profundidade exige aten\u00e7\u00e3o estrutural.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem de Campo de Golfe", req:[{tipo:"trator",qtd:1},{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:16, valorBase:260000, riscoDesc:"Modelagem de terreno art\u00edstica, prazo mais longo por causa dos detalhes.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Reforma de Estrada de Fazenda", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:95000, riscoDesc:"Trecho curto e simples de manuten\u00e7\u00e3o rural.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Conten\u00e7\u00e3o de Encosta", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:300000, riscoDesc:"Risco real de deslizamento durante a interven\u00e7\u00e3o \u2014 clima \u00e9 fator cr\u00edtico.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Estabiliza\u00e7\u00e3o de Margem de Rio", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:15, valorBase:315000, riscoDesc:"Trabalho pr\u00f3ximo \u00e0 \u00e1gua corrente, risco de eros\u00e3o durante a obra.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Remo\u00e7\u00e3o de Entulho de Obra", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:105000, riscoDesc:"Canteiro j\u00e1 finalizado, s\u00f3 falta a limpeza \u2014 baixa complexidade.", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Preparo de Base p/ Galp\u00e3o Log\u00edstico", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:245000, riscoDesc:"Compacta\u00e7\u00e3o de base precisa atender especifica\u00e7\u00e3o r\u00edgida do cliente.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Extra\u00e7\u00e3o de Cascalho", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:250000, riscoDesc:"Jazida de cascalho a c\u00e9u aberto, volume grande de material transportado.", photo:"foto-cascalho-thumb.jpg", hero:"foto-cascalho-hero.jpg" },
+  { nome:"Extra\u00e7\u00e3o de Areia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:200000, riscoDesc:"Jazida de areia, terreno arenoso dificulta um pouco a tra\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem p/ Loteamento Popular", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:215000, riscoDesc:"Projeto habitacional popular, prazo apertado por exig\u00eancia do contratante.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Escava\u00e7\u00e3o p/ Piscina Residencial", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:6, valorBase:62000, riscoDesc:"Obra pequena, quintal residencial \u2014 baix\u00edssima complexidade.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" }
+];
+
 const CONTRACTS = {
   aterro: {
     name:"Aterro Industrial", value:240000, company:"Construtora Planalto", location:"Campinas, SP",
@@ -1251,28 +1294,6 @@ const CIDADES_SP = [
   "Campinas, SP","Itupeva, SP","Mairinque, SP","Sorocaba, SP","Itatiba, SP",
   "Jundiaí, SP","Indaiatuba, SP","Valinhos, SP","Vinhedo, SP","Louveira, SP"
 ];
-// Combinações alternativas de máquina por arquétipo — dá variedade sem quebrar a lógica de risco/valor
-const VARIANTES_MAQUINA = {
-  // Cada variante agora é uma lista de {tipo, qtd} — algumas obras exigem mais de 1 unidade do mesmo tipo.
-  aterro:        [
-    [{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}],
-    [{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}],       // obra maior — 2 caminhões escoando material
-    [{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}]
-  ],
-  estrada:       [[{tipo:"motoniveladora",qtd:1}]], // exige motoniveladora de verdade — compre uma na Loja pra liberar
-  pedra:         [[{tipo:"escavadeira30",qtd:1}]],  // sempre escavadeira 30t+ (fora de alcance) — mantém o gargalo proposital
-  loteamento:    [
-    [{tipo:"trator",qtd:1}],
-    [{tipo:"pa",qtd:1}],
-    [{tipo:"escavadeira",qtd:1}],
-    [{tipo:"trator",qtd:2}]                                // loteamento grande — 2 tratores nivelando junto
-  ],
-  desmatamento:  [
-    [{tipo:"retro",qtd:1}],
-    [{tipo:"trator",qtd:1}],
-    [{tipo:"retro",qtd:2}]                                 // área maior de desmatamento — 2 retros
-  ]
-};
 const REQ_LABELS = {
   escavadeira:"Escavadeira 20t ou maior", caminhao:"Caminhão basc. mín. 10m³",
   trator:"Trator de Esteira", pa:"Pá Carregadeira", retro:"Retroescavadeira",
@@ -1343,22 +1364,44 @@ function obterProximoTier(rep){
 
 function regenerarContrato(key){
   const c = CONTRACTS[key];
-  const variantes = VARIANTES_MAQUINA[key] || [c.requiredMachineKeys];
-  const novaVariante = variantes[Math.floor(Math.random()*variantes.length)];
-  const { ok, missing } = calcularHasMachine(novaVariante);
+  // Sorteia um arquétipo diferente do catálogo de 40 (evita repetir o nome que acabou de sair,
+  // desde que o catálogo tenha mais de uma opção) — isso é o que garante que o jogador não fica
+  // vendo o mesmo tipo de obra toda hora, mesmo jogando por muito tempo.
+  let arquetipo;
+  do {
+    arquetipo = CONTRACT_POOL[Math.floor(Math.random()*CONTRACT_POOL.length)];
+  } while (arquetipo.nome === c.name && CONTRACT_POOL.length > 1);
 
+  const { ok, missing } = calcularHasMachine(arquetipo.req);
   const tier = obterTierReputacao(reputacao);
   const fator = (0.85 + Math.random()*0.30) * tier.multiplicador; // variação normal × bônus de reputação
-  c.value = Math.round(c.value * fator / 1000) * 1000;
+
+  c.name = arquetipo.nome;
+  c.value = Math.round(arquetipo.valorBase * fator / 1000) * 1000;
   c.company = EMPRESAS_CLIENTE[Math.floor(Math.random()*EMPRESAS_CLIENTE.length)];
   c.location = CIDADES_SP[Math.floor(Math.random()*CIDADES_SP.length)];
-  c.requiredMachineKeys = novaVariante;
+  c.photo = arquetipo.photo;
+  c.hero = arquetipo.hero;
+  c.risk = arquetipo.risk;
+  c.riskLabel = arquetipo.riskLabel;
+  c.riskDesc = arquetipo.riscoDesc;
+  c.prazoDias = arquetipo.prazoDias;
+  c.prazo = `${arquetipo.prazoDias} dias`;
+  c.requiredMachineKeys = arquetipo.req;
   c.hasMachine = ok;
   c.missing = missing;
-  c.req = [...novaVariante.map(req => {
+  const PENALIDADE_POR_RISCO = {
+    low:  { pct: 0.003, cancel: 8 },
+    mid:  { pct: 0.005, cancel: 10 },
+    high: { pct: 0.008, cancel: 15 }
+  };
+  const pen = PENALIDADE_POR_RISCO[arquetipo.risk];
+  c.penaltyPctDia = pen.pct;
+  c.penalty = `Atraso: ${(pen.pct*100).toFixed(1).replace('.',',')}%/dia · Cancelamento: ${pen.cancel}% do valor total.`;
+  c.req = [...arquetipo.req.map(req => {
     const label = REQ_LABELS[req.tipo] || req.tipo;
     const icone = REQ_ICONS[req.tipo] || "🚜";
-    return req.qtd > 1 ? `${icone} ${label} — 2 unidades` : `${icone} ${label}`;
+    return req.qtd > 1 ? `${icone} ${label} — ${req.qtd} unidades` : `${icone} ${label}`;
   }), "👷 Operador habilitado"];
   c.state = 'DISPONIVEL';
   c.accepted = false;
@@ -1397,13 +1440,13 @@ const DIAS_ENTRE_PARCELAS = 30;
 let financiamentosAtivos = []; // { nome, parcela, parcelasRestantes, diasParaProxima }
 let diasGlobaisDecorridos = 0;
 
-function podeFinanciar(catalogKey){
+function podeFinanciar(catalogKey, valorAFinanciarOverride){
   const c = CATALOG[catalogKey];
   const minRep = c.reputacaoMinFinanciamento || 0;
   if(reputacao < minRep){
     return { ok:false, motivo:`Reputação insuficiente para crédito — precisa de ${minRep}, você tem ${reputacao}.` };
   }
-  const fin = calcularFinanciamento(c.vista, c.parcelasCount);
+  const fin = valorAFinanciarOverride!=null ? calcularFinanciamento(valorAFinanciarOverride, c.parcelasCount) : calcularFinanciamento(c.vista, c.parcelasCount);
   const debitoAtual = financiamentosAtivos.reduce((s,f) => s + f.parcela*f.parcelasRestantes, 0);
   const debitoComEste = debitoAtual + fin.parcela*fin.parcelas;
   const tetoEndividamento = Math.max(LIMITE_ENDIVIDAMENTO_PISO, Math.round((playerPatrimonio + faturamentoAcumulado) * LIMITE_ENDIVIDAMENTO_PCT_PATRIMONIO));
@@ -1469,6 +1512,15 @@ const DIAS_GRACA_MANUTENCAO_BASICA = 45; // dentro desse prazo desde a última m
 const DESGASTE_PARADA_MIN_POR_DIA = 0.05; // bem mais lento que o desgaste de uso — negligência, não trabalho
 const DESGASTE_PARADA_MAX_POR_DIA = 0.12;
 const VENDA_DESAGIO_PCT = 0.90;         // vender rápido não pega o valor cheio de mercado — negociação realista
+const TROCA_DESAGIO_PCT = 0.95;         // troca direta (dar de entrada) tem deságio menor que venda avulsa — incentivo real de mercado
+
+function calcularTroca(machineKeyTroca, precoNovaMaquina){
+  const valorTroca = Math.round(valorMercadoAtual(machineKeyTroca) * TROCA_DESAGIO_PCT);
+  const diferenca = precoNovaMaquina - valorTroca;
+  // diferenca > 0: jogador precisa pagar a diferença (à vista ou financiada)
+  // diferenca < 0: jogador recebe a diferença de volta em caixa
+  return { valorTroca, diferenca };
+}
 
 function valorMercadoAtual(machineKey){
   const m = MACHINES[machineKey];
@@ -2870,8 +2922,9 @@ function renderLojaDetail(){
     <div class="toggle-row">
       <div class="toggle-btn ${currentLojaMode==='vista'?'active':''}" onclick="selectLojaMode('vista')">💵 À vista</div>
       <div class="toggle-btn ${currentLojaMode==='financiado'?'active':''}" onclick="selectLojaMode('financiado')">📄 Financiar</div>
+      <div class="toggle-btn ${currentLojaMode==='troca'?'active':''}" onclick="selectLojaMode('troca')">🔄 Trocar</div>
     </div>
-    <div class="plan-box">${planHtml}</div>
+    ${currentLojaMode==='troca' ? renderTrocaHtml(c) : `<div class="plan-box">${planHtml}</div>
     ${creditoHtml}
     <div class="info-box" style="${risky?'background:rgba(255,93,122,0.15);border-color:rgba(255,93,122,.3);':''}">${cashHtml}</div>
     <div class="info-box">
@@ -2880,9 +2933,107 @@ function renderLojaDetail(){
     </div>
     <div class="action-zone">
       <button class="action-btn ${risky||!aprovacaoCredito.ok?'risky':''}" onclick="buyMachine()">${aprovacaoCredito.ok?btnLabel:'🔒 Financiamento indisponível'}<span class="sub">${aprovacaoCredito.ok?`Capital restante: ${fmt(remaining)}`:'Toque para ver o motivo'}</span></button>
-    </div>
+    </div>`}
     <div style="height:6px;"></div>`;
 }
+
+let selectedTrocaKey = null;
+function selecionarMaquinaTroca(key){ selectedTrocaKey = key; renderLojaDetail(); }
+
+function renderTrocaHtml(c){
+  const disponiveis = Object.entries(MACHINES).filter(([k,m]) => !m.inContract);
+  if(disponiveis.length === 0){
+    return `<div class="info-box"><div class="box-title danger">🔒 Nenhuma máquina disponível pra troca</div><div class="box-text">Todas as suas máquinas estão em contrato ativo agora.</div></div>`;
+  }
+
+  const listaHtml = disponiveis.map(([k,m]) => {
+    const valor = Math.round(valorMercadoAtual(k) * TROCA_DESAGIO_PCT);
+    return `<div onclick="selecionarMaquinaTroca('${k}')" style="text-align:left;background:${selectedTrocaKey===k?'rgba(51,224,160,.12)':'var(--surface)'};border:1.5px solid ${selectedTrocaKey===k?'rgba(51,224,160,.4)':'var(--surface-border)'};border-radius:10px;padding:10px 12px;margin-top:8px;cursor:pointer;">
+      <b>${m.name}</b> <span style="color:var(--text-faint);font-size:12px;">— ${Math.round(m.health)}% de condição</span><br>
+      <span style="font-size:13px;color:var(--ok);font-weight:700;">Valor de troca: ${fmt(valor)}</span>
+    </div>`;
+  }).join('');
+
+  if(!selectedTrocaKey || !MACHINES[selectedTrocaKey] || MACHINES[selectedTrocaKey].inContract){
+    return `<div class="info-box"><div class="box-title">🔄 Escolha a máquina que vai dar de troca</div><div class="box-text">O valor de troca usa o mesmo cálculo de mercado (idade + condição), com deságio menor que uma venda avulsa.</div></div>${listaHtml}`;
+  }
+
+  const { valorTroca, diferenca } = calcularTroca(selectedTrocaKey, c.vista);
+  const nomeTroca = MACHINES[selectedTrocaKey].name;
+
+  let resumoHtml, botoesHtml;
+  if(diferenca <= 0){
+    const receber = -diferenca;
+    resumoHtml = `<div class="plan-row"><span class="plan-label">Valor da ${nomeTroca}</span><span class="plan-value" style="color:var(--ok);">${fmt(valorTroca)}</span></div>
+      <div class="plan-row"><span class="plan-label">Preço da ${c.name}</span><span class="plan-value">${fmt(c.vista)}</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:700;">Você recebe de volta</span><span class="plan-value" style="color:var(--ok);font-size:16px;">${fmt(receber)}</span></div>`;
+    botoesHtml = `<button class="action-btn" onclick="confirmarTroca('receber')">🔄 Confirmar troca — receber ${fmt(receber)}</button>`;
+  } else {
+    const aprovacaoDif = podeFinanciar(currentLojaKey, diferenca);
+    resumoHtml = `<div class="plan-row"><span class="plan-label">Valor da ${nomeTroca}</span><span class="plan-value" style="color:var(--ok);">${fmt(valorTroca)}</span></div>
+      <div class="plan-row"><span class="plan-label">Preço da ${c.name}</span><span class="plan-value">${fmt(c.vista)}</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:700;">Diferença a pagar</span><span class="plan-value" style="color:var(--danger);font-size:16px;">${fmt(diferenca)}</span></div>`;
+    botoesHtml = `<button class="action-btn ${playerCash<diferenca?'risky':''}" onclick="confirmarTroca('vista')" ${playerCash<diferenca?'disabled':''}>💵 Pagar diferença à vista — ${fmt(diferenca)}</button>
+      <button class="action-btn" style="margin-top:9px;background:rgba(90,168,255,.12);border-color:rgba(90,168,255,.35);color:var(--blue);" onclick="confirmarTroca('financiado')" ${!aprovacaoDif.ok?'disabled':''}>📄 ${aprovacaoDif.ok ? 'Financiar a diferença' : 'Financiamento indisponível: '+aprovacaoDif.motivo}</button>`;
+  }
+
+  return `<div class="info-box"><div class="box-title">🔄 Trocando: ${nomeTroca}</div></div>
+    <div class="plan-box">${resumoHtml}</div>
+    <div class="action-zone">${botoesHtml}</div>`;
+}
+
+function confirmarTroca(modo){
+  const c = CATALOG[currentLojaKey];
+  const machineKeyTroca = selectedTrocaKey;
+  if(!machineKeyTroca || !MACHINES[machineKeyTroca]) return;
+  const { diferenca } = calcularTroca(machineKeyTroca, c.vista);
+
+  if(modo === 'vista' && playerCash < diferenca){
+    showToast('🔒 Caixa insuficiente para pagar a diferença à vista.');
+    return;
+  }
+  if(modo === 'financiado'){
+    const aprovacao = podeFinanciar(currentLojaKey, diferenca);
+    if(!aprovacao.ok){
+      showResultModal('🏦', 'Crédito não aprovado', aprovacao.motivo);
+      return;
+    }
+  }
+
+  const nomeAntiga = MACHINES[machineKeyTroca].name;
+  delete MACHINES[machineKeyTroca]; // a máquina antiga sai da frota — foi dada de entrada
+
+  if(modo === 'receber'){
+    playerCash += -diferenca; // diferenca já é negativa ou zero aqui
+  } else if(modo === 'vista'){
+    playerCash -= diferenca;
+  } else if(modo === 'financiado'){
+    const fin = calcularFinanciamento(diferenca, c.parcelasCount);
+    playerCash -= fin.entrada;
+    financiamentosAtivos.push({ nome: c.name, parcela: fin.parcela, parcelasRestantes: fin.parcelas, diasParaProxima: DIAS_ENTRE_PARCELAS });
+  }
+
+  const tpl = MACHINE_TEMPLATES[currentLojaKey];
+  const novaChave = chooseMachineKey(tpl.tipoKey);
+  MACHINES[novaChave] = {
+    tipoKey: tpl.tipoKey, idadeDias: 0, diasDesdeUltimaManutencao: 0,
+    name: tpl.name, cat: tpl.cat, specs: tpl.specs, photo: tpl.photo, thumb: tpl.thumb,
+    health:100, status:'green', statusLabel:'🟢 OK', hours:'0h (nova)', utilizacao:0,
+    problem:'Nenhum problema detectado — máquina recém-adquirida.',
+    original:{price:1800, downtime:'3h', impact:0, contract:null},
+    alt:{price:1100, downtime:'6h', impact:0, contract:null},
+    inContract:false, task:'Disponível para novo contrato', location:'Base — Campinas, SP'
+  };
+
+  registrarHistorico('🔄', `Troca realizada`, `${nomeAntiga} → ${tpl.name} · ${diferenca<=0?`recebeu ${fmt(-diferenca)}`:`pagou ${fmt(diferenca)}${modo==='financiado'?' (financiado)':' à vista'}`}`);
+  selectedTrocaKey = null;
+  updateFinanceDisplays();
+  renderFinancas();
+  renderMaquinasList(); renderManutList();
+  recomputarDisponibilidadeContratos();
+  showCompraCelebration(tpl.name, tpl.photo);
+}
+
 function buyMachine(){
   const c = CATALOG[currentLojaKey];
   const fin = calcularFinanciamento(c.vista, c.parcelasCount);
