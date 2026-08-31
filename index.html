@@ -1172,55 +1172,63 @@ const MACHINES = {
    Cada vídeo precisa mostrar exatamente o tipo de trabalho daquele contrato. Contratos sem vídeo
    confirmado aqui mostram só o dashboard, sem forçar uma cena que não corresponde à obra real. */
 const VIDEO_POR_CONTRATO = {
-  desmatamento: {
+  "Desmatamento Fazenda Boa Vista": {
     url: "video-desmatamento.mp4",
     poster: "https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=400&fit=crop&w=400"
+  },
+  "Extração de Cascalho": {
+    url: "video-cascalho.mp4",
+    poster: "foto-cascalho-thumb.jpg"
+  },
+  "Remoção de Entulho de Obra": {
+    url: "video-entulho.mp4",
+    poster: "https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop"
   }
-  // aterro, estrada, pedra, loteamento: ainda sem vídeo que combine de verdade com a cena —
+  // Os outros 37 arquétipos ainda sem vídeo que combine de verdade com a cena —
   // pendente de geração/busca melhor, não forçamos vídeo genérico só pra preencher.
 };
 
 const CONTRACT_POOL = [
-  { nome:"Aterro Industrial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:240000, riscoDesc:"Terreno com hist\u00f3rico de chuvas na regi\u00e3o. Pode haver atrasos por condi\u00e7\u00f5es clim\u00e1ticas.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Aterro Industrial \u2014 Fase 2", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:260000, riscoDesc:"\u00c1rea maior exige mais caminh\u00f5es escoando material simultaneamente.", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Abertura de Estrada Rural", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:14, valorBase:180000, riscoDesc:"Trecho relativamente simples, mas exige motoniveladora pr\u00f3pria \u2014 nenhuma dispon\u00edvel de in\u00edcio.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Reforma de Estrada Vicinal", req:[{tipo:"motoniveladora",qtd:1},{tipo:"caminhao",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:12, valorBase:165000, riscoDesc:"Estrada j\u00e1 existente, s\u00f3 precisa de nivelamento e reposi\u00e7\u00e3o de material.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Extra\u00e7\u00e3o de Pedra", req:[{tipo:"escavadeira30",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:21, valorBase:525000, riscoDesc:"Pedreira a c\u00e9u aberto, exige escavadeira de grande porte \u2014 fora do alcance inicial.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Terraplenagem p/ Loteamento", req:[{tipo:"trator",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:210000, riscoDesc:"Nivelamento de terreno para condom\u00ednio residencial.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Terraplenagem de Loteamento Grande", req:[{tipo:"trator",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:15, valorBase:280000, riscoDesc:"Loteamento maior \u2014 dois tratores nivelando em paralelo.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Desmatamento Fazenda Boa Vista", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:15, valorBase:95000, riscoDesc:"\u00c1rea rural de baixa complexidade, sem hist\u00f3rico de intercorr\u00eancias.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Desmatamento de \u00c1rea Extensa", req:[{tipo:"retro",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:18, valorBase:130000, riscoDesc:"Propriedade maior \u2014 dois retros limpando o terreno.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Demoli\u00e7\u00e3o Controlada", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:310000, riscoDesc:"Estrutura antiga, risco real de colapso parcial imprevisto durante a demoli\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
-  { nome:"Demoli\u00e7\u00e3o de Galp\u00e3o Industrial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:2}], risk:"high", riskLabel:"Alto", prazoDias:16, valorBase:350000, riscoDesc:"Galp\u00e3o grande, escombro pesado exige mais de um caminh\u00e3o de remo\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
-  { nome:"Dragagem de Lago Artificial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:265000, riscoDesc:"Remo\u00e7\u00e3o de sedimento acumulado \u2014 solo encharcado aumenta o risco de atolamento.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Desassoreamento de Rio", req:[{tipo:"escavadeira",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:220000, riscoDesc:"Curso d'\u00e1gua com correnteza \u2014 trabalho mais lento que em terra firme.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Abertura de Vala p/ Tubula\u00e7\u00e3o", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:85000, riscoDesc:"Vala estreita e rasa, trabalho relativamente previs\u00edvel.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Rede de Drenagem Pluvial", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:175000, riscoDesc:"Tubula\u00e7\u00e3o enterrada exige escava\u00e7\u00e3o precisa perto de vias j\u00e1 pavimentadas.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Nivelamento de Campo Agr\u00edcola", req:[{tipo:"trator",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:110000, riscoDesc:"Terreno plano, poucas surpresas \u2014 trabalho de rotina para o setor rural.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Preparo de Solo p/ Plantio", req:[{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:90000, riscoDesc:"Remo\u00e7\u00e3o de ra\u00edzes e revolvimento do solo antes do plantio.", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
-  { nome:"Escava\u00e7\u00e3o de Funda\u00e7\u00e3o Predial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:255000, riscoDesc:"Risco de encontrar rocha ou len\u00e7ol fre\u00e1tico raso durante a escava\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Escava\u00e7\u00e3o de Funda\u00e7\u00e3o \u2014 Pr\u00e9dio Grande", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:16, valorBase:320000, riscoDesc:"Funda\u00e7\u00e3o de maior porte, mais material a remover do canteiro.", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Pavimenta\u00e7\u00e3o de Estacionamento", req:[{tipo:"motoniveladora",qtd:1},{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:10, valorBase:150000, riscoDesc:"\u00c1rea comercial plana, trabalho relativamente controlado.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Limpeza P\u00f3s-Inc\u00eandio", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:145000, riscoDesc:"Solo inst\u00e1vel e cinzas dificultam a tra\u00e7\u00e3o das m\u00e1quinas.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Nivelamento de Campo Esportivo", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:120000, riscoDesc:"Superf\u00edcie precisa ficar perfeitamente nivelada \u2014 exige aten\u00e7\u00e3o, mas baixo risco.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Amplia\u00e7\u00e3o de Cemit\u00e9rio Municipal", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:78000, riscoDesc:"Trabalho pontual e de baixo volume, mas exige cuidado redobrado.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Cobertura de Aterro Sanit\u00e1rio", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:230000, riscoDesc:"Compacta\u00e7\u00e3o de camada de cobertura sobre res\u00edduos \u2014 cheiro forte, terreno inst\u00e1vel.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Limpeza de Faixa de Servid\u00e3o", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:88000, riscoDesc:"Faixa estreita ao longo de linha de transmiss\u00e3o, vegeta\u00e7\u00e3o leve.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Acesso p/ Parque E\u00f3lico", req:[{tipo:"motoniveladora",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:15, valorBase:275000, riscoDesc:"Estrada de acesso em terreno acidentado at\u00e9 o canteiro de montagem das turbinas.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Acesso p/ Usina Solar", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:11, valorBase:155000, riscoDesc:"Terreno relativamente plano, projeto de baixa complexidade.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Lastro de Ferrovia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:14, valorBase:240000, riscoDesc:"Distribui\u00e7\u00e3o de brita ao longo do trecho \u2014 exige precis\u00e3o e ritmo constante.", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
-  { nome:"Terraplenagem de P\u00e1tio Industrial", req:[{tipo:"trator",qtd:1},{tipo:"pa",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:235000, riscoDesc:"P\u00e1tio de armazenamento de grande porte, terreno j\u00e1 parcialmente compactado.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Escava\u00e7\u00e3o de Piscina de Conten\u00e7\u00e3o", req:[{tipo:"escavadeira",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:195000, riscoDesc:"Bacia de conten\u00e7\u00e3o de \u00e1gua pluvial \u2014 profundidade exige aten\u00e7\u00e3o estrutural.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Terraplenagem de Campo de Golfe", req:[{tipo:"trator",qtd:1},{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:16, valorBase:260000, riscoDesc:"Modelagem de terreno art\u00edstica, prazo mais longo por causa dos detalhes.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Reforma de Estrada de Fazenda", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:95000, riscoDesc:"Trecho curto e simples de manuten\u00e7\u00e3o rural.", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Conten\u00e7\u00e3o de Encosta", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:300000, riscoDesc:"Risco real de deslizamento durante a interven\u00e7\u00e3o \u2014 clima \u00e9 fator cr\u00edtico.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
-  { nome:"Estabiliza\u00e7\u00e3o de Margem de Rio", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:15, valorBase:315000, riscoDesc:"Trabalho pr\u00f3ximo \u00e0 \u00e1gua corrente, risco de eros\u00e3o durante a obra.", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Remo\u00e7\u00e3o de Entulho de Obra", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:105000, riscoDesc:"Canteiro j\u00e1 finalizado, s\u00f3 falta a limpeza \u2014 baixa complexidade.", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
-  { nome:"Preparo de Base p/ Galp\u00e3o Log\u00edstico", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:245000, riscoDesc:"Compacta\u00e7\u00e3o de base precisa atender especifica\u00e7\u00e3o r\u00edgida do cliente.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Extra\u00e7\u00e3o de Cascalho", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:250000, riscoDesc:"Jazida de cascalho a c\u00e9u aberto, volume grande de material transportado.", photo:"foto-cascalho-thumb.jpg", hero:"foto-cascalho-hero.jpg" },
-  { nome:"Extra\u00e7\u00e3o de Areia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:200000, riscoDesc:"Jazida de areia, terreno arenoso dificulta um pouco a tra\u00e7\u00e3o.", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
-  { nome:"Terraplenagem p/ Loteamento Popular", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:215000, riscoDesc:"Projeto habitacional popular, prazo apertado por exig\u00eancia do contratante.", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
-  { nome:"Escava\u00e7\u00e3o p/ Piscina Residencial", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:6, valorBase:62000, riscoDesc:"Obra pequena, quintal residencial \u2014 baix\u00edssima complexidade.", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" }
+  { nome:"Aterro Industrial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:240000, riscoDesc:"Caminhão pode atolar na lama após chuva, prendendo a operação até o resgate.", tipoConsequencia:"atraso", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Aterro Industrial — Fase 2", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:260000, riscoDesc:"Solo instável pode ceder sob o peso do trator, danificando as esteiras.", tipoConsequencia:"custo", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Abertura de Estrada Rural", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:14, valorBase:180000, riscoDesc:"Pedras ocultas sob a terra podem danificar a lâmina de nivelamento.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Reforma de Estrada Vicinal", req:[{tipo:"motoniveladora",qtd:1},{tipo:"caminhao",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:12, valorBase:165000, riscoDesc:"Buraco antigo mal sinalizado pode causar dano à suspensão da máquina.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Extração de Pedra", req:[{tipo:"escavadeira30",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:21, valorBase:525000, riscoDesc:"Risco real de queda de blocos de rocha soltos sobre a máquina durante a extração.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem p/ Loteamento", req:[{tipo:"trator",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:210000, riscoDesc:"Fundação antiga enterrada e não mapeada pode danificar a lâmina do trator.", tipoConsequencia:"custo", photo:"foto-loteamento-thumb.jpg", hero:"foto-loteamento-hero.jpg" },
+  { nome:"Terraplenagem de Loteamento Grande", req:[{tipo:"trator",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:15, valorBase:280000, riscoDesc:"Falha de coordenação entre os dois tratores pode causar colisão leve entre as máquinas.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Desmatamento Fazenda Boa Vista", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:15, valorBase:95000, riscoDesc:"Tronco caído de forma inesperada pode prender a caçamba durante a remoção.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Desmatamento de Área Extensa", req:[{tipo:"retro",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:18, valorBase:130000, riscoDesc:"Área extensa aumenta a chance de encontrar ninho de inseto ou animal peçonhento, parando o serviço.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Demolição Controlada", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:310000, riscoDesc:"Risco real de colapso parcial imprevisto da estrutura sobre a máquina.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Demolição de Galpão Industrial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:2}], risk:"high", riskLabel:"Alto", prazoDias:16, valorBase:350000, riscoDesc:"Estrutura metálica pode ceder de forma imprevisível, atingindo equipamento próximo.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1776594974675-b21647efe342?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Dragagem de Lago Artificial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:265000, riscoDesc:"Solo do fundo do lago pode ceder, fazendo a escavadeira atolar ou afundar parcialmente na água.", tipoConsequencia:"atraso", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Desassoreamento de Rio", req:[{tipo:"escavadeira",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:220000, riscoDesc:"Correnteza forte pode desestabilizar a máquina na margem, com risco de a esteira escorregar pra dentro d'água.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Abertura de Vala p/ Tubulação", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:85000, riscoDesc:"Cabo elétrico ou tubulação não mapeada pode ser rompida durante a escavação.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Rede de Drenagem Pluvial", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:175000, riscoDesc:"Escavação perto de via pavimentada pode causar rachadura no asfalto, gerando multa extra.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Nivelamento de Campo Agrícola", req:[{tipo:"trator",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:110000, riscoDesc:"Cerca ou irrigação enterrada pode ser rompida acidentalmente durante o nivelamento.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Preparo de Solo p/ Plantio", req:[{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:90000, riscoDesc:"Raízes profundas podem travar a caçamba momentaneamente, exigindo manobra extra.", tipoConsequencia:"atraso", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Escavação de Fundação Predial", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:255000, riscoDesc:"Encontrar rocha ou lençol freático raso pode obrigar a parar a escavação até avaliação técnica.", tipoConsequencia:"atraso", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Escavação de Fundação — Prédio Grande", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:16, valorBase:320000, riscoDesc:"Profundidade maior aumenta o risco de desmoronamento lateral da vala.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Pavimentação de Estacionamento", req:[{tipo:"motoniveladora",qtd:1},{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:10, valorBase:150000, riscoDesc:"Nivelamento impreciso pode exigir uma segunda passada completa.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Limpeza Pós-Incêndio", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:145000, riscoDesc:"Solo instável coberto de cinzas pode ceder sob o peso do trator sem aviso.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Nivelamento de Campo Esportivo", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:120000, riscoDesc:"Irregularidade oculta no terreno pode exigir passada extra de nivelamento.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Ampliação de Cemitério Municipal", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:78000, riscoDesc:"Proximidade com estrutura já existente exige cuidado redobrado — risco de dano à vizinhança.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Cobertura de Aterro Sanitário", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:230000, riscoDesc:"Gases do aterro podem se acumular e causar mal-estar no operador, exigindo pausa na operação.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Limpeza de Faixa de Servidão", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:9, valorBase:88000, riscoDesc:"Proximidade com linha de transmissão exige distância mínima — risco de choque se não respeitada.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Acesso p/ Parque Eólico", req:[{tipo:"motoniveladora",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:15, valorBase:275000, riscoDesc:"Encosta acidentada aumenta o risco de a motoniveladora escorregar ou tombar em terreno molhado.", tipoConsequencia:"ambos", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Acesso p/ Usina Solar", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:11, valorBase:155000, riscoDesc:"Terreno relativamente plano — risco baixo, mas poeira excessiva pode exigir pausa por segurança.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Lastro de Ferrovia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:14, valorBase:240000, riscoDesc:"Trabalho próximo a trilho ativo pode ser interditado por segurança a qualquer momento.", tipoConsequencia:"atraso", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem de Pátio Industrial", req:[{tipo:"trator",qtd:1},{tipo:"pa",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:235000, riscoDesc:"Solo parcialmente compactado pode ocultar vazio subterrâneo, arriscando afundamento repentino da máquina.", tipoConsequencia:"ambos", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Escavação de Piscina de Contenção", req:[{tipo:"escavadeira",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:10, valorBase:195000, riscoDesc:"Profundidade da escavação aumenta o risco de desabamento das paredes de terra sobre a máquina.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem de Campo de Golfe", req:[{tipo:"trator",qtd:1},{tipo:"pa",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:16, valorBase:260000, riscoDesc:"Exigência de acabamento fino aumenta o risco de retrabalho, mais que o de incidente físico.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Reforma de Estrada de Fazenda", req:[{tipo:"motoniveladora",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:8, valorBase:95000, riscoDesc:"Trecho simples — risco baixo, mas erosão recente pode exigir correção extra.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Contenção de Encosta", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:300000, riscoDesc:"Risco real de deslizamento de terra durante a intervenção, especialmente em dia de chuva.", tipoConsequencia:"ambos", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" },
+  { nome:"Estabilização de Margem de Rio", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:15, valorBase:315000, riscoDesc:"Erosão da margem pode ceder sob o peso da máquina, com risco de tombamento em direção à água.", tipoConsequencia:"ambos", photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=1000&auto=format&fit=crop" },
+  { nome:"Remoção de Entulho de Obra", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:105000, riscoDesc:"Entulho pontiagudo pode perfurar pneu da máquina durante o carregamento.", tipoConsequencia:"custo", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Preparo de Base p/ Galpão Logístico", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:245000, riscoDesc:"Especificação rígida de compactação aumenta o risco de retrabalho caso a base não passe no teste.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Extração de Cascalho", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:250000, riscoDesc:"Pilha instável de material pode desmoronar sobre a máquina durante o carregamento.", tipoConsequencia:"custo", photo:"foto-cascalho-thumb.jpg", hero:"foto-cascalho-hero.jpg" },
+  { nome:"Extração de Areia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:200000, riscoDesc:"Areia encharcada pode fazer a máquina atolar durante a extração.", tipoConsequencia:"atraso", photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=400&auto=format&fit=crop", hero:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=1000&auto=format&fit=crop" },
+  { nome:"Terraplenagem p/ Loteamento Popular", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:215000, riscoDesc:"Prazo apertado por exigência do contratante aumenta a pressão — risco maior de atraso que de incidente físico.", tipoConsequencia:"atraso", photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop", hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop" },
+  { nome:"Escavação p/ Piscina Residencial", req:[{tipo:"retro",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:6, valorBase:62000, riscoDesc:"Espaço apertado do quintal aumenta o risco de a máquina esbarrar em muro ou estrutura vizinha.", tipoConsequencia:"custo", photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=400", hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000" }
 ];
 
 const CONTRACTS = {
@@ -1367,10 +1375,22 @@ function regenerarContrato(key){
   // Sorteia um arquétipo diferente do catálogo de 40 (evita repetir o nome que acabou de sair,
   // desde que o catálogo tenha mais de uma opção) — isso é o que garante que o jogador não fica
   // vendo o mesmo tipo de obra toda hora, mesmo jogando por muito tempo.
+  //
+  // Rede de segurança: se NENHUM dos 5 contratos visíveis (contando esse que está regenerando)
+  // ficaria cumprível com a frota atual, força esse aqui a ser um que o jogador consiga cumprir —
+  // evita a "seca" de ficar sem nenhuma opção viável só por causa do sorteio.
+  const outrosCumprivel = Object.entries(CONTRACTS).some(([k,outro]) => k !== key && outro.hasMachine);
+  const cumpriveisNoPool = CONTRACT_POOL.filter(a => calcularHasMachine(a.req).ok);
+  const precisaForcar = !outrosCumprivel && cumpriveisNoPool.length > 0;
+
   let arquetipo;
-  do {
-    arquetipo = CONTRACT_POOL[Math.floor(Math.random()*CONTRACT_POOL.length)];
-  } while (arquetipo.nome === c.name && CONTRACT_POOL.length > 1);
+  if(precisaForcar){
+    arquetipo = cumpriveisNoPool[Math.floor(Math.random()*cumpriveisNoPool.length)];
+  } else {
+    do {
+      arquetipo = CONTRACT_POOL[Math.floor(Math.random()*CONTRACT_POOL.length)];
+    } while (arquetipo.nome === c.name && CONTRACT_POOL.length > 1);
+  }
 
   const { ok, missing } = calcularHasMachine(arquetipo.req);
   const tier = obterTierReputacao(reputacao);
@@ -2276,7 +2296,7 @@ function abrirObra(idx){
   const ac = acceptedContracts[idx];
   if(!ac) return;
   const catalog = CONTRACTS[ac.key];
-  const video = VIDEO_POR_CONTRATO[ac.key];
+  const video = VIDEO_POR_CONTRATO[ac.name];
   const videoWrap = document.getElementById('obraVideoWrap');
 
   if(video){
@@ -2330,6 +2350,95 @@ function fecharObra(){
   document.getElementById('obraVideoWrap').innerHTML = ''; // pausa o vídeo de verdade, não só esconde
 }
 
+/* ===================== DECISÃO DE ENGENHARIA — resolver risco vira escolha real, não botão único =====================
+   Cada tipo de incidente (tipoConsequencia do arquétipo) oferece 3 caminhos: caro e seguro, padrão,
+   ou barato e arriscado. Decisão mal tomada tem custo de verdade — a chance de escalar pra perda
+   total do contrato varia bastante entre as opções. */
+const OPCOES_ENGENHARIA = {
+  custo: [
+    { id:'robusta', label:'Reparo estrutural completo', fatorCusto:1.4, chanceEscalada:0.10, extraDias:1, desc:'Resolve com segurança, praticamente elimina o risco de piorar — mas custa mais.' },
+    { id:'padrao',  label:'Reparo padrão', fatorCusto:1.0, chanceEscalada:0.30, extraDias:3, desc:'Caminho intermediário — nem o mais caro, nem o mais arriscado.' },
+    { id:'gambiarra', label:'Reparo paliativo (mais barato)', fatorCusto:0.4, chanceEscalada:0.55, extraDias:1, desc:'Economiza agora, mas mais da metade das vezes o problema volta pior.' }
+  ],
+  atraso: [
+    { id:'robusta', label:'Mobilizar equipe extra e equipamento de apoio', fatorCusto:1.5, chanceEscalada:0.08, extraDias:1, desc:'Resolve rápido e com segurança — caro, mas quase elimina o risco de piorar.' },
+    { id:'padrao',  label:'Resolver com a equipe atual', fatorCusto:1.0, chanceEscalada:0.30, extraDias:3, desc:'Caminho intermediário — nem o mais caro, nem o mais arriscado.' },
+    { id:'gambiarra', label:'Forçar a operação sem reforço', fatorCusto:0.5, chanceEscalada:0.55, extraDias:5, desc:'Economiza dinheiro agora, mas se não der certo o atraso é bem maior.' }
+  ],
+  ambos: [
+    { id:'robusta', label:'Solução técnica completa', fatorCusto:1.4, chanceEscalada:0.10, extraDias:2, desc:'Resolve com segurança, praticamente elimina o risco de piorar — mais caro.' },
+    { id:'padrao',  label:'Solução padrão', fatorCusto:1.0, chanceEscalada:0.30, extraDias:3, desc:'Caminho intermediário, já validado.' },
+    { id:'gambiarra', label:'Solução mínima (mais barata)', fatorCusto:0.4, chanceEscalada:0.55, extraDias:2, desc:'Economiza agora, mas o risco de piorar é bem mais alto.' }
+  ]
+};
+
+function abrirDecisaoEngenharia(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac) return;
+  const catalog = CONTRACTS[ac.key];
+  const opcoes = OPCOES_ENGENHARIA[catalog.tipoConsequencia] || OPCOES_ENGENHARIA.ambos;
+  const exp = calcularExposicao(ac.key, ac.seguro);
+
+  const listaHtml = opcoes.map(op => {
+    const custoEstimado = Math.round(exp.impacto * op.fatorCusto);
+    return `<div onclick="resolverComOpcaoEngenharia(${idx},'${op.id}')" style="text-align:left;background:var(--surface);border:1.5px solid var(--surface-border);border-radius:10px;padding:11px 12px;margin-top:9px;cursor:pointer;">
+      <b>${op.label}</b><br>
+      <span style="font-size:12px;color:var(--text-faint);">${op.desc}</span><br>
+      <span style="font-size:12.5px;font-weight:700;color:var(--danger);">Custo estimado: ${fmt(custoEstimado)}</span>
+      <span style="font-size:12px;color:var(--text-faint);"> · chance de piorar: ${Math.round(op.chanceEscalada*100)}%</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('resultModalIcon').textContent = '🛠️';
+  document.getElementById('resultModalTitle').textContent = 'Escolha a solução de engenharia';
+  document.getElementById('resultModalText').innerHTML = `${catalog.riskDesc}<br><br>Como o dono da empresa, você decide como resolver:${listaHtml}`;
+  document.querySelector('.result-modal-box').classList.remove('success');
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+
+function resolverComOpcaoEngenharia(idx, opcaoId){
+  const ac = acceptedContracts[idx];
+  if(!ac) { closeResultModal(); return; }
+  const catalog = CONTRACTS[ac.key];
+  const opcoes = OPCOES_ENGENHARIA[catalog.tipoConsequencia] || OPCOES_ENGENHARIA.ambos;
+  const opcao = opcoes.find(o => o.id === opcaoId);
+  const exp = calcularExposicao(ac.key, ac.seguro);
+
+  const escalar = Math.random() < opcao.chanceEscalada;
+  if(escalar){
+    const multa = Math.round(ac.value * 0.10);
+    playerCash -= multa;
+    ajustarReputacao(-8);
+    registrarHistorico('🔴', `Contrato perdido: ${ac.name}`, `Decisão de engenharia (${opcao.label}) não foi suficiente — risco escalou. Multa de cancelamento: ${fmt(multa)}`);
+    liberarMaquinas(ac.machineKeys);
+    acceptedContracts.splice(idx,1);
+    lostContracts.push({ name: ac.name, value: ac.value, machineKeys: ac.machineKeys, multa });
+    historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
+    regenerarContrato(ac.key);
+    atualizarMissoes('perdido');
+    updateFinanceDisplays();
+    renderContratosAndamento(); renderContratosConcluidos(); renderFinancas(); renderContratosList();
+    renderMaquinasList(); renderManutList();
+    switchContratoTab('concluidos');
+    showResultModal('💥', 'Contrato perdido', `A solução escolhida (${opcao.label}) não foi suficiente, e o risco escalou em "${ac.name}". Multa de cancelamento: ${fmt(multa)}.`);
+    return;
+  }
+
+  const custoFinal = Math.round(exp.impacto * opcao.fatorCusto);
+  playerCash -= custoFinal;
+  ac.custoRiscoAdministrado += custoFinal;
+  ajustarReputacao(-3);
+  ac.diasDecorridos += opcao.extraDias;
+  processarParcelasDoTempo(opcao.extraDias);
+  envelhecerFrota(opcao.extraDias);
+  ac.state = 'EM_ANDAMENTO';
+  ac.eventoAtivo = null;
+  registrarHistorico('🟡', `Risco administrado: ${ac.name}`, `${opcao.label} · custo ${fmt(custoFinal)} · +${opcao.extraDias} dias no prazo`);
+  updateFinanceDisplays();
+  renderContratosAndamento();
+  showResultModal('⚠️', 'Situação resolvida', `${opcao.label} aplicada.\n\nCusto: ${fmt(custoFinal)}\nPrazo aumentou em ${opcao.extraDias} dia(s).`);
+}
+
 function avancarContrato(idx){
   const ac = acceptedContracts[idx];
   if(!ac){
@@ -2341,37 +2450,8 @@ function avancarContrato(idx){
   const exp = calcularExposicao(ac.key, ac.seguro);
 
   if(ac.state === 'EM_RISCO'){
-    const escalar = Math.random() < 0.30;
-    if(escalar){
-      const multa = Math.round(ac.value * 0.10);
-      playerCash -= multa;
-      ajustarReputacao(-8);
-      registrarHistorico('🔴', `Contrato perdido: ${ac.name}`, `O risco escalou. Multa de cancelamento: ${fmt(multa)}`);
-      liberarMaquinas(ac.machineKeys);
-      acceptedContracts.splice(idx,1);
-      lostContracts.push({ name: ac.name, value: ac.value, machineKeys: ac.machineKeys, multa });
-      historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
-      regenerarContrato(ac.key);
-      atualizarMissoes('perdido');
-      updateFinanceDisplays();
-      renderContratosAndamento(); renderContratosConcluidos(); renderFinancas(); renderContratosList();
-      renderMaquinasList(); renderManutList();
-      switchContratoTab('concluidos');
-      showResultModal('💥', 'Contrato perdido', `O risco escalou em "${ac.name}". Multa de cancelamento: ${fmt(multa)}.`);
-      return;
-    } else {
-      playerCash -= exp.impacto;
-      ac.custoRiscoAdministrado += exp.impacto;
-      ajustarReputacao(-3);
-      ac.diasDecorridos += 3;
-      processarParcelasDoTempo(3);
-      envelhecerFrota(3);
-      ac.state = 'EM_ANDAMENTO';
-      ac.eventoAtivo = null;
-      registrarHistorico('🟡', `Risco administrado: ${ac.name}`, `Custo ${fmt(exp.impacto)} · +3 dias no prazo`);
-      updateFinanceDisplays();
-      showResultModal('⚠️', 'Risco administrado', `Custo de ${fmt(exp.impacto)} para resolver a situação, e o prazo aumentou em 3 dias.`);
-    }
+    abrirDecisaoEngenharia(idx);
+    return;
   } else {
     const problemaOcorreu = Math.random() < exp.prob;
     if(problemaOcorreu){
@@ -2723,8 +2803,18 @@ function openContractDetail(key){
       <div class="box-text">${c.penalty}</div>
     </div>
     <div class="action-zone">
-      ${c.hasMachine ? '' : `<div class="warn-box"><b>🚫 Você não possui a máquina necessária disponível.</b>${c.missing}</div>`}
-      <button class="action-btn ${c.hasMachine?'':'locked'}" onclick="acceptContract()">${c.hasMachine?'✅ Aceitar contrato':'🔒 Aceitar contrato'}<span class="sub">${c.hasMachine?'Máquina disponível — pronto para iniciar':'Disponibilize a máquina necessária'}</span></button>
+      ${(() => {
+        const disp = maquinasDisponiveisAgora(c.requiredMachineKeys);
+        if(!c.hasMachine){
+          return `<div class="warn-box"><b>🚫 Você não possui a máquina necessária.</b>${c.missing}</div>
+          <button class="action-btn locked" onclick="acceptContract()">🔒 Aceitar contrato<span class="sub">Disponibilize a máquina necessária</span></button>`;
+        }
+        if(!disp.ok){
+          return `<div class="warn-box"><b>🔒 Máquina ocupada em outro contrato.</b>${disp.motivo}</div>
+          <button class="action-btn locked" onclick="acceptContract()">🔒 Aceitar contrato<span class="sub">Aguarde a máquina ficar livre, ou realoque</span></button>`;
+        }
+        return `<button class="action-btn" onclick="acceptContract()">✅ Aceitar contrato<span class="sub">Máquina disponível — pronto para iniciar</span></button>`;
+      })()}
     </div>`;
   renderContractRiskBlock();
   document.getElementById('contratos-list-view').classList.remove('active');
