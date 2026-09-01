@@ -2,13 +2,15 @@
 // Sempre que atualizar o app.html, AUMENTE o número da versão abaixo
 // (v1 -> v2 -> v3...), senão o celular das pessoas continua mostrando
 // a versão antiga em cache.
-const CACHE_VERSION = 'imperio-v28';
+const CACHE_VERSION = 'imperio-v31';
 
 const ARQUIVOS_PARA_CACHE = [
   './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
+  './icon-192-maskable.png',
+  './icon-512-maskable.png',
   './video-desmatamento.mp4',
   './video-cascalho.mp4',
   './video-entulho.mp4',

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Império das Máquinas — App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
     display:flex;flex-direction:column;
   }
   .app-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;min-height:0;}
-  .statusbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:19.5px;font-weight:600;color:var(--text-dim);flex-shrink:0;}
+  .statusbar{height:30px;padding-top:env(safe-area-inset-top, 0px);display:flex;align-items:center;justify-content:space-between;padding-left:22px;padding-right:22px;font-size:19.5px;font-weight:600;color:var(--text-dim);flex-shrink:0;}
   .statusbar-brand{font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;color:#FFC947;letter-spacing:.01em;text-shadow:1px 1.5px 0 #C17710;}
 
   .topbar{display:flex;align-items:center;gap:8px;padding:8px 14px 8px;flex-shrink:0;}
@@ -915,11 +915,20 @@ const CUSTOS_ADMINISTRATIVOS_COMPONENTES = [
   { label:"Pró-labore dos sócios",       icon:"💼", valorDia:500 }
 ];
 const CUSTO_ADMINISTRATIVO_DIARIO_BASE = CUSTOS_ADMINISTRATIVOS_COMPONENTES.reduce((s,c)=>s+c.valorDia,0); // R$1.250/dia com 1 máquina
-const CUSTO_ADICIONAL_POR_MAQUINA_DIA = 150; // cada máquina extra na frota soma isso ao custo fixo diário
+const CUSTO_ADICIONAL_POR_MAQUINA_DIA = 150; // máquina extra TRABALHANDO soma isso ao custo fixo diário
+const CUSTO_MAQUINA_OCIOSA_DIA = 50; // ACHADO DA FASE 4A: máquina extra PARADA custa bem menos — só
+// armazenagem/seguro, não a coordenação de operação ativa. Antes, uma frota grande e ociosa pesava
+// no custo administrativo igual a uma frota trabalhando — o que ajudava a explicar por que
+// estratégias que compravam máquina sem garantia de contrato correspondente colapsavam rápido demais.
 
 function custoAdministrativoDiarioAtual(){
-  const numMaquinas = Math.max(1, Object.keys(MACHINES).length);
-  return CUSTO_ADMINISTRATIVO_DIARIO_BASE + (numMaquinas - 1) * CUSTO_ADICIONAL_POR_MAQUINA_DIA;
+  const maquinas = Object.values(MACHINES);
+  if(maquinas.length <= 1) return CUSTO_ADMINISTRATIVO_DIARIO_BASE;
+  // A primeira máquina já está embutida no custo-base fixo. Cada máquina além dela soma um
+  // valor que depende do status: trabalhando pesa cheio, parada pesa bem menos.
+  const extras = maquinas.slice(1);
+  const custoExtras = extras.reduce((soma, m) => soma + (m.inContract ? CUSTO_ADICIONAL_POR_MAQUINA_DIA : CUSTO_MAQUINA_OCIOSA_DIA), 0);
+  return CUSTO_ADMINISTRATIVO_DIARIO_BASE + custoExtras;
 }
 function calcularCustosAdministrativos(dias){
   const fatorEscala = custoAdministrativoDiarioAtual() / CUSTO_ADMINISTRATIVO_DIARIO_BASE;
@@ -1987,6 +1996,11 @@ function confirmStartMachine(){
   MACHINES[selectedStartMachine].task = 'Disponível para novo contrato';
   MACHINES[selectedStartMachine].location = 'Base — Campinas, SP';
   recalcularPatrimonio();
+  Object.keys(CONTRACTS).forEach(function(k){
+    var check = calcularHasMachine(CONTRACTS[k].requiredMachineKeys);
+    CONTRACTS[k].hasMachine = check.ok;
+    CONTRACTS[k].missing = check.missing;
+  });
   historicoCaixa = [{ label:'Início', valor: playerCash }];
   updateFinanceDisplays();
   showToast('✅ Máquina adquirida! Bem-vindo ao seu império.');
@@ -2194,7 +2208,11 @@ function acceptContract(){
     return;
   }
   const exp = calcularExposicao(currentContractKey, selectedSeguro);
-  if(playerCash < exp.custoSeguro){
+  // Correção achada na Fase 4A (simulação de longevidade): se o seguro escolhido é grátis (R$0),
+  // aceitar não pode depender do caixa — senão caixa negativo (de uma multa qualquer) trava o
+  // jogador pra sempre, já que nenhum número negativo passaria no "caixa < 0". Morte econômica
+  // sem saída, mesmo pra quem escolhe não gastar nada.
+  if(exp.custoSeguro > 0 && playerCash < exp.custoSeguro){
     showToast('🔒 Caixa insuficiente para pagar o seguro escolhido.');
     return;
   }
@@ -2710,7 +2728,7 @@ function renderFinancas(){
   const custoDiarioEl = document.getElementById('financasCustosAdminExplicacao');
   if(custoDiarioEl){
     const numMaquinas = Object.keys(MACHINES).length;
-    custoDiarioEl.innerHTML = `Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou. <b style="color:var(--amber-1);">Hoje: ${fmt(custoAdministrativoDiarioAtual())}/dia</b> (frota de ${numMaquinas} máquina${numMaquinas!==1?'s':''}${numMaquinas>1?` — cada uma além da 1ª soma ${fmt(CUSTO_ADICIONAL_POR_MAQUINA_DIA)}/dia`:''}).`;
+    custoDiarioEl.innerHTML = `Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou. <b style="color:var(--amber-1);">Hoje: ${fmt(custoAdministrativoDiarioAtual())}/dia</b> (frota de ${numMaquinas} máquina${numMaquinas!==1?'s':''}${numMaquinas>1?` — cada uma além da 1ª soma ${fmt(CUSTO_ADICIONAL_POR_MAQUINA_DIA)}/dia se estiver trabalhando, ou só ${fmt(CUSTO_MAQUINA_OCIOSA_DIA)}/dia se estiver parada`:''}).`;
   }
 
   const finTotalParcelasEl = document.getElementById('finTotalParcelas');

@@ -1,0 +1,113 @@
+==========================================================
+GUIA DE REFERÊNCIA — IMPÉRIO DAS MÁQUINAS
+Como subir/atualizar arquivos no GitHub (pelo celular)
+==========================================================
+
+REPOSITÓRIO DO JOGO (criar com este nome ou outro à sua escolha)
+------------------------------
+github.com/<seu-usuario>/imperio-das-maquinas
+Site publicado ficará em: https://<seu-usuario>.github.io/imperio-das-maquinas/
+
+
+==========================================================
+1. CRIAR O REPOSITÓRIO
+==========================================================
+1. No GitHub, cria um repositório novo (Public)
+2. NÃO marca nenhuma opção de "Add README" — deixa vazio
+3. Nome sugerido: imperio-das-maquinas
+
+
+==========================================================
+2. SUBIR OS 4 ARQUIVOS (um de cada vez — funciona liso no celular)
+==========================================================
+No repositório vazio: "Add file" → "Upload files" → seleciona UM
+arquivo por vez (ou vários juntos, se o seletor deixar) → desce até
+o final → "Commit changes..." → confirma.
+
+Os 4 arquivos que você precisa subir (estão no zip que te mandei):
+  index.html      - o jogo inteiro (era o app.html, só renomeado)
+  manifest.json   - configuração de "app instalável" (PWA)
+  sw.js           - Service Worker (cache offline)
+  icon-192.png    - ícone do app
+  icon-512.png    - ícone do app (tamanho grande)
+  video-desmatamento.mp4 - vídeo "tipo GIF" do contrato de Desmatamento
+  video-cascalho.mp4 - vídeo do contrato de Extração de Cascalho
+  video-entulho.mp4 - vídeo do contrato de Remoção de Entulho de Obra
+  foto-cascalho-thumb.jpg e foto-cascalho-hero.jpg - foto do contrato "Extração de Cascalho"
+  foto-loteamento-thumb.jpg e foto-loteamento-hero.jpg - foto do contrato "Terraplenagem p/ Loteamento"
+  icon-192-maskable.png e icon-512-maskable.png - versão "maskable" dos ícones,
+                    necessária pro Android mostrar o ícone corretamente na instalação
+                    (mais arquivos assim vão sendo adicionados conforme você gera mais imagens/vídeos)
+
+Todos ficam soltos na RAIZ do repositório — nenhuma pasta necessária
+desta vez (mais simples que o projeto Capacitor que eu tinha
+preparado antes, que pode ser ignorado).
+
+
+==========================================================
+3. ATIVAR O GITHUB PAGES
+==========================================================
+1. No repositório, vai em "Settings" (ícone de engrenagem, no menu
+   de abas do topo — pode estar escondido atrás de "..." no celular)
+2. Menu lateral → "Pages"
+3. Em "Branch", seleciona "main" e a pasta "/ (root)"
+4. Toca em "Save"
+5. Espera 1-2 minutos, atualiza a página — vai aparecer o link do
+   site publicado (https://<seu-usuario>.github.io/imperio-das-maquinas/)
+6. Testa esse link no navegador — o jogo tem que abrir normal
+
+
+==========================================================
+4. EMPACOTAR COMO APK — PWABUILDER (sem instalar nada)
+==========================================================
+1. Acessa pwabuilder.com pelo navegador do celular
+2. Cola a URL do site publicado (do passo 3) → "Start"
+3. Espera ele analisar o site (confere se manifest.json e sw.js
+   foram encontrados — se dor algum aviso vermelho, me manda print)
+4. Aba "Android" → "Package For Stores"
+5. Confirma Package ID (sugestão: com.imperiodasmaquinas.app) e nome
+   do app ("Império das Máquinas")
+6. "Download Package" → gera um .zip com:
+   - Império das Máquinas.aab   (pra Play Store, no futuro)
+   - Império das Máquinas.apk   (versão de teste — instala direto)
+   - signing.keystore            (CHAVE DE ASSINATURA — guardar com
+     muito cuidado, sem ela não dá pra atualizar o app depois)
+   - signing-key-info.txt        (senha da chave)
+   - assetlinks.json             (só necessário se for publicar de
+     verdade na Play Store depois — ver seção 5)
+7. Extrai esse zip, pega o .apk, copia pro celular e instala
+
+
+==========================================================
+5. SE FOR PUBLICAR NA PLAY STORE NO FUTURO
+==========================================================
+O assetlinks.json que o PWABuilder gerar precisa ficar acessível em:
+https://<seu-usuario>.github.io/.well-known/assetlinks.json
+
+Isso é na RAIZ do domínio do GitHub Pages, não dentro da pasta do
+projeto — por isso, se chegar nessa etapa, provavelmente vai precisar
+de um repositório separado chamado exatamente:
+<seu-usuario>.github.io
+(igual foi feito no Tele Game 77) — aviso isso agora só pra você já
+saber que essa etapa existe; não é necessária agora, só quando for
+publicar de verdade.
+
+
+==========================================================
+6. LIÇÕES DO PROJETO ANTERIOR QUE JÁ SE APLICAM AQUI
+==========================================================
+a) Sempre que o "index.html" mudar, é bom subir de novo E aumentar o
+   número CACHE_VERSION dentro do sw.js (hoje está "imperio-v1"),
+   senão o celular das pessoas pode continuar mostrando a versão
+   antiga em cache.
+
+b) Teste sempre numa aba anônima depois de atualizar, pra evitar que
+   o cache do próprio navegador atrapalhe o teste.
+
+c) A chave de assinatura (signing.keystore) do PWABuilder NUNCA pode
+   ser perdida — faça backup no Google Drive assim que gerar.
+
+
+==========================================================
+FIM DO GUIA
+==========================================================
