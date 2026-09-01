@@ -1,0 +1,200 @@
+{
+  "contratsTier2": {
+    "descricao": "Contratos intermediários, valor R$45k-90k, liberam com Nível 2",
+    "quantidade_base": 12,
+    "opcoesSimultaneas": 4
+  },
+  "contratsTier3": {
+    "descricao": "Contratos avançados, valor R$90k-150k, liberam com Nível 3 (após Cadeia Técnica)",
+    "quantidade_base": 8,
+    "opcoesSimultaneas": 3
+  },
+  "exemplosContratsTier2": [
+    {
+      "id": "tier2_001",
+      "nome": "Fundação Comercial Centro",
+      "cliente": "ConstrutorX Empreendimentos",
+      "cidade": "São Paulo, SP",
+      "valor": 45000,
+      "duracao_dias": 14,
+      "maquinasRequeridas": ["Retroescavadeira", "Rolo Compactador"],
+      "risco_base": 25,
+      "marca_preferida": "marca_02_oleo",
+      "descricao_marca": "Cliente prefere fornecedores que usam SynthFlow. Bônus +5% se usar.",
+      "bonus_se_marca_preferida": 2250,
+      "descricao": "Escavação e compactação de fundação para shopping center. 2 máquinas, 14 dias."
+    },
+    {
+      "id": "tier2_002",
+      "nome": "Reforma Via Expressa",
+      "cliente": "Prefeitura Municipal",
+      "cidade": "Belo Horizonte, MG",
+      "valor": 67500,
+      "duracao_dias": 21,
+      "maquinasRequeridas": ["Motoniveladora", "Rolo Compactador"],
+      "risco_base": 35,
+      "marca_preferida": "marca_04_combustivel",
+      "descricao_marca": "Projeto oficial requer combustível PowerFuel certificado.",
+      "bonus_se_marca_preferida": 3375,
+      "descricao": "Levantamento e compactação de 3km de asfalto. Projeto oficial."
+    },
+    {
+      "id": "tier2_003",
+      "nome": "Pátio Logístico Industrial",
+      "cliente": "LogistXYZ Distribuição",
+      "cidade": "Campinas, SP",
+      "valor": 56000,
+      "duracao_dias": 18,
+      "maquinasRequeridas": ["Escavadeira Hidráulica", "Rolo Compactador"],
+      "risco_base": 20,
+      "marca_preferida": "marca_03_pecas",
+      "descricao_marca": "Exigem peças originais certificadas MegaParts.",
+      "bonus_se_marca_preferida": 2800,
+      "descricao": "Escavação, compactação e drenagem de pátio para distribuição."
+    },
+    {
+      "id": "tier2_004",
+      "nome": "Terraplanagem Vale do Rio",
+      "cliente": "Desenvolvimento Urbano ABC",
+      "cidade": "Osasco, SP",
+      "valor": 78000,
+      "duracao_dias": 25,
+      "maquinasRequeridas": ["Motoniveladora", "Retroescavadeira", "Rolo Compactador"],
+      "risco_base": 40,
+      "marca_preferida": "marca_01_pneus",
+      "descricao_marca": "Projeto em lama/lodo. RoadForce Pneus recomendado (durabilidade garantida).",
+      "bonus_se_marca_preferida": 3900,
+      "descricao": "Terraplanagem grande em área úmida. 3 máquinas, 25 dias. Alto risco."
+    },
+    {
+      "id": "tier2_005",
+      "nome": "Fundação Corporativa Imigrantes",
+      "cliente": "TechCorp Brasil",
+      "cidade": "São Paulo, SP",
+      "valor": 89000,
+      "duracao_dias": 20,
+      "maquinasRequeridas": ["Escavadeira Hidráulica", "Retroescavadeira"],
+      "risco_base": 28,
+      "marca_preferida": "marca_05_oficina",
+      "descricao_marca": "Projeto crítico. TechRep deve fazer diagnóstico de segurança.",
+      "bonus_se_marca_preferida": 4450,
+      "descricao": "Fundação profunda em área urbana. Exige diagnóstico técnico certificado."
+    }
+  ],
+  "exemplosContratsTier3": [
+    {
+      "id": "tier3_001",
+      "nome": "Mega Terraplanagem - Porto",
+      "cliente": "Desenvolvimento Portuário SA",
+      "cidade": "Santos, SP",
+      "valor": 125000,
+      "duracao_dias": 35,
+      "maquinasRequeridas": ["Retroescavadeira Pesada", "Motoniveladora", "Escavadeira Hidráulica", "Rolo Compactador"],
+      "risco_base": 45,
+      "marca_preferida": "marca_01_pneus",
+      "descricao_marca": "Ambiente de alta abraçamento (lama/sal). RoadForce Pneus essencial.",
+      "bonus_se_marca_preferida": 6250,
+      "descricao": "Terraplanagem de 50 hectares em porto. 4 máquinas, 35 dias. Projeto nacional."
+    },
+    {
+      "id": "tier3_002",
+      "nome": "Infraestrutura Rodovia Federal",
+      "cliente": "DNIT - Infraestrutura Nacional",
+      "cidade": "Mato Grosso do Sul",
+      "valor": 145000,
+      "duracao_dias": 42,
+      "maquinasRequeridas": ["Motoniveladora", "Rolo Compactador Pesado"],
+      "risco_base": 55,
+      "marca_preferida": "marca_04_combustivel",
+      "descricao_marca": "Projeto federal requer rastreabilidade PowerFuel. Obrigatório.",
+      "bonus_se_marca_preferida": 7250,
+      "descricao": "Construção de rodovia federal. Contrato de 6 semanas. Impacto regional."
+    },
+    {
+      "id": "tier3_003",
+      "nome": "Complexo Aeroportuário",
+      "cliente": "Infraero Desenvolvimento",
+      "cidade": "Brasília, DF",
+      "valor": 150000,
+      "duracao_dias": 40,
+      "maquinasRequeridas": ["Escavadeira Hidráulica Pesada", "Rolo Compactador", "Motoniveladora"],
+      "risco_base": 50,
+      "marca_preferida": "marca_05_oficina",
+      "descricao_marca": "Aeroport exige certificação TechRep contínua. Downtime zero permitido.",
+      "bonus_se_marca_preferida": 7500,
+      "descricao": "Expansão de pista aeroportuária. Projeto crítico de segurança."
+    },
+    {
+      "id": "tier3_004",
+      "nome": "Fundação Megaprédio - Paulista",
+      "cliente": "Empresão Construtora Global",
+      "cidade": "São Paulo, SP",
+      "valor": 135000,
+      "duracao_dias": 30,
+      "maquinasRequeridas": ["Escavadeira Hidráulica", "Retroescavadeira"],
+      "risco_base": 38,
+      "marca_preferida": "marca_03_pecas",
+      "descricao_marca": "Prédio corporativo. Requer peças certificadas MegaParts em tudo.",
+      "bonus_se_marca_preferida": 6750,
+      "descricao": "Fundação de prédio de 30 andares. Exigências de qualidade premium."
+    },
+    {
+      "id": "tier3_005",
+      "nome": "Mina - Operação Terraplenagem",
+      "cliente": "MineralCorp Brasil",
+      "cidade": "Minas Gerais",
+      "valor": 155000,
+      "duracao_dias": 50,
+      "maquinasRequeridas": ["Retroescavadeira Pesada", "Rolo", "Motoniveladora", "Escavadeira"],
+      "risco_base": 65,
+      "marca_preferida": "marca_02_oleo",
+      "descricao_marca": "Ambiente extremo (poeira/calor). SynthFlow protege motor em condições brutas.",
+      "bonus_se_marca_preferida": 7750,
+      "descricao": "Operação de mina. 50 dias, ambiente extremo, risco elevado. Retorno alto."
+    }
+  ],
+  "mecanicaMarcaPreferida": {
+    "descricao": "Alguns contratos preferem marcas específicas",
+    "como_funciona": [
+      "Contrato tem campo 'marca_preferida': null (ou ID da marca)",
+      "Se marca_preferida != null, jogador pode:",
+      "- Ignorar (nenhum bônus)",
+      "- Usar marca preferida (bônus +5% do contrato)"
+    ],
+    "bonus_detalhes": {
+      "quanto": "5% do valor do contrato",
+      "quando": "Recebido ao completar contrato, SE usou marca",
+      "detecta_automaticamente": "Sistema registra qual oficina foi usada",
+      "exemplo": "Contrato R$100k + marca PowerFuel = +R$5k se usou PowerFuel"
+    }
+  },
+  "regeneracaoInteligente": {
+    "descricao": "Contratos regeneram com marcas variadas",
+    "logica": [
+      "Ao completar contrato, ele desaparece do menu",
+      "Novo contrato similar regenera (mesmo cliente ou similar)",
+      "Marca preferida é aleatória (pode ser mesma ou diferente)",
+      "Valor varia ±10% (evita repetição exata)"
+    ]
+  },
+  "futuroIntegracaoMarcas": {
+    "quando_marca_real_integrar": [
+      "substituir marca_01_pneus por 'Pirelli' (exemplo)",
+      "Atualizar logo, website, contato",
+      "Histórico de contratos continua (preferia fica marcada)",
+      "Jogadores que já usaram 'marca_ficticia_01' veem: 'Agora parceira real de X'"
+    ],
+    "transicao": "Suave - sem quebra de gameplay"
+  },
+  "dadosParaMarcaReal": {
+    "coleta": [
+      "Quantos jogadores aceitaram contrato com sua marca",
+      "Quantos completaram sem usar marca",
+      "Quantos usaram marca e qual oficina",
+      "Tempo médio de conversão (aceitação -> uso)",
+      "Taxa de sucesso (completaram sem atraso)",
+      "Bônus gerado ($)"
+    ],
+    "uso_marca": "Demonstra ROI claro pra marca real"
+  }
+}

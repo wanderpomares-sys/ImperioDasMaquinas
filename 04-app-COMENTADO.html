@@ -1,0 +1,3074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<!-- 🔧 CORREÇÃO v2.0+: Adicionado viewport-fit=cover para suportar safe-area-inset em mobile
+     Permite que o CSS use env(safe-area-inset-top/bottom/left/right) para respeitar:
+     - iPhone notch/Dynamic Island
+     - Android hole-punch/notch
+     - Qualquer outro elemento de sistema que invada a tela
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Império das Máquinas — App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#120E1E; --bg-2:#1D1730;
+    --amber-1:#FFC24B; --amber-2:#FF7A3D;
+    --text:#FFFFFF; --text-dim:#D6D1E6; --text-faint:#B5AFCC;
+    --danger:#FF5D7A; --ok:#33E0A0; --blue:#5AA8FF; --purple:#B98CFF;
+    --surface:#2A2148; --surface-2:#332A57; --surface-border:#4A3D75;
+    --light-card:#FFF3DE; --light-card-2:#FFE8C2; --light-text:#3A2A0F; --light-text-dim:#6B5530;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{
+    background:#000; color:var(--text);
+    font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    -webkit-font-smoothing:antialiased; width:100%; overflow-x:hidden;
+  }
+  body{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:5px 3px;}
+  .device{
+    width:100%;max-width:415px;height:840px;max-height:94vh;
+    background:var(--bg-1);border-radius:38px;border:8px solid #000;
+    box-shadow:0 30px 70px rgba(0,0,0,.6);
+    overflow:hidden;position:relative;isolation:isolate;
+    display:flex;flex-direction:column;
+  }
+  .app-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;min-height:0;}
+  /* 🔧 CORREÇÃO v2.0+: Safe area padding para respectar notch/Dynamic Island
+     padding: max(0px, env(safe-area-inset-top)) 22px 0;
+     
+     ANTES: padding:0 22px; 
+     PROBLEMA: Header "Império das Máquinas" invadia a barra de status
+     
+     DEPOIS: padding:max(0px, env(safe-area-inset-top)) 22px 0;
+     SOLUÇÃO: 
+     - Em iPhones com notch (14, 14 Pro, etc) → adiciona padding automático
+     - Em Android com notch/hole-punch → adiciona padding
+     - Em dispositivos sem notch → mantém padding 0 (graças ao max())
+     - Funciona em todos os navegadores modernos (iOS 15.1+, Android Chrome, etc)
+     
+     COMPATIBILIDADE: ✅ iPhone 12+, Pixel 6+, Galaxy S10+, etc
+  */
+  .statusbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:max(0px,env(safe-area-inset-top)) 22px 0;font-size:19.5px;font-weight:600;color:var(--text-dim);flex-shrink:0;}
+  .statusbar-brand{font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;color:#FFC947;letter-spacing:.01em;text-shadow:1px 1.5px 0 #C17710;}
+
+  .topbar{display:flex;align-items:center;gap:8px;padding:8px 14px 8px;flex-shrink:0;}
+  .tb-back{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);border:none;color:var(--text);font-size:21.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+  .tb-back.hidden{visibility:hidden;}
+  .tb-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:6px 9px;font-size:15.5px;font-weight:800;}
+  .tb-cash{color:var(--ok);}
+  .tb-spacer{flex:1;}
+  .tb-settings{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.06);border:none;color:var(--text-dim);font-size:20px;display:flex;align-items:center;justify-content:center;}
+
+  /* ===== SCREEN SWITCHING ===== */
+  .app-body{flex:1;min-height:0;position:relative;}
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;min-height:0;}
+  .screen.active{display:flex;}
+  .screen-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .subview{display:none;}
+  .subview.active{display:flex;flex-direction:column;height:100%;min-height:0;}
+
+  /* ===== SHARED COMPONENTS ===== */
+  .section-label{padding:14px 16px 8px;font-size:15.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-1);}
+  .finance-panel{
+    margin:12px 16px 0;background:linear-gradient(135deg,var(--light-card),var(--light-card-2));border:1.5px solid var(--amber-1);
+    border-radius:16px;padding:12px 4px;display:grid;grid-template-columns:1fr 1fr 1fr;box-shadow:3px 3px 0 rgba(255,194,75,.35);
+  }
+  .fin-col{padding:0 8px;border-left:1px solid rgba(58,42,15,.15);}
+  .fin-col:first-child{border-left:none;}
+  .fin-label{font-size:12.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--light-text-dim);}
+  .fin-value{font-size:20.5px;font-weight:800;margin-top:4px;color:var(--light-text);}
+  .fin-value.ok{color:#1E7A45;} .fin-value.amber{color:#B45309;}
+  .risk-badge{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:800;padding:3px 8px;border-radius:7px;width:fit-content;}
+  .risk-badge.low{background:rgba(51,224,160,.12);color:var(--ok);border:1px solid rgba(51,224,160,.3);}
+  .risk-badge.mid{background:rgba(255,194,75,.12);color:var(--amber-1);border:1px solid rgba(255,194,75,.3);}
+  .risk-badge.high{background:rgba(255,93,122,.12);color:var(--danger);border:1px solid rgba(255,93,122,.3);}
+
+  /* ===== HUB ===== */
+  .hub-header{padding:6px 16px 4px;}
+  .hub-cover-hero{
+    position:relative;margin:2px 16px 12px;height:160px;border-radius:18px;overflow:hidden;
+    background-image:url('https://images.unsplash.com/photo-1723367194881-fe2e53534170?fm=jpg&q=80&w=1000&auto=format&fit=crop');
+    background-color:#241C3B;background-size:cover;background-position:center 45%;
+  }
+  .hub-cover-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.15) 0%, rgba(9,7,15,.55) 65%, rgba(9,7,15,.92) 100%);}
+  .hub-cover-content{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px;}
+  .hub-cover-eyebrow{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-1);}
+  .screen-hero{
+    margin:2px 16px 12px;height:120px;border-radius:16px;background-color:#241C3B;background-size:cover;background-position:center;
+    position:relative;overflow:hidden;
+  }
+  .screen-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg, rgba(9,7,15,.7) 30%, rgba(9,7,15,.15) 100%);}
+  .screen-hero.hero-blue::after{background:linear-gradient(105deg, rgba(15,25,45,.75) 30%, rgba(90,168,255,.18) 100%);}
+  .screen-hero.hero-amber::after{background:linear-gradient(105deg, rgba(35,25,10,.75) 30%, rgba(255,194,75,.2) 100%);}
+  .screen-hero.hero-teal::after{background:linear-gradient(105deg, rgba(8,30,25,.75) 30%, rgba(51,224,160,.2) 100%);}
+  .screen-hero.hero-red::after{background:linear-gradient(105deg, rgba(35,10,15,.75) 30%, rgba(255,93,122,.2) 100%);}
+  .screen-hero-text{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:0 16px;}
+  .sh-title{font-size:20px;font-weight:800;color:var(--text);}
+  .sh-sub{font-size:13.5px;color:var(--text-faint);margin-top:3px;max-width:220px;line-height:1.4;}
+  .hub-title{font-size:27.5px;font-weight:800;}
+  .hub-company{display:flex;align-items:center;gap:9px;margin-top:8px;}
+  .hub-company-icon{width:34px;height:34px;border-radius:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);display:flex;align-items:center;justify-content:center;font-size:21.5px;flex-shrink:0;}
+  .hub-company-name{font-size:19.5px;font-weight:800;}
+  .hub-company-sub{font-size:13.5px;color:var(--text-faint);}
+  .alerts-row{display:flex;gap:10px;overflow-x:auto;padding:0 16px 2px;scrollbar-width:none;}
+  .alerts-row::-webkit-scrollbar{display:none;}
+  .alert-card{flex:0 0 190px;border-radius:16px;overflow:hidden;background:linear-gradient(160deg, #3A2230, #241830);border:1.5px solid rgba(255,93,122,.3);padding:10px 11px;cursor:pointer;box-shadow:3px 3px 0 rgba(255,93,122,.25);}
+  .alert-title{font-size:16px;font-weight:800;}
+  .alert-desc{font-size:13.5px;color:var(--text-faint);margin-top:3px;}
+  .alert-btn{margin-top:8px;background:var(--danger);color:#fff;border:none;border-radius:8px;padding:6px 0;font-size:13.5px;font-weight:800;text-align:center;width:100%;}
+  .machines-row{display:flex;gap:10px;overflow-x:auto;padding:0 16px 2px;scrollbar-width:none;}
+  .machines-row::-webkit-scrollbar{display:none;}
+  .machine-card{flex:0 0 130px;}
+  .machine-photo{height:80px;border-radius:12px;background-color:#241C3B;background-size:cover;background-position:center;position:relative;border:1px solid rgba(255,255,255,.1);}
+  .status-dot{position:absolute;top:6px;right:6px;width:11px;height:11px;border-radius:50%;border:2px solid var(--bg-1);}
+  .status-dot.green{background:var(--ok);} .status-dot.amber{background:var(--amber-1);} .status-dot.red{background:var(--danger);}
+  .machine-name{font-size:15px;font-weight:800;margin-top:6px;line-height:1.2;}
+  .status-chip{display:inline-block;font-size:12.5px;font-weight:800;padding:2px 6px;border-radius:6px;margin-top:3px;}
+  .status-chip.green{background:rgba(51,224,160,.15);color:var(--ok);}
+  .status-chip.amber{background:rgba(255,194,75,.15);color:var(--amber-1);}
+  .status-chip.red{background:rgba(255,93,122,.15);color:var(--danger);}
+  .hub-contract-row{padding:0 16px;}
+  .hub-cc{display:flex;gap:11px;background:linear-gradient(135deg,rgba(90,168,255,.06),rgba(255,255,255,.02));border:1.5px solid rgba(90,168,255,.25);border-radius:14px;padding:9px;margin-bottom:11px;cursor:pointer;box-shadow:3px 3px 0 rgba(90,168,255,.2);}
+  .hub-cc-photo{width:60px;height:60px;border-radius:10px;background-color:#241C3B;background-size:cover;background-position:center;flex-shrink:0;}
+  .hub-cc-body{flex:1;min-width:0;}
+  .hub-cc-name{font-size:16px;font-weight:800;}
+  .hub-cc-value{font-size:15.5px;font-weight:800;color:var(--ok);margin-top:2px;}
+
+  /* ===== LIST/DETAIL PATTERN (contratos, manutencao, loja) ===== */
+  .cat-card, .m-card{
+    display:flex;gap:11px;background:var(--surface);border:1.5px solid var(--surface-border);
+    border-radius:15px;padding:10px;margin-bottom:12px;cursor:pointer;position:relative;
+    box-shadow:3px 3px 0 rgba(0,0,0,.25);transition:transform .1s ease, box-shadow .1s ease;
+  }
+  .cat-card:active, .m-card:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.25);}
+  .m-card.crit{border-color:var(--danger);background:linear-gradient(135deg,rgba(255,93,122,.1),rgba(255,93,122,0.07));box-shadow:3px 3px 0 rgba(255,93,122,.3);}
+  /* Acentos por seção — mesma estrutura, cor própria por tela */
+  .card-accent-blue{border-color:var(--blue);box-shadow:3px 3px 0 rgba(90,168,255,.25);}
+  .card-accent-blue:active{box-shadow:1px 1px 0 rgba(90,168,255,.25);}
+  .card-accent-amber{border-color:rgba(255,194,75,.5);background:linear-gradient(135deg,rgba(255,194,75,0.15),rgba(255,255,255,.02));box-shadow:3px 3px 0 rgba(255,194,75,.22);}
+  .card-accent-amber:active{box-shadow:1px 1px 0 rgba(255,194,75,.22);}
+  .card-accent-teal{border-color:var(--ok);background:linear-gradient(135deg,rgba(51,224,160,0.18),rgba(255,255,255,.02));box-shadow:3px 3px 0 rgba(51,224,160,.22);}
+  .card-accent-teal:active{box-shadow:1px 1px 0 rgba(51,224,160,.22);}
+  .cat-photo, .m-photo{width:70px;height:70px;border-radius:11px;background-color:#241C3B;background-size:cover;background-position:center;flex-shrink:0;position:relative;}
+  .cat-body, .m-body{flex:1;min-width:0;}
+  .cat-cat{font-size:13px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--text-faint);}
+  .cat-name, .m-name{font-size:18.5px;font-weight:800;margin-top:2px;}
+  .cat-meta, .m-meta{font-size:13.5px;color:var(--text-faint);margin-top:2px;}
+  .cat-value{font-size:18.5px;font-weight:800;color:var(--ok);}
+  .m-health-row{display:flex;align-items:center;gap:7px;margin-top:6px;}
+  .m-bar{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+  .m-bar-fill{height:100%;border-radius:3px;}
+  .m-bar-fill.green{background:linear-gradient(90deg,#33E0A0,#1FB8A8);}
+  .m-bar-fill.amber{background:linear-gradient(90deg,var(--amber-1),var(--amber-2));}
+  .m-bar-fill.red{background:linear-gradient(90deg,#FF5D7A,#C43856);}
+  .m-health-pct{font-size:14.5px;font-weight:800;width:30px;text-align:right;}
+
+  .d-photo{margin:2px 16px 0;height:150px;min-height:150px;flex-shrink:0;border-radius:16px;background-color:#241C3B;background-size:cover;background-position:center;position:relative;overflow:hidden;}
+  .d-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,0) 45%, rgba(9,7,15,.8) 100%);}
+  .d-title-row{padding:12px 16px 0;}
+  .d-name{font-size:26px;font-weight:800;}
+  .d-value{font-size:24.5px;font-weight:800;color:var(--ok);}
+  .d-status-chip{display:inline-block;margin-top:6px;font-size:14.5px;font-weight:800;padding:4px 10px;border-radius:8px;}
+
+  .info-box, .plan-box{
+    margin:12px 16px 0;padding:12px 13px;border-radius:14px;
+    background:var(--surface);border:1px solid var(--surface-border);
+  }
+  .box-title{font-size:15.5px;font-weight:800;color:var(--amber-1);display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+  .box-title.danger{color:var(--danger);}
+  .box-text{font-size:16px;color:var(--text-dim);line-height:1.55;}
+  .plan-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+  .plan-row:last-child{border-bottom:none;}
+  .plan-label{font-size:15.5px;color:var(--text-faint);}
+  .plan-value{font-size:17.5px;font-weight:800;}
+
+  .toggle-row{display:flex;gap:8px;padding:12px 16px 0;}
+  .toggle-btn{flex:1;text-align:center;padding:9px 6px;border-radius:11px;font-size:16px;font-weight:800;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;}
+  .toggle-btn.active{background:rgba(255,194,75,.1);border-color:var(--amber-1);color:var(--amber-1);}
+
+  .warn-box{margin:12px 16px 0;padding:10px 12px;border-radius:12px;background:rgba(255,93,122,0.18);border:1px solid rgba(255,93,122,.3);font-size:15px;color:var(--danger);line-height:1.5;}
+  .warn-box b{display:block;margin-bottom:2px;}
+  .warn-box.hidden{display:none;}
+
+  .action-zone{padding:14px 16px 18px;}
+  .action-btn{
+    width:100%;border:none;border-radius:14px;padding:15px;font-size:19.5px;font-weight:800;
+    background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
+    box-shadow:0 8px 22px rgba(255,150,50,.35);cursor:pointer;
+  }
+  .action-btn.locked{background:rgba(255,255,255,.06);color:var(--text-faint);box-shadow:none;}
+  .action-btn.risky{background:linear-gradient(160deg,#FF8A65,var(--danger));}
+  .action-btn .sub{display:block;font-size:13.5px;font-weight:700;margin-top:2px;opacity:.85;}
+  .toast{
+    position:absolute;left:16px;right:16px;bottom:90px;z-index:20;
+    background:var(--ok);color:var(--bg-1);font-weight:800;font-size:17.5px;text-align:center;
+    padding:11px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.4);
+    opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;transform:translateY(8px);
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
+
+  /* ===== MODAL DE RESULTADO (exige toque pra continuar — não some sozinho) ===== */
+  /* ===== CELEBRAÇÃO DE COMPRA DE MÁQUINA (flash + brilho + confete) ===== */
+  /* ===== TELA "VER OBRA" — vídeo tipo GIF + dashboard ===== */
+  .obra-overlay{position:absolute;inset:0;z-index:65;background:var(--bg-1);display:none;flex-direction:column;}
+  .obra-overlay.show{display:flex;}
+  .obra-video-wrap{position:relative;width:100%;height:230px;background:#000;overflow:hidden;flex-shrink:0;}
+  .obra-video-wrap video{width:100%;height:100%;object-fit:cover;pointer-events:none;}
+  .obra-video-label{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:16px;font-weight:800;color:#fff;}
+  .obra-sem-video{width:100%;height:150px;background:linear-gradient(135deg,#241C3D,#1A1330);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;flex-shrink:0;}
+
+  .compra-overlay{
+    position:absolute;inset:0;z-index:70;background:radial-gradient(circle at 50% 30%, #241C3D, #0A0712);
+    display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow:hidden;
+  }
+  .compra-overlay.show{display:flex;}
+  .compra-flash{
+    position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;
+    animation:flashPulse 1.1s ease-out;
+  }
+  @keyframes flashPulse{
+    0%{opacity:0;} 6%{opacity:.9;} 16%{opacity:0;} 24%{opacity:.55;} 34%{opacity:0;} 100%{opacity:0;}
+  }
+  .confete-container{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+  .confete{position:absolute;top:-20px;border-radius:2px;animation-name:confeteCair;animation-timing-function:linear;animation-fill-mode:forwards;}
+  @keyframes confeteCair{
+    to{transform:translateY(760px) rotate(680deg);opacity:0;}
+  }
+  .compra-eyebrow{position:relative;z-index:1;font-size:14.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-1);margin-bottom:6px;}
+  .compra-title{position:relative;z-index:1;font-family:'Fredoka',sans-serif;font-size:29px;font-weight:700;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;text-align:center;margin-bottom:18px;}
+  .compra-photo-wrap{
+    position:relative;z-index:1;width:100%;max-width:280px;height:210px;border-radius:20px;overflow:hidden;
+    border:3px solid var(--amber-1);box-shadow:0 0 45px rgba(255,194,75,.5), 7px 7px 0 rgba(255,150,50,.4);
+    animation:compraPop .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes compraPop{0%{transform:scale(.55) rotate(-5deg);opacity:0;}100%{transform:scale(1) rotate(0);opacity:1;}}
+  .compra-photo{background-color:#241C3B;width:100%;height:100%;background-size:cover;background-position:center;}
+  .compra-shine{
+    position:absolute;top:0;left:-60%;width:35%;height:100%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.65), transparent);
+    transform:skewX(-20deg);animation:shineSweep 2.1s ease-in-out infinite;
+  }
+  @keyframes shineSweep{0%{left:-60%;}45%{left:130%;}100%{left:130%;}}
+  .compra-sparkles{position:absolute;inset:0;pointer-events:none;font-size:22.5px;}
+  .compra-sparkle{position:absolute;animation:sparkleFloat 2.4s ease-in-out infinite;}
+  @keyframes sparkleFloat{0%,100%{transform:translateY(0) scale(1);opacity:.7;}50%{transform:translateY(-8px) scale(1.25);opacity:1;}}
+  .compra-nome{position:relative;z-index:1;font-size:21.5px;font-weight:800;color:var(--text);text-align:center;margin-top:18px;}
+  .compra-sub{position:relative;z-index:1;font-size:14.5px;color:var(--text-faint);text-align:center;margin-top:5px;max-width:260px;line-height:1.5;}
+  .compra-btn{
+    position:relative;z-index:1;margin-top:22px;width:100%;max-width:280px;border:none;border-radius:14px;padding:15px;
+    font-size:17px;font-weight:800;background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
+    box-shadow:0 8px 22px rgba(255,150,50,.4);
+  }
+
+  .result-modal-overlay{
+    position:absolute;inset:0;z-index:60;background:rgba(6,4,12,.75);
+    display:none;align-items:center;justify-content:center;padding:24px;
+  }
+  .result-modal-overlay.show{display:flex;}
+  .result-modal-box{
+    width:100%;max-width:320px;background:var(--bg-2);border-radius:18px;
+    border:1.5px solid rgba(255,255,255,.12);box-shadow:0 20px 50px rgba(0,0,0,.5);
+    padding:22px 20px 18px;text-align:center;
+  }
+  .result-modal-box.success{
+    background:linear-gradient(160deg,var(--light-card),var(--light-card-2));
+    border:2px solid var(--amber-1);
+    box-shadow:6px 6px 0 rgba(255,150,50,.4), 0 20px 50px rgba(0,0,0,.5);
+    animation:successPop .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes successPop{
+    0%{transform:scale(.85);opacity:0;}
+    100%{transform:scale(1);opacity:1;}
+  }
+  .result-modal-box.success .result-modal-icon{
+    font-size:62.5px;filter:drop-shadow(3px 3px 0 rgba(255,150,50,.35));
+  }
+  .result-modal-box.success .result-modal-title{color:var(--light-text);}
+  .result-modal-box.success .result-modal-text{color:var(--light-text-dim);}
+  .result-modal-box.success .result-modal-btn{
+    box-shadow:3px 3px 0 rgba(58,42,15,.3);
+  }
+  .result-modal-icon{font-size:54.5px;margin-bottom:10px;}
+  .result-modal-title{font-size:21.5px;font-weight:800;color:var(--text);margin-bottom:8px;}
+  .result-modal-text{font-size:18px;color:var(--text-dim);line-height:1.6;margin-bottom:18px;white-space:pre-line;}
+  .result-modal-btn{
+    width:100%;border:none;border-radius:12px;padding:13px;font-size:18.5px;font-weight:800;
+    background:linear-gradient(160deg,var(--amber-1),var(--amber-2));color:var(--bg-1);
+    box-shadow:0 6px 16px rgba(255,150,50,.3);
+  }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottomnav{
+    flex-shrink:0;display:flex;justify-content:space-around;align-items:center;
+    padding:9px 2px 16px;background:linear-gradient(180deg,#161029,#0F0B1D);
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;padding:6px 1px;border:none;background:transparent;cursor:pointer;}
+  .nav-icon{font-size:19px;color:var(--text-faint);}
+  .nav-label{font-size:9px;font-weight:700;color:var(--text-faint);letter-spacing:0;white-space:nowrap;}
+  .nav-item.active .nav-icon, .nav-item.active .nav-label{color:var(--amber-1);}
+  .nav-badge{position:absolute;top:0;right:14%;min-width:14px;height:14px;border-radius:999px;background:var(--danger);color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+  .nav-item{position:relative;}
+
+  /* ===== EVENTO MODAL ===== */
+  .evento-overlay{position:absolute;inset:0;z-index:30;display:none;background:var(--bg-1);flex-direction:column;}
+  .evento-overlay.show{display:flex;}
+  .event-banner{margin:2px 14px 0;padding:14px;border-radius:16px;background:linear-gradient(160deg, rgba(255,93,122,.16), rgba(58,20,30,.5));border:1px solid rgba(255,93,122,.35);}
+  .eb-top{display:flex;align-items:flex-start;gap:11px;}
+  .eb-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,93,122,.18);border:1px solid rgba(255,93,122,.4);display:flex;align-items:center;justify-content:center;font-size:28.5px;flex-shrink:0;}
+  .eb-name{font-size:23px;font-weight:800;}
+  .eb-sub{font-size:15px;color:var(--text-faint);margin-top:2px;}
+  .eb-risk{background:rgba(255,93,122,.16);border:1px solid rgba(255,93,122,.45);color:var(--danger);font-size:13.5px;font-weight:800;padding:5px 8px;border-radius:9px;white-space:nowrap;}
+  .event-photo{margin-top:10px;height:110px;border-radius:12px;background-color:#241C3B;background-size:cover;background-position:center;}
+  .choices{padding:10px 14px 0;display:flex;flex-direction:column;gap:9px;}
+  .choice-card{border-radius:14px;padding:11px 12px;cursor:pointer;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);}
+  .choice-card.selected{border-color:var(--amber-1);background:rgba(255,194,75,0.15);}
+  .ch-name{font-size:18px;font-weight:800;}
+  .ch-desc{font-size:14.5px;color:var(--text-faint);margin-top:3px;}
+  .impacts{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px;margin-top:8px;padding-top:7px;border-top:1px solid rgba(255,255,255,.06);}
+  .impact-val{font-size:13.5px;font-weight:800;text-align:center;}
+  .impact-val.neg{color:var(--danger);} .impact-val.pos{color:var(--ok);} .impact-val.neutral{color:var(--text-dim);}
+  .impact-label{font-size:12.5px;font-weight:800;text-transform:uppercase;color:var(--text-faint);text-align:center;margin-bottom:2px;}
+
+  .empty-state{padding:60px 30px;text-align:center;}
+  .empty-icon{font-size:51.5px;margin-bottom:14px;opacity:.6;}
+  .empty-text{font-size:17.5px;color:var(--text-faint);line-height:1.6;}
+
+  /* ===== TELA INICIAL (3.1 — primeira máquina) ===== */
+  .start-hero{
+    position:relative;padding-bottom:14px;min-height:230px;display:flex;flex-direction:column;justify-content:flex-end;
+    background-image:url('https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=80&w=1200&auto=format&fit=crop');
+    background-color:#241C3B;background-size:cover;background-position:center 40%;
+  }
+  .start-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.25) 0%, rgba(9,7,15,.55) 45%, var(--bg-1) 100%);}
+  .start-hero > *{position:relative;z-index:1;}
+  .start-logo{display:flex;flex-direction:column;align-items:center;padding:26px 20px 6px;text-align:center;}
+  .start-logo .l1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:34px;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;white-space:nowrap;}
+  .start-logo .l2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18.5px;color:var(--text-dim);margin-top:2px;}
+  .start-narrative{font-size:16px;color:var(--text-dim);text-align:center;padding:10px 26px 4px;line-height:1.6;}
+  .start-capital{
+    margin:12px 20px 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,194,75,.3);
+    border-radius:14px;padding:10px 14px;text-align:center;
+  }
+  .start-capital-label{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);}
+  .start-capital-value{font-size:27.5px;font-weight:800;color:var(--amber-1);margin-top:2px;}
+
+  .start-list{padding:16px 16px 0;}
+  .start-card{
+    background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:16px;
+    padding:12px;margin-bottom:12px;cursor:pointer;transition:border-color .15s ease;
+  }
+  .start-card.selected{border-color:var(--amber-1);background:rgba(255,194,75,0.13);}
+  .start-card-top{display:flex;gap:11px;}
+  .start-card-photo{width:78px;height:78px;border-radius:12px;background-color:#241C3B;background-size:cover;background-position:center;flex-shrink:0;}
+  .start-card-body{flex:1;min-width:0;}
+  .start-card-name{font-size:19.5px;font-weight:800;}
+  .start-card-price{font-size:20px;font-weight:800;color:var(--ok);margin-top:4px;}
+  .start-card-finance{font-size:13.5px;color:var(--text-faint);margin-top:2px;}
+  .start-zone{padding:6px 16px 20px;}
+
+  /* ===== TELA DE CADASTRO (login/signup) ===== */
+  .signup-hero{
+    position:relative;padding:34px 24px 22px;text-align:center;min-height:250px;display:flex;flex-direction:column;justify-content:center;
+    background-image:url('https://images.unsplash.com/photo-1723367194881-fe2e53534170?fm=jpg&q=75&w=1000&auto=format&fit=crop');
+    background-color:#241C3B;background-size:cover;background-position:center 55%;
+  }
+  .signup-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.35) 0%, rgba(9,7,15,.6) 55%, var(--bg-1) 100%);}
+  .signup-hero > *{position:relative;z-index:1;}
+  .signup-logo .l1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:37.5px;color:#FFC947;text-shadow:2px 2.5px 0 #C17710;white-space:nowrap;}
+  .signup-logo .l2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18.5px;color:var(--text-dim);margin-top:3px;}
+  .signup-tag{font-size:16px;color:var(--text-faint);margin-top:10px;line-height:1.5;}
+
+  .signup-form{padding:22px 22px 0;}
+  .field-group{margin-bottom:16px;}
+  .field-label{font-size:15px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--amber-1);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+  .field-label .opt{color:var(--text-faint);font-weight:600;text-transform:none;letter-spacing:0;font-size:13.5px;}
+  .field-input{
+    width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);
+    border-radius:12px;padding:13px 14px;font-size:19.5px;color:var(--text);font-family:inherit;
+    outline:none;transition:border-color .15s ease;
+  }
+  .field-input::placeholder{color:var(--text-faint);}
+  .field-input:focus{border-color:var(--amber-1);}
+  .field-input.error{border-color:var(--danger);}
+  .field-error{font-size:14.5px;color:var(--danger);margin-top:5px;display:none;}
+  .field-error.show{display:block;}
+  .signup-zone{padding:10px 22px 22px;}
+  .signup-note{font-size:13.5px;color:var(--text-faint);text-align:center;margin-top:12px;line-height:1.5;}
+
+  .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;}
+  .logo-option{
+    aspect-ratio:1;border-radius:13px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);
+    display:flex;align-items:center;justify-content:center;font-size:28.5px;cursor:pointer;transition:all .15s ease;
+  }
+  .logo-option.selected{border-color:var(--amber-1);background:rgba(255,194,75,.12);box-shadow:0 0 0 1px rgba(255,194,75,.3);}
+
+  /* ===== TELA DE LOGIN (retorno) ===== */
+  .login-hero{
+    position:relative;padding:50px 24px 30px;text-align:center;
+    background-image:url('https://images.unsplash.com/photo-1723367194881-fe2e53534170?fm=jpg&q=75&w=1000&auto=format&fit=crop');
+    background-color:#241C3B;background-size:cover;background-position:center 55%;
+  }
+  .login-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(9,7,15,.75) 0%, rgba(9,7,15,.9) 75%, var(--bg-1) 100%);}
+  .login-hero > *{position:relative;z-index:1;}
+  .login-icon{
+    width:74px;height:74px;border-radius:20px;margin:0 auto 16px;
+    background:rgba(255,194,75,.14);border:1.5px solid rgba(255,194,75,.4);
+    display:flex;align-items:center;justify-content:center;font-size:48.5px;
+  }
+  .login-welcome{font-size:15.5px;color:var(--text-faint);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+  .login-company{font-family:'Fredoka',sans-serif;font-size:30px;font-weight:700;color:#FFC947;text-shadow:1.5px 2px 0 #C17710;margin-top:6px;}
+  .login-owner{font-size:17.5px;color:var(--text-dim);margin-top:5px;}
+  .login-zone{padding:26px 24px 0;}
+  .login-note{font-size:13.5px;color:var(--text-faint);text-align:center;margin-top:14px;}
+  .login-switch{
+    display:block;text-align:center;margin-top:18px;font-size:15px;color:var(--text-faint);
+    text-decoration:underline;cursor:pointer;background:none;border:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="device">
+  <div class="app-content">
+    <div class="statusbar"><span id="clock">9:41</span><span class="statusbar-brand">Império das Máquinas</span><span>●●●● Wi-Fi 87%</span></div>
+
+    <div class="app-body">
+
+      <!-- ============ LOGIN (retorno) ============ -->
+      <div class="screen" id="screen-login">
+        <div class="screen-scroll">
+          <div class="login-hero">
+            <div class="login-icon" id="loginIcon">🏛️</div>
+            <div class="login-welcome">Bem-vindo de volta</div>
+            <div class="login-company" id="loginCompanyName">Operação Alpha</div>
+            <div class="login-owner" id="loginOwnerName">Wanderson Silva</div>
+          </div>
+          <div class="login-zone">
+            <button class="action-btn" onclick="confirmLogin()">🔑 Entrar</button>
+            <div class="login-note">Seus dados continuam salvos neste aparelho.</div>
+            <button class="login-switch" onclick="showSignupFromLogin()">Não é você? Criar outra empresa</button>
+          </div>
+          <div style="height:6px;"></div>
+        </div>
+      </div>
+
+      <!-- ============ CADASTRO (login/onboarding de conta) ============ -->
+      <div class="screen active" id="screen-signup">
+        <div class="screen-scroll">
+          <div class="signup-hero">
+            <div class="signup-logo">
+              <div class="l1">Império das Máquinas</div>
+              <div class="l2">Crie sua empresa para começar</div>
+            </div>
+            <div class="signup-tag">Antes de escolher sua primeira máquina, vamos registrar quem está construindo esse império.</div>
+          </div>
+
+          <div class="signup-form">
+            <div class="field-group">
+              <div class="field-label">🏛️ Nome da empresa</div>
+              <input class="field-input" id="fieldCompany" type="text" placeholder="Ex: Operação Alpha" maxlength="40">
+              <div class="field-error" id="errCompany">Digite o nome da sua empresa para continuar.</div>
+            </div>
+            <div class="field-group">
+              <div class="field-label">👤 Seu nome</div>
+              <input class="field-input" id="fieldOwner" type="text" placeholder="Ex: Wanderson Silva" maxlength="40">
+              <div class="field-error" id="errOwner">Digite seu nome para continuar.</div>
+            </div>
+            <div class="field-group">
+              <div class="field-label">✉️ E-mail <span class="opt">(opcional)</span></div>
+              <input class="field-input" id="fieldEmail" type="email" placeholder="voce@email.com">
+            </div>
+            <div class="field-group" style="margin-bottom:6px;">
+              <div class="field-label">🎨 Escolha um logotipo</div>
+              <div class="logo-grid" id="logoGrid"></div>
+            </div>
+          </div>
+
+          <div style="height:6px;"></div>
+        </div>
+        <div class="signup-zone">
+          <button class="action-btn" onclick="confirmSignup()">🏗️ Criar empresa e continuar</button>
+          <div class="signup-note">Seus dados ficam salvos localmente nesta demonstração — nenhuma informação é enviada a servidores.</div>
+        </div>
+      </div>
+
+      <!-- ============ TELA INICIAL (3.1) ============ -->
+      <div class="screen" id="screen-start">
+        <div class="screen-scroll">
+          <div class="start-hero">
+            <div class="start-logo">
+              <span class="l1">Império das Máquinas</span>
+              <span class="l2">Seu primeiro passo para o império</span>
+            </div>
+            <div class="start-narrative">Você recebeu seu primeiro capital. Agora precisa escolher sua primeira máquina — cada escolha muda seus custos, contratos e riscos.</div>
+            <div class="start-capital">
+              <div class="start-capital-label">Capital disponível</div>
+              <div class="start-capital-value">R$ 60.000</div>
+            </div>
+          </div>
+
+          <div class="start-list" id="startList"></div>
+          <div style="height:6px;"></div>
+        </div>
+        <div class="start-zone">
+          <button class="action-btn locked" id="startBuyBtn" onclick="confirmStartMachine()">🚜 Comprar e começar a operar<span class="sub">Selecione uma máquina acima</span></button>
+        </div>
+      </div>
+
+      <!-- ============ HUB ============ -->
+      <div class="screen" id="screen-hub">
+        <div class="topbar">
+          <div class="tb-back hidden">←</div>
+          <div class="tb-spacer"></div>
+          <div class="tb-pill tb-cash">💵&nbsp;<span id="hubCash">R$ 1.248.750</span></div>
+          <button class="tb-settings">⚙️</button>
+        </div>
+        <div class="screen-scroll">
+          <div class="hub-cover-hero">
+            <div class="hub-cover-content">
+              <div class="hub-cover-eyebrow">Central de operações</div>
+              <div class="hub-company">
+                <div class="hub-company-icon">🏛️</div>
+                <div><div class="hub-company-name">Operação Alpha</div><div class="hub-company-sub">Empresa</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="finance-panel">
+            <div class="fin-col"><div class="fin-label">Caixa</div><div class="fin-value ok js-cash">R$ 60.000</div></div>
+            <div class="fin-col"><div class="fin-label">Patrimônio</div><div class="fin-value amber js-patrimonio">R$ 0</div></div>
+            <div class="fin-col"><div class="fin-label">Saúde do caixa</div><div class="fin-value ok js-saude">—</div></div>
+          </div>
+
+          <div id="tierBanner" style="margin:14px 16px 0;padding:14px 15px;border-radius:16px;position:relative;overflow:hidden;"></div>
+
+          <div class="section-label">🎯 Missões e Desafios</div>
+          <div style="padding:0 16px;" id="missoesLista"></div>
+
+          <div class="section-label">⚠️ Alertas pendentes</div>
+          <div class="alerts-row">
+            <div class="alert-card" onclick="openEvento()">
+              <div class="alert-title">⚠️ Chuva forte</div>
+              <div class="alert-desc">Aterro Industrial afetado</div>
+              <button class="alert-btn">Ver evento</button>
+            </div>
+            <div class="alert-card" onclick="goTo('manutencao'); openMaintDetail('retro');">
+              <div class="alert-title">🔧 Retro crítica</div>
+              <div class="alert-desc">22% de saúde</div>
+              <button class="alert-btn">Ver manutenção</button>
+            </div>
+          </div>
+
+          <div class="section-label">🚜 Minhas máquinas</div>
+          <div class="machines-row">
+            <div class="machine-card" onclick="goTo('manutencao'); openMaintDetail('escavadeira');">
+              <div class="machine-photo" style="background-image:url('https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=300&auto=format&fit=crop');"><span class="status-dot green"></span></div>
+              <div class="machine-name">Escavadeira CAT 320D</div>
+              <span class="status-chip green">Operando</span>
+            </div>
+            <div class="machine-card" onclick="goTo('manutencao'); openMaintDetail('trator');">
+              <div class="machine-photo" style="background-image:url('https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop');"><span class="status-dot amber"></span></div>
+              <div class="machine-name">Trator de Esteira D6T</div>
+              <span class="status-chip amber">Atenção</span>
+            </div>
+            <div class="machine-card" onclick="goTo('manutencao'); openMaintDetail('caminhao');">
+              <div class="machine-photo" style="background-image:url('https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=300&auto=format&fit=crop');"><span class="status-dot green"></span></div>
+              <div class="machine-name">Caminhão Ford Cargo</div>
+              <span class="status-chip green">Operando</span>
+            </div>
+          </div>
+
+          <div class="section-label">📋 Contratos disponíveis</div>
+          <div class="hub-contract-row">
+            <div class="hub-cc" onclick="goTo('contratos'); openContractDetail('aterro');">
+              <div class="hub-cc-photo" style="background-image:url('https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop');"></div>
+              <div class="hub-cc-body">
+                <div class="hub-cc-name">Aterro Industrial</div>
+                <div class="hub-cc-value">R$ 240.000</div>
+                <span class="risk-badge mid" style="margin-top:4px;">🟡 Médio</span>
+              </div>
+            </div>
+            <div class="hub-cc" onclick="goTo('contratos'); openContractDetail('estrada');">
+              <div class="hub-cc-photo" style="background-image:url('https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop');"></div>
+              <div class="hub-cc-body">
+                <div class="hub-cc-name">Abertura de Estrada</div>
+                <div class="hub-cc-value">R$ 180.000</div>
+                <span class="risk-badge low" style="margin-top:4px;">🟢 Baixo</span>
+              </div>
+            </div>
+          </div>
+          <div style="height:10px;"></div>
+        </div>
+      </div>
+
+      <!-- ============ MÁQUINAS (alias simples da frota) ============ -->
+      <div class="screen" id="screen-maquinas">
+        <div class="topbar"><div class="tb-back hidden">←</div><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+        <div class="screen-scroll">
+          <div class="hub-header"><div class="hub-title">🚜 Frota</div></div>
+          <div class="screen-hero hero-blue" style="background-image:url('https://images.unsplash.com/photo-1723367194881-fe2e53534170?fm=jpg&q=75&w=900&auto=format&fit=crop');">
+            <div class="screen-hero-text">
+              <div class="sh-title">Sua frota, seu império</div>
+              <div class="sh-sub">Cada máquina bem cuidada é capacidade de faturar sem parar.</div>
+            </div>
+          </div>
+          <div class="section-label">Todas as máquinas</div>
+          <div style="padding:0 16px;" id="maquinasList"></div>
+          <div style="height:10px;"></div>
+        </div>
+      </div>
+
+      <!-- ============ CONTRATOS ============ -->
+      <div class="screen" id="screen-contratos">
+        <div class="subview active" id="contratos-list-view">
+          <div class="topbar"><div class="tb-back hidden">←</div><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+          <div class="screen-scroll">
+            <div class="hub-header"><div class="hub-title">📋 Contratos</div></div>
+            <div class="screen-hero hero-amber" style="background-image:url('https://images.unsplash.com/photo-1534097575056-ddba81f714c8?fm=jpg&q=75&w=900&auto=format&fit=crop');">
+              <div class="screen-hero-text">
+                <div class="sh-title">Escolha bem, lucre melhor</div>
+                <div class="sh-sub">Todo contrato paga um preço em risco — avalie antes de aceitar.</div>
+              </div>
+            </div>
+            <div class="tabs" style="display:flex;gap:8px;padding:0 16px 12px;">
+              <div class="tab" data-tab="disponiveis" onclick="switchContratoTab('disponiveis')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:var(--amber-1);color:var(--bg-1);cursor:pointer;">Disponíveis</div>
+              <div class="tab" data-tab="andamento" onclick="switchContratoTab('andamento')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Em andamento</div>
+              <div class="tab" data-tab="concluidos" onclick="switchContratoTab('concluidos')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Concluídos</div>
+            </div>
+            <div id="tabContentDisponiveis">
+              <div class="section-label">Disponíveis</div>
+              <div style="padding:0 16px;" id="contratosList"></div>
+            </div>
+            <div id="tabContentAndamento" style="display:none;">
+              <div class="section-label">📊 Painel de execução</div>
+              <div style="padding:0 16px;" id="contratosAndamentoList"></div>
+            </div>
+            <div id="tabContentConcluidos" style="display:none;">
+              <div class="section-label">✅ Contratos concluídos</div>
+              <div style="padding:0 16px;" id="contratosConcluidosList"></div>
+            </div>
+            <div style="height:10px;"></div>
+          </div>
+        </div>
+        <div class="subview" id="contratos-detail-view">
+          <div class="topbar"><button class="tb-back" onclick="closeDetail('contratos')">←</button><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+          <div class="screen-scroll" id="contratoDetailScroll"></div>
+        </div>
+      </div>
+
+      <!-- ============ MANUTENÇÃO ============ -->
+      <div class="screen" id="screen-manutencao">
+        <div class="subview active" id="manut-list-view">
+          <div class="topbar"><div class="tb-back hidden">←</div><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+          <div class="screen-scroll">
+            <div class="hub-header"><div class="hub-title">🔧 Manutenção &amp; Peças</div></div>
+            <div class="screen-hero hero-red" style="background-image:url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?fm=jpg&q=75&w=900&auto=format&fit=crop');">
+              <div class="screen-hero-text">
+                <div class="sh-title">🔧 Oficina Central</div>
+                <div class="sh-sub">Peças, ferramentas e revisões — mantenha sua frota rodando com segurança.</div>
+              </div>
+            </div>
+            <div class="section-label">Suas máquinas</div>
+            <div style="padding:0 16px;" id="manutList"></div>
+            <div style="height:10px;"></div>
+          </div>
+        </div>
+        <div class="subview" id="manut-detail-view">
+          <div class="topbar"><button class="tb-back" onclick="closeDetail('manutencao')">←</button><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+          <div class="screen-scroll" id="manutDetailScroll"></div>
+        </div>
+      </div>
+
+      <!-- ============ FINANÇAS ============ -->
+      <div class="screen" id="screen-financas">
+        <div class="topbar"><div class="tb-back hidden">←</div><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+        <div class="screen-scroll">
+          <div class="hub-header"><div class="hub-title">🏛️ Administração</div></div>
+          <div class="screen-hero hero-amber" style="background-image:url('https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=900&auto=format&fit=crop');">
+            <div class="screen-hero-text">
+              <div class="sh-title">A empresa por trás dos contratos</div>
+              <div class="sh-sub">Reputação, impostos, custos fixos e o que entra e sai do caixa.</div>
+            </div>
+          </div>
+          <div class="finance-panel">
+            <div class="fin-col"><div class="fin-label">Caixa</div><div class="fin-value ok js-cash">R$ 60.000</div></div>
+            <div class="fin-col"><div class="fin-label">Patrimônio</div><div class="fin-value amber js-patrimonio">R$ 0</div></div>
+            <div class="fin-col"><div class="fin-label">Saúde do caixa</div><div class="fin-value ok js-saude">—</div></div>
+          </div>
+          <div class="finance-panel" style="grid-template-columns:1fr 1fr;margin-top:8px;">
+            <div class="fin-col"><div class="fin-label">⭐ Reputação da empresa</div><div class="fin-value" id="hubReputacao" style="color:#B45309;">100 / 150</div></div>
+            <div class="fin-col"><div class="fin-label">🧾 Impostos provisionados</div><div class="fin-value" id="hubImpostos" style="color:#B03A2E;">R$ 0</div></div>
+          </div>
+
+          <div class="section-label">📊 Visão geral do negócio</div>
+          <div style="padding:0 16px;" id="visaoGeralCharts"></div>
+
+          <div id="financasContent">
+            <div class="section-label">💵 Previsão de faturamento</div>
+            <div class="finance-panel" style="grid-template-columns:1fr 1fr;">
+              <div class="fin-col"><div class="fin-label">Contratos em andamento</div><div class="fin-value ok" id="finQtdContratos">0</div></div>
+              <div class="fin-col"><div class="fin-label">Total a receber</div><div class="fin-value ok" id="finTotalReceber">R$ 0</div></div>
+            </div>
+
+            <div class="section-label">📋 Contratos em andamento</div>
+            <div style="padding:0 16px;" id="financasContratosList"></div>
+
+            <div class="section-label">🏢 Custos administrativos</div>
+            <div class="finance-panel" style="grid-template-columns:1fr;">
+              <div class="fin-col"><div class="fin-label">Total pago (todos os contratos)</div><div class="fin-value" style="color:#B03A2E;" id="finCustosAdmin">R$ 0</div></div>
+            </div>
+            <div style="padding:10px 16px 0;color:var(--text-faint);font-size:14.5px;" id="financasCustosAdminExplicacao">Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou.</div>
+            <div style="padding:10px 16px 0;" id="financasCustosAdminList"></div>
+
+            <div class="section-label" id="financasDespesasSection">💸 Despesas (manutenção)</div>
+            <div class="finance-panel" style="grid-template-columns:1fr;">
+              <div class="fin-col"><div class="fin-label">Total pago em manutenção</div><div class="fin-value" style="color:#B03A2E;" id="finTotalDespesas">R$ 0</div></div>
+            </div>
+            <div style="padding:10px 16px 0;" id="financasDespesasList"></div>
+
+            <div class="section-label">🏦 Financiamentos ativos</div>
+            <div class="finance-panel" style="grid-template-columns:1fr;">
+              <div class="fin-col"><div class="fin-label">Total já pago em parcelas</div><div class="fin-value" style="color:#B03A2E;" id="finTotalParcelas">R$ 0</div></div>
+            </div>
+            <div style="padding:0 16px;" id="financiamentosLista"></div>
+
+            <div class="section-label">🧾 Impostos</div>
+            <div class="finance-panel" style="grid-template-columns:1fr 1fr;">
+              <div class="fin-col"><div class="fin-label">Provisionados</div><div class="fin-value" style="color:#B03A2E;" id="finImpostosProvisionados">R$ 0</div></div>
+              <div class="fin-col"><div class="fin-label">Pagos (total)</div><div class="fin-value" style="color:#6B5530;" id="finImpostosPagos">R$ 0</div></div>
+            </div>
+            <div style="padding:10px 16px 0;">
+              <button onclick="openRegimeTributario()" style="width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:var(--text-dim);font-weight:800;font-size:15.5px;border-radius:11px;padding:9px 0;">🧾 Ver Regime Tributário</button>
+            </div>
+
+            <div class="section-label">📜 Histórico de decisões</div>
+            <div style="padding:0 16px;" id="hubHistorico"></div>
+          </div>
+          <div style="height:10px;"></div>
+        </div>
+      </div>
+
+      <!-- ============ LOJA / EXPANSÃO ============ -->
+      <div class="screen" id="screen-loja">
+        <div class="subview active" id="loja-list-view">
+          <div class="topbar"><div class="tb-back hidden">←</div><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+          <div class="screen-scroll">
+            <div class="hub-header"><div class="hub-title">🏗️ Expansão da Frota</div></div>
+            <div class="screen-hero hero-teal" style="background-image:url('https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=900&auto=format&fit=crop');">
+              <div class="screen-hero-text">
+                <div class="sh-title">Crescer é aposta, não automático</div>
+                <div class="sh-sub">Comprar capacidade certa, na hora certa, é o que separa expansão de risco.</div>
+              </div>
+            </div>
+            <div class="finance-panel">
+              <div class="fin-col"><div class="fin-label">Capital</div><div class="fin-value ok js-cash">R$ 60.000</div></div>
+              <div class="fin-col"><div class="fin-label">Patrimônio</div><div class="fin-value amber js-patrimonio">R$ 0</div></div>
+              <div class="fin-col"><div class="fin-label">Poder de compra</div><div class="fin-value ok js-poder">R$ 0</div></div>
+            </div>
+            <div class="section-label">Catálogo</div>
+            <div style="padding:0 16px;" id="lojaList"></div>
+            <div style="height:10px;"></div>
+          </div>
+        </div>
+        <div class="subview" id="loja-detail-view">
+          <div class="topbar"><button class="tb-back" onclick="closeDetail('loja')">←</button><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+          <div class="screen-scroll" id="lojaDetailScroll"></div>
+        </div>
+      </div>
+
+      <!-- ============ REGIME TRIBUTÁRIO (overlay) ============ -->
+      <div class="evento-overlay" id="regimeOverlay">
+        <div class="topbar"><button class="tb-back" onclick="closeRegimeTributario()">←</button><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+        <div class="screen-scroll" id="regimeTributarioScroll"></div>
+      </div>
+
+      <!-- ============ EVENTO (overlay) ============ -->
+      <div class="evento-overlay" id="eventoOverlay">
+        <div class="topbar"><button class="tb-back" onclick="closeEvento()">←</button><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
+        <div class="screen-scroll">
+          <div class="event-banner">
+            <div class="eb-top">
+              <div class="eb-icon">🌧️</div>
+              <div style="flex:1;"><div class="eb-name">Chuva forte na região</div><div class="eb-sub">Evento climático</div></div>
+              <div class="eb-risk">⚠️ ALTO</div>
+            </div>
+            <div class="event-photo" style="background-image:url('https://images.unsplash.com/photo-1534097575056-ddba81f714c8?fm=jpg&q=75&w=900&auto=format&fit=crop');"></div>
+          </div>
+          <div class="info-box">
+            <div class="box-title danger">Por que isso está acontecendo agora?</div>
+            <div class="box-text">Contrato de risco climático alto, sem seguro contratado, e manutenção preventiva da escavadeira atrasada há 12 dias.</div>
+          </div>
+          <div class="info-box" style="background:rgba(255,150,50,0.15);border-color:rgba(255,150,50,.35);">
+            <div class="box-title" style="color:var(--amber-2);">🎲 Risco de escalada — 30% de chance</div>
+            <div class="box-text">Esse tipo de evento pode piorar quando a manutenção está atrasada: o contrato pode ser paralisado no mês inteiro e gerar multa de até 35% do valor. Manutenção em dia reduziria essa chance em até 70%; seguro reduziria o prejuízo em até 60%. Nenhum dos dois está ativo aqui.</div>
+          </div>
+          <div class="choices" id="eventoChoices">
+            <div class="choice-card" data-choice="1" onclick="selectEventChoice(this)">
+              <div class="ch-name">1. Pagar equipe extra</div>
+              <div class="ch-desc">Recupera o prazo com custo imediato.</div>
+              <div class="impacts">
+                <div><div class="impact-label">Caixa</div><div class="impact-val neg">-8k</div></div>
+                <div><div class="impact-label">Prazo</div><div class="impact-val neutral">No prazo</div></div>
+                <div><div class="impact-label">Reputação</div><div class="impact-val pos">+2</div></div>
+                <div><div class="impact-label">Risco</div><div class="impact-val pos">Reduz</div></div>
+              </div>
+            </div>
+            <div class="choice-card" data-choice="2" onclick="selectEventChoice(this)">
+              <div class="ch-name">2. Aceitar atraso</div>
+              <div class="ch-desc">Multa contratual, sem custo extra de equipe.</div>
+              <div class="impacts">
+                <div><div class="impact-label">Caixa</div><div class="impact-val neg">-24k</div></div>
+                <div><div class="impact-label">Prazo</div><div class="impact-val neutral">+3 dias</div></div>
+                <div><div class="impact-label">Reputação</div><div class="impact-val neg">-3</div></div>
+                <div><div class="impact-label">Risco</div><div class="impact-val neg">Aumenta</div></div>
+              </div>
+            </div>
+            <div class="choice-card" data-choice="3" onclick="selectEventChoice(this)">
+              <div class="ch-name">3. Realocar máquina</div>
+              <div class="ch-desc">Puxa recurso de outro contrato ativo.</div>
+              <div class="impacts">
+                <div><div class="impact-label">Caixa</div><div class="impact-val neg">-5k</div></div>
+                <div><div class="impact-label">Prazo</div><div class="impact-val neutral">No prazo</div></div>
+                <div><div class="impact-label">Reputação</div><div class="impact-val neg">-1</div></div>
+                <div><div class="impact-label">Risco</div><div class="impact-val neutral">Médio</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="action-zone">
+            <button class="action-btn locked" id="eventoConfirmBtn" onclick="confirmEvento()">Confirmar escolha<span class="sub">Selecione uma opção acima</span></button>
+          </div>
+          <div style="height:6px;"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="result-modal-overlay" id="resultModalOverlay">
+      <div class="result-modal-box">
+        <div class="result-modal-icon" id="resultModalIcon">⚠️</div>
+        <div class="result-modal-title" id="resultModalTitle">Título</div>
+        <div class="result-modal-text" id="resultModalText">Mensagem</div>
+        <button class="result-modal-btn" onclick="closeResultModal()">Entendi, continuar</button>
+      </div>
+    </div>
+
+    <div class="obra-overlay" id="obraOverlay">
+      <div class="topbar"><button class="tb-back" onclick="fecharObra()">←</button><div class="tb-spacer"></div></div>
+      <div id="obraVideoWrap"></div>
+      <div class="screen-scroll" id="obraDashboard"></div>
+    </div>
+
+    <div class="compra-overlay" id="compraOverlay">
+      <div class="compra-flash" id="compraFlash"></div>
+      <div class="confete-container" id="confeteContainer"></div>
+      <div class="compra-eyebrow">🎉 Entrega realizada!</div>
+      <div class="compra-title">Bem-vinda à frota!</div>
+      <div class="compra-photo-wrap">
+        <div class="compra-photo" id="compraFoto"></div>
+        <div class="compra-shine"></div>
+      </div>
+      <div class="compra-sparkles" id="compraSparkles"></div>
+      <div class="compra-nome" id="compraNome">Nome da máquina</div>
+      <div class="compra-sub">Foto oficial da entrega, direto do pátio — sua nova máquina já está pronta pro primeiro contrato.</div>
+      <button class="compra-btn" onclick="closeCompraCelebration()">🚜 Vamos trabalhar!</button>
+    </div>
+
+    <div class="bottomnav" id="bottomNav">
+      <button class="nav-item active" data-screen="hub"><span class="nav-icon">🏠</span><span class="nav-label">HUB</span></button>
+      <button class="nav-item" data-screen="maquinas"><span class="nav-icon">🚜</span><span class="nav-label">MÁQUINAS</span></button>
+      <button class="nav-item" data-screen="contratos"><span class="nav-icon">📋</span><span class="nav-label">CONTRATOS</span><span class="nav-badge">2</span></button>
+      <button class="nav-item" data-screen="manutencao"><span class="nav-icon">🔧</span><span class="nav-label">MANUTENÇÃO</span></button>
+      <button class="nav-item" data-screen="financas"><span class="nav-icon">🏛️</span><span class="nav-label">ADMIN.</span></button>
+      <button class="nav-item" data-screen="loja"><span class="nav-icon">🛒</span><span class="nav-label">LOJA</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+/* AUDITORIA (Etapa 1): CASH era uma constante morta (R$1.248.750) herdada de uma versão antiga
+   e ainda era usada em renderLojaDetail() para calcular caixa restante — enquanto o resto do app
+   já usava playerCash (dinâmico). Bug real: comprar máquina na Loja calculava contra um caixa fake.
+   Corrigido: removida a constante, tudo abaixo usa playerCash como única fonte de verdade. */
+
+/* ===================== MODELO DE RISCO CENTRALIZADO (Etapa 4/5/14) =====================
+   Fonte única para: probabilidade/impacto por risco do contrato, opções de seguro, e fatores
+   de exposição. Nenhuma tela deve ter esses números hardcoded — todas leem daqui. */
+/* ===================== MODELO DE RISCO — recalibrado pra probabilidade POR DIA =====================
+   Antes, cada clique em "Avançar execução" valia ~1/3 do contrato inteiro (progresso de 30-45% por vez),
+   então um contrato de "21 dias" terminava em ~3 toques — não batia com o próprio texto da tela, e deixava
+   o jogo rápido demais. Agora cada clique representa 1 DIA de obra de verdade (progresso = 100/prazoDias
+   por dia), então um contrato de 21 dias leva ~21 cliques — e por isso a chance de risco por evento
+   precisa ser bem menor que antes, senão um contrato longo vira quase certeza de dar problema.
+   Os números abaixo foram recalculados pra manter a MESMA chance total de acontecer algo num contrato
+   inteiro que já era validada antes (Fase 4A.6) — só redistribuída em mais eventos menores, ao longo
+   de mais dias, em vez de poucos eventos grandes. */
+const RISK_TIERS = {
+  low:  { label:"Baixo",  baseProb:0.020, impactPct:0.15 },
+  mid:  { label:"Médio",  baseProb:0.060, impactPct:0.25 },
+  high: { label:"Alto",   baseProb:0.085, impactPct:0.35 }
+};
+const SEGURO_OPTIONS = {
+  nenhum:   { label:"Sem seguro",        custoPct:0,    probRed:0,    impactRed:0    },
+  basica:   { label:"Cobertura básica",  custoPct:0.03, probRed:0.060, impactRed:0.40 },
+  completa: { label:"Cobertura completa",custoPct:0.07, probRed:0.120, impactRed:0.75 }
+};
+const CUSTOS_OPERACIONAIS_COMPONENTES = [
+  { label:"Operador",                    icon:"👷", pct:0.05 },
+  { label:"Combustível",                 icon:"⛽", pct:0.04 },
+  { label:"Mobilização e desmobilização",icon:"🚚", pct:0.03 }
+];
+const CUSTOS_OPERACIONAIS_PCT = CUSTOS_OPERACIONAIS_COMPONENTES.reduce((s,c)=>s+c.pct,0); // 12% — derivado dos itens acima, não duplicado
+function calcularCustosOperacionais(valor){
+  const itens = CUSTOS_OPERACIONAIS_COMPONENTES.map(c => ({ label:c.label, icon:c.icon, valor:Math.round(valor*c.pct) }));
+  return { total: itens.reduce((s,i)=>s+i.valor,0), itens };
+}
+
+/* ===================== CUSTOS ADMINISTRATIVOS (fixos, da empresa — não do contrato) =====================
+   Diferença importante em relação aos custos operacionais acima: esses NÃO são % do valor do
+   contrato, são um valor fixo por dia — a empresa gasta isso pra existir, contrato rendendo muito
+   ou pouco. Cobrado pelos dias que o contrato levou pra ser executado (diasDecorridos), que é a
+   melhor aproximação de "tempo passando" que o protótipo tem hoje (não existe um relógio global). */
+/* ===================== FASE 3 — CUSTO ADMINISTRATIVO ESCALA COM O TAMANHO DA FROTA =====================
+   Antes, o custo fixo diário era sempre o mesmo, não importa se a empresa tinha 1 ou 10 máquinas —
+   não fazia sentido: mais máquina significa mais logística, mais gente pra coordenar, sede maior.
+   Agora cada máquina extra na frota soma um valor por dia aos 3 componentes administrativos,
+   proporcionalmente — "Expansão → maior custo fixo", fechando mais um elo do ciclo. */
+const CUSTOS_ADMINISTRATIVOS_COMPONENTES = [
+  { label:"Aluguel da sede",             icon:"🏢", valorDia:400 },
+  { label:"Equipe administrativa",       icon:"🧑‍💼", valorDia:350 },
+  { label:"Pró-labore dos sócios",       icon:"💼", valorDia:500 }
+];
+const CUSTO_ADMINISTRATIVO_DIARIO_BASE = CUSTOS_ADMINISTRATIVOS_COMPONENTES.reduce((s,c)=>s+c.valorDia,0); // R$1.250/dia com 1 máquina
+const CUSTO_ADICIONAL_POR_MAQUINA_DIA = 150; // cada máquina extra na frota soma isso ao custo fixo diário
+
+function custoAdministrativoDiarioAtual(){
+  const numMaquinas = Math.max(1, Object.keys(MACHINES).length);
+  return CUSTO_ADMINISTRATIVO_DIARIO_BASE + (numMaquinas - 1) * CUSTO_ADICIONAL_POR_MAQUINA_DIA;
+}
+function calcularCustosAdministrativos(dias){
+  const fatorEscala = custoAdministrativoDiarioAtual() / CUSTO_ADMINISTRATIVO_DIARIO_BASE;
+  const itens = CUSTOS_ADMINISTRATIVOS_COMPONENTES.map(c => ({ label:c.label, icon:c.icon, valor: Math.round(c.valorDia*fatorEscala*dias) }));
+  return { total: itens.reduce((s,i)=>s+i.valor,0), itens };
+}
+
+/* ===================== SISTEMA TRIBUTÁRIO (Fase 4A.7) =====================
+   Modelo abstrato e universal — nenhuma legislação real (nem BR, nem de qualquer país).
+   Fonte única das faixas: mudar aqui muda o jogo inteiro. Preparado para outras moedas
+   (troca apenas CURRENCY_SYMBOL, os números continuam corretos). */
+const TAX_BRACKETS = [
+  { ate: 500000,    aliquota: 0.06 },
+  { ate: 1000000,   aliquota: 0.08 },
+  { ate: 2000000,   aliquota: 0.10 },
+  { ate: Infinity,  aliquota: 0.12 }
+];
+function calcularAliquotaEfetiva(faturamentoAcumulado){
+  for(const faixa of TAX_BRACKETS){
+    if(faturamentoAcumulado <= faixa.ate) return faixa.aliquota;
+  }
+  return TAX_BRACKETS[TAX_BRACKETS.length-1].aliquota;
+}
+function proximaFaixa(faturamentoAcumulado){
+  return TAX_BRACKETS.find(f => faturamentoAcumulado <= f.ate) || null;
+}
+let faturamentoAcumulado = 0;
+let impostosProvisionados = 0;
+let faturamentoDesdeUltimoFechamento = 0;
+let impostosPagosTotal = 0;
+let totalParcelasPagas = 0;
+let custosAdministrativosTotal = 0;
+let custosAdministrativosLog = []; // histórico de itens pagos, pra detalhar na tela de Administração
+
+// Calcula exposição ao risco de um contrato dado o seguro escolhido — única função que decide isso no app inteiro
+function calcularExposicao(contractKey, seguroTipo){
+  const c = CONTRACTS[contractKey];
+  const tier = RISK_TIERS[c.risk];
+  const seguro = SEGURO_OPTIONS[seguroTipo] || SEGURO_OPTIONS.nenhum;
+
+  const requisitos = c.requiredMachineKeys || [];
+  const machines = [];
+  requisitos.forEach(req => {
+    const doTipo = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).sort((a,b) => b.health - a.health);
+    for(let i=0; i<req.qtd && i<doTipo.length; i++) machines.push(doTipo[i]);
+  });
+  const avgHealth = machines.length ? machines.reduce((s,m)=>s+m.health,0)/machines.length : 100;
+  const manutBonus = avgHealth >= 80 ? -0.035 : (avgHealth < 50 ? 0.035 : 0);
+
+  let prob = tier.baseProb - seguro.probRed + manutBonus;
+  prob = Math.max(0.015, Math.min(0.6, prob));
+
+  const impactoBase = c.value * tier.impactPct;
+  const impacto = Math.round(impactoBase * (1 - seguro.impactRed));
+
+  const fatores = [];
+  fatores.push(avgHealth >= 80
+    ? { icon:"🟢", text:"Manutenção em dia — reduz exposição" }
+    : avgHealth < 50
+      ? { icon:"🔴", text:"Máquina próxima da revisão — aumenta exposição" }
+      : { icon:"⚪", text:"Manutenção em estado neutro" });
+  fatores.push(seguroTipo !== 'nenhum'
+    ? { icon:"🟢", text:`${seguro.label} contratada — reduz exposição` }
+    : { icon:"🔴", text:"Sem seguro — exposição total" });
+  if(c.risk === 'high') fatores.push({ icon:"🔴", text:"Contrato de risco elevado" });
+  if((c.prazoDias||99) <= 12) fatores.push({ icon:"🔴", text:"Prazo apertado" });
+
+  return { prob, impacto, custoSeguro: Math.round(c.value * seguro.custoPct), fatores, tier, seguro };
+}
+
+/* ===================== HISTÓRICO E REPUTAÇÃO (Etapa 9/10) ===================== */
+let reputacao = 100;
+
+let missoes = [
+  { id:'m0', tipo:'normal', titulo:'🏆 Suba de nível', desc:'Alcance a reputação 110 e vire "Confiável" — contratos passam a valer mais.', meta:110, progresso:100, recompensaTexto:'+R$8.000 de bônus', recompensaFn:()=>{playerCash+=8000;}, concluida:false, resgatada:false },
+  { id:'m1', tipo:'normal', titulo:'📦 Entregas no prazo', desc:'Conclua 3 contratos sem atraso.', meta:3, progresso:0, recompensaTexto:'+R$5.000', recompensaFn:()=>{playerCash+=5000;}, concluida:false, resgatada:false },
+  { id:'m2', tipo:'normal', titulo:'🔧 Frota em dia', desc:'Realize manutenção em 2 máquinas diferentes.', meta:2, progresso:0, recompensaTexto:'+5 reputação', recompensaFn:()=>{ajustarReputacao(5);}, concluida:false, resgatada:false },
+  { id:'m3', tipo:'normal', titulo:'💰 Faturamento sólido', desc:'Fature R$300.000 acumulados.', meta:300000, progresso:0, recompensaTexto:'+R$10.000', recompensaFn:()=>{playerCash+=10000;}, concluida:false, resgatada:false },
+  { id:'d1', tipo:'desafio', titulo:'🔥 Desafio: aposta calculada', desc:'Aceite um contrato de risco médio ou alto sem seguro, e conclua com sucesso.', meta:1, progresso:0, recompensaTexto:'+R$15.000 e +8 reputação', recompensaFn:()=>{playerCash+=15000; ajustarReputacao(8);}, concluida:false, resgatada:false }
+];
+let maquinasComManutencaoRealizada = new Set();
+
+function atualizarMissoes(evento, dados){
+  if(evento === 'concluido' && dados){
+    const m1 = missoes.find(m=>m.id==='m1');
+    if(m1 && !m1.concluida && dados.noPrazo) m1.progresso++;
+    const m3 = missoes.find(m=>m.id==='m3');
+    if(m3 && !m3.concluida) m3.progresso = faturamentoAcumulado;
+    const d1 = missoes.find(m=>m.id==='d1');
+    if(d1 && !d1.concluida && dados.seguro==='nenhum' && (dados.risk==='mid'||dados.risk==='high')) d1.progresso = 1;
+  }
+  if(evento === 'manutencao' && dados){
+    maquinasComManutencaoRealizada.add(dados.maquinaKey);
+    const m2 = missoes.find(m=>m.id==='m2');
+    if(m2 && !m2.concluida) m2.progresso = maquinasComManutencaoRealizada.size;
+  }
+  missoes.forEach(m => { if(!m.concluida && m.progresso >= m.meta) m.concluida = true; });
+  renderMissoes();
+}
+
+function resgatarMissao(id){
+  const m = missoes.find(x=>x.id===id);
+  if(!m || !m.concluida || m.resgatada) return;
+  m.recompensaFn();
+  m.resgatada = true;
+  updateFinanceDisplays();
+  renderHubExtras();
+  renderMissoes();
+  showToast(`🏆 Recompensa resgatada: ${m.recompensaTexto}`);
+}
+
+function renderMissoes(){
+  const el = document.getElementById('missoesLista');
+  if(!el) return;
+  el.innerHTML = missoes.map(m => {
+    const pct = Math.min(100, Math.round(m.progresso/m.meta*100));
+    const isDesafio = m.tipo === 'desafio';
+    return `<div style="background:${isDesafio?'linear-gradient(135deg,rgba(255,93,122,.1),rgba(255,255,255,.02))':'var(--surface)'};border:1.5px solid ${isDesafio?'rgba(255,93,122,.4)':'var(--surface-border)'};border-radius:14px;padding:11px 12px;margin-bottom:9px;">
+      <div style="font-size:14.5px;font-weight:800;color:${isDesafio?'var(--danger)':'var(--text)'};">${m.titulo}</div>
+      <div style="font-size:12.5px;color:var(--text-faint);margin-top:3px;">${m.desc}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+        <div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${isDesafio?'var(--danger)':'var(--amber-1)'};border-radius:4px;"></div>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:var(--text-dim);">${pct}%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;">
+        <span style="font-size:12.5px;font-weight:700;color:var(--ok);">🎁 ${m.recompensaTexto}</span>
+        ${m.concluida && !m.resgatada ? `<button onclick="resgatarMissao('${m.id}')" style="background:var(--ok);color:var(--bg-1);border:none;border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:800;">Resgatar</button>` : m.resgatada ? '<span style="font-size:12px;color:var(--text-faint);">✅ Resgatada</span>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let historico = [];
+function registrarHistorico(icon, titulo, detalhe){
+  historico.unshift({ icon, titulo, detalhe, ts: Date.now() });
+  if(historico.length > 30) historico.pop();
+  renderHubExtras();
+}
+function ajustarReputacao(delta, motivo){
+  reputacao = Math.max(0, Math.min(150, reputacao + delta));
+  const m0 = missoes.find(m=>m.id==='m0');
+  if(m0 && !m0.concluida){
+    m0.progresso = reputacao;
+    if(m0.progresso >= m0.meta) m0.concluida = true;
+    renderMissoes();
+  }
+  renderHubExtras();
+  renderTierBanner();
+}
+function renderTierBanner(){
+  const el = document.getElementById('tierBanner');
+  if(!el) return;
+  const tier = obterTierReputacao(reputacao);
+  const proximo = obterProximoTier(reputacao);
+  const pctNoTier = Math.round(((reputacao - tier.min) / (tier.max - tier.min + 1)) * 100);
+  el.style.background = `linear-gradient(135deg, ${tier.cor}22, rgba(255,255,255,.02))`;
+  el.style.border = `1.5px solid ${tier.cor}66`;
+  el.innerHTML = `
+    <div style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${tier.cor};">Objetivo principal</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;">
+      <div style="font-size:18px;font-weight:800;">🏆 ${tier.nome}</div>
+      <div style="font-size:12.5px;font-weight:700;color:var(--text-faint);">contratos valem ${tier.multiplicador>1?'+':''}${Math.round((tier.multiplicador-1)*100)||0}%</div>
+    </div>
+    <div style="height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:9px;">
+      <div style="height:100%;width:${pctNoTier}%;background:${tier.cor};border-radius:4px;"></div>
+    </div>
+    <div style="font-size:12px;color:var(--text-faint);margin-top:7px;line-height:1.5;">
+      ${proximo
+        ? `Faça obras dentro do prazo pra subir de nível — faltam <b style="color:${tier.cor};">${proximo.min - reputacao} pontos</b> de reputação pra virar <b>${proximo.nome}</b> (contratos ${Math.round((proximo.multiplicador-1)*100)}% mais valiosos).`
+        : `Você chegou ao topo — <b style="color:${tier.cor};">Referência no mercado</b>. Contratos regenerados agora valem o máximo possível.`}
+    </div>
+  `;
+}
+function renderHubExtras(){
+  const repEl = document.getElementById('hubReputacao');
+  if(repEl) repEl.textContent = `${reputacao} / 150`;
+  const histEl = document.getElementById('hubHistorico');
+  if(!histEl) return;
+  histEl.innerHTML = historico.length === 0
+    ? '<div style="font-size:15.5px;color:var(--text-faint);padding:6px 2px;">Nenhuma decisão registrada ainda.</div>'
+    : historico.slice(0,6).map(h => `
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:9px 11px;margin-bottom:7px;">
+        <div style="font-size:15.5px;font-weight:800;">${h.icon} ${h.titulo}</div>
+        <div style="font-size:13.5px;color:var(--text-faint);margin-top:2px;">${h.detalhe}</div>
+      </div>`).join('');
+}
+
+const MACHINES = {
+  retro: {
+    tipoKey:"retro", idadeDias:640, diasDesdeUltimaManutencao:80,
+    name: "Retroescavadeira NH B110B", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
+    photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=500&fit=crop&w=800",
+    thumb:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200",
+    health:22, status:"red", statusLabel:"🔴 Crítico", hours:"340h desde a última revisão", utilizacao:0,
+    problem:"Vazamento no sistema hidráulico e desgaste avançado nas mangueiras principais.",
+    original:{price:8500, downtime:"1 dia", impact:1800, contract:"Terraplenagem p/ Loteamento"},
+    alt:{price:4900, downtime:"3 dias", impact:5400, contract:"Terraplenagem p/ Loteamento"},
+    inContract:true, task:"Parada — aguardando manutenção", location:"Base — Campinas, SP"
+  },
+  trator: {
+    tipoKey:"trator", idadeDias:310, diasDesdeUltimaManutencao:20,
+    name: "Trator de Esteira D6T", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
+    photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
+    thumb:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+    health:61, status:"amber", statusLabel:"🟡 Atenção", hours:"180h desde a última revisão", utilizacao:78,
+    problem:"Filtro de ar e óleo de motor próximos do limite recomendado.",
+    original:{price:2200, downtime:"4h", impact:400, contract:"Aterro Sanitário Leste"},
+    alt:{price:1300, downtime:"1 dia", impact:1900, contract:"Aterro Sanitário Leste"},
+    inContract:true, task:"Em operação — Aterro Sanitário Leste", location:"Suzano, SP"
+  },
+  escavadeira: {
+    tipoKey:"escavadeira", idadeDias:45, diasDesdeUltimaManutencao:10,
+    name: "Escavadeira Hidráulica CAT 320D", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
+    photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=75&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop",
+    health:92, status:"green", statusLabel:"🟢 OK", hours:"40h desde a última revisão", utilizacao:35,
+    problem:"Nenhum problema detectado. Revisão de rotina recomendada em 620h.",
+    original:{price:1800, downtime:"3h", impact:0, contract:null},
+    alt:{price:1100, downtime:"6h", impact:0, contract:null},
+    inContract:false, task:"Disponível para novo contrato", location:"Base — Campinas, SP"
+  },
+  caminhao: {
+    tipoKey:"caminhao", idadeDias:95, diasDesdeUltimaManutencao:15,
+    name: "Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
+    photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop",
+    health:88, status:"green", statusLabel:"🟢 OK", hours:"95h desde a última revisão", utilizacao:20,
+    problem:"Nenhum problema detectado. Pastilhas de freio com 70% de vida útil.",
+    original:{price:1600, downtime:"3h", impact:0, contract:null},
+    alt:{price:900, downtime:"5h", impact:0, contract:null},
+    inContract:false, task:"Disponível para novo contrato", location:"Base — Campinas, SP"
+  },
+  pa: {
+    tipoKey:"pa", idadeDias:380, diasDesdeUltimaManutencao:50,
+    name: "Pá Carregadeira WA200", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
+    photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=70&w=200&auto=format&fit=crop",
+    health:58, status:"amber", statusLabel:"🟡 Atenção", hours:"210h desde a última revisão", utilizacao:8,
+    problem:"Pneus com desgaste irregular e sistema de içamento pedindo lubrificação.",
+    original:{price:3400, downtime:"1 dia", impact:0, contract:null},
+    alt:{price:1900, downtime:"2 dias", impact:0, contract:null},
+    inContract:false, task:"Em pátio — revisão recomendada", location:"Base — Campinas, SP"
+  }
+};
+
+/* ===================== VÍDEOS "TIPO GIF" DA OBRA — só entra vídeo que bate com a cena de verdade =====================
+   Cada vídeo precisa mostrar exatamente o tipo de trabalho daquele contrato. Contratos sem vídeo
+   confirmado aqui mostram só o dashboard, sem forçar uma cena que não corresponde à obra real. */
+const VIDEO_POR_CONTRATO = {
+  desmatamento: {
+    url: "video-desmatamento.mp4",
+    poster: "https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=400&fit=crop&w=400"
+  }
+  // aterro, estrada, pedra, loteamento: ainda sem vídeo que combine de verdade com a cena —
+  // pendente de geração/busca melhor, não forçamos vídeo genérico só pra preencher.
+};
+
+const CONTRACTS = {
+  aterro: {
+    name:"Aterro Industrial", value:240000, company:"Construtora Planalto", location:"Campinas, SP",
+    photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=400&auto=format&fit=crop",
+    hero:"https://images.unsplash.com/photo-1534097575056-ddba81f714c8?fm=jpg&q=75&w=900&auto=format&fit=crop",
+    payment:"Parcelado (3x)", risk:"mid", riskLabel:"Risco médio",
+    req:["🚜 Escavadeira 20t ou maior (você tem: 22t)","🚛 Caminhão basc. mín. 10m³ (você tem: 12m³)","👷 Operador habilitado"],
+    prazo:"10 dias", prazoDias:10, km:"48 km",
+    riskDesc:"Terreno com histórico de chuvas na região. Pode haver atrasos por condições climáticas.",
+    penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], state:"DISPONIVEL"
+  },
+  estrada: {
+    name:"Abertura de Estrada", value:180000, company:"Prefeitura de Itupeva", location:"Itupeva, SP",
+    photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop",
+    hero:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&fit=crop",
+    payment:"À vista", risk:"low", riskLabel:"Risco baixo",
+    req:["🚜 Motoniveladora","👷 Operador habilitado"],
+    prazo:"14 dias", prazoDias:14, km:"22 km",
+    riskDesc:"Terreno plano, acesso pavimentado e histórico estável na região.",
+    penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
+    hasMachine:false, missing:"Motoniveladora (nenhuma na sua frota)", requiredMachineKeys:[{tipo:"motoniveladora",qtd:1}], state:"DISPONIVEL"
+  },
+  pedra: {
+    name:"Extração de Pedra", value:525000, company:"Mineração Forte", location:"Mairinque, SP",
+    photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=400&auto=format&fit=crop",
+    hero:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=75&w=900&auto=format&fit=crop",
+    payment:"Parcelado (4x)", risk:"high", riskLabel:"Risco alto",
+    req:["🚜 Escavadeira 30t+ (sua maior: 22t)","👷 Operador certificado NR-22"],
+    prazo:"21 dias", prazoDias:21, km:"63 km",
+    riskDesc:"Área de mineração ativa, terreno instável e exigências regulatórias.",
+    penalty:"Atraso: 0,8%/dia · Cancelamento: 15% do valor total.", penaltyPctDia:0.008,
+    hasMachine:false, missing:"Escavadeira 30t ou maior", requiredMachineKeys:[{tipo:"escavadeira30",qtd:1}], state:"DISPONIVEL"
+  },
+  loteamento: {
+    name:"Terraplenagem p/ Loteamento", value:210000, company:"Loteadora Nova Vida", location:"Sorocaba, SP",
+    photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop",
+    hero:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=1000&h=700&fit=crop",
+    payment:"Parcelado (2x)", risk:"mid", riskLabel:"Risco médio",
+    req:["🚜 Trator de Esteira (você tem: D6T, 18t)","👷 Operador habilitado"],
+    prazo:"12 dias", prazoDias:12, km:"35 km",
+    riskDesc:"Terreno recém-loteado com drenagem ainda não testada em chuva forte.",
+    penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"trator",qtd:1}], state:"DISPONIVEL"
+  },
+  desmatamento: {
+    name:"Desmatamento Fazenda Boa Vista", value:95000, company:"Fazenda Boa Vista", location:"Itatiba, SP",
+    photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=400&fit=crop&w=400",
+    hero:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=700&fit=crop&w=1000",
+    payment:"À vista", risk:"low", riskLabel:"Risco baixo",
+    req:["🚜 Retroescavadeira (você tem: NH B110B, 14t)","👷 Operador habilitado"],
+    prazo:"15 dias", prazoDias:15, km:"18 km",
+    riskDesc:"Área rural de baixa complexidade, sem histórico de intercorrências.",
+    penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
+    hasMachine:true, missing:"", requiredMachineKeys:[{tipo:"retro",qtd:1}], state:"DISPONIVEL"
+  }
+};
+
+/* ===================== REGENERAÇÃO DE CONTRATOS (variedade, não repetição infinita) =====================
+   Cada "arquétipo" de contrato (aterro/estrada/pedra/loteamento/desmatamento) pode reaparecer depois de
+   concluído ou perdido, com cliente/cidade/valor diferentes — e às vezes até exigindo outra combinação de
+   máquina, dentro do mesmo tipo de obra. Isso evita o jogo "acabar" depois dos 5 contratos originais. */
+const EMPRESAS_CLIENTE = [
+  "Construtora Planalto","Loteadora Nova Vida","Mineração Forte","Prefeitura de Itupeva",
+  "Fazenda Boa Vista","Construtora Horizonte","Grupo Alicerce Engenharia","Terraplenagem Vale Verde",
+  "Incorporadora Serra Azul","Prefeitura de Sorocaba"
+];
+const CIDADES_SP = [
+  "Campinas, SP","Itupeva, SP","Mairinque, SP","Sorocaba, SP","Itatiba, SP",
+  "Jundiaí, SP","Indaiatuba, SP","Valinhos, SP","Vinhedo, SP","Louveira, SP"
+];
+// Combinações alternativas de máquina por arquétipo — dá variedade sem quebrar a lógica de risco/valor
+const VARIANTES_MAQUINA = {
+  // Cada variante agora é uma lista de {tipo, qtd} — algumas obras exigem mais de 1 unidade do mesmo tipo.
+  aterro:        [
+    [{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}],
+    [{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:2}],       // obra maior — 2 caminhões escoando material
+    [{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}]
+  ],
+  estrada:       [[{tipo:"motoniveladora",qtd:1}]], // exige motoniveladora de verdade — compre uma na Loja pra liberar
+  pedra:         [[{tipo:"escavadeira30",qtd:1}]],  // sempre escavadeira 30t+ (fora de alcance) — mantém o gargalo proposital
+  loteamento:    [
+    [{tipo:"trator",qtd:1}],
+    [{tipo:"pa",qtd:1}],
+    [{tipo:"escavadeira",qtd:1}],
+    [{tipo:"trator",qtd:2}]                                // loteamento grande — 2 tratores nivelando junto
+  ],
+  desmatamento:  [
+    [{tipo:"retro",qtd:1}],
+    [{tipo:"trator",qtd:1}],
+    [{tipo:"retro",qtd:2}]                                 // área maior de desmatamento — 2 retros
+  ]
+};
+const REQ_LABELS = {
+  escavadeira:"Escavadeira 20t ou maior", caminhao:"Caminhão basc. mín. 10m³",
+  trator:"Trator de Esteira", pa:"Pá Carregadeira", retro:"Retroescavadeira",
+  motoniveladora:"Motoniveladora", escavadeira30:"Escavadeira 30t ou maior"
+};
+const REQ_ICONS = {
+  escavadeira:"🚜", caminhao:"🚛", trator:"🚜", pa:"🚜", retro:"🚜", motoniveladora:"🚜", escavadeira30:"🚜"
+};
+
+// Checa se o jogador POSSUI (não necessariamente livre agora) máquinas suficientes de cada tipo exigido.
+function calcularHasMachine(requisitos){
+  if(!requisitos || requisitos.length === 0) return { ok:false, missing:"Máquina fora da sua frota atual" };
+  for(const req of requisitos){
+    const possuidas = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).length;
+    if(possuidas < req.qtd){
+      const label = REQ_LABELS[req.tipo] || "Máquina não disponível";
+      const falta = req.qtd - possuidas;
+      return { ok:false, missing: req.qtd > 1 ? `${label} — precisa de ${req.qtd}, você tem ${possuidas}` : label };
+    }
+  }
+  return { ok:true, missing:"" };
+}
+
+// Checa se as máquinas exigidas estão LIVRES agora (não só na garagem) — usado na hora de aceitar de verdade.
+function maquinasDisponiveisAgora(requisitos){
+  for(const req of requisitos){
+    const livres = Object.entries(MACHINES).filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract).length;
+    if(livres < req.qtd){
+      const label = REQ_LABELS[req.tipo] || "máquina";
+      return { ok:false, motivo: `${label}: precisa de ${req.qtd} livre(s), só ${livres} disponível(is) agora (o resto já está em outro contrato).` };
+    }
+  }
+  return { ok:true, motivo:"" };
+}
+
+// Escolhe QUAIS instâncias específicas de máquina vão trabalhar nesse contrato, entre as livres.
+function selecionarMaquinasParaContrato(requisitos){
+  const escolhidas = [];
+  requisitos.forEach(req => {
+    const livres = Object.entries(MACHINES)
+      .filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract)
+      .sort((a,b) => b[1].health - a[1].health); // prioriza as mais saudáveis primeiro
+    for(let i=0; i<req.qtd && i<livres.length; i++){
+      escolhidas.push(livres[i][0]);
+    }
+  });
+  return escolhidas;
+}
+
+/* ===================== NÍVEIS DE REPUTAÇÃO — a dinâmica central do jogo =====================
+   "Fazer obras bem feitas dentro do prazo" (o que já sobe a reputação) passa a ter consequência
+   real: contratos regenerados em níveis de reputação mais altos valem mais. Isso fecha o ciclo
+   que faltava — reputação deixa de ser só um número decorativo. */
+const REPUTACAO_TIERS = [
+  { min:0,   max:109, nome:"Iniciante",            multiplicador:0.90, cor:"#9891B0" },
+  { min:110, max:124, nome:"Confiável",             multiplicador:1.05, cor:"#5AA8FF" },
+  { min:125, max:139, nome:"Referência regional",   multiplicador:1.20, cor:"#33E0A0" },
+  { min:140, max:150, nome:"Referência no mercado", multiplicador:1.35, cor:"#FFC24B" }
+];
+function obterTierReputacao(rep){
+  return REPUTACAO_TIERS.find(t => rep >= t.min && rep <= t.max) || REPUTACAO_TIERS[0];
+}
+function obterProximoTier(rep){
+  const atual = obterTierReputacao(rep);
+  const idx = REPUTACAO_TIERS.indexOf(atual);
+  return REPUTACAO_TIERS[idx+1] || null;
+}
+
+function regenerarContrato(key){
+  const c = CONTRACTS[key];
+  const variantes = VARIANTES_MAQUINA[key] || [c.requiredMachineKeys];
+  const novaVariante = variantes[Math.floor(Math.random()*variantes.length)];
+  const { ok, missing } = calcularHasMachine(novaVariante);
+
+  const tier = obterTierReputacao(reputacao);
+  const fator = (0.85 + Math.random()*0.30) * tier.multiplicador; // variação normal × bônus de reputação
+  c.value = Math.round(c.value * fator / 1000) * 1000;
+  c.company = EMPRESAS_CLIENTE[Math.floor(Math.random()*EMPRESAS_CLIENTE.length)];
+  c.location = CIDADES_SP[Math.floor(Math.random()*CIDADES_SP.length)];
+  c.requiredMachineKeys = novaVariante;
+  c.hasMachine = ok;
+  c.missing = missing;
+  c.req = [...novaVariante.map(req => {
+    const label = REQ_LABELS[req.tipo] || req.tipo;
+    const icone = REQ_ICONS[req.tipo] || "🚜";
+    return req.qtd > 1 ? `${icone} ${label} — 2 unidades` : `${icone} ${label}`;
+  }), "👷 Operador habilitado"];
+  c.state = 'DISPONIVEL';
+  c.accepted = false;
+  c.isNovo = true;
+  c.tierNoMomento = tier.nome;
+}
+
+
+/* ===================== FINANCIAMENTO (Loja) =====================
+   Fonte única: entrada e juros embutidos, aplicados a qualquer máquina do catálogo.
+   Parcelar sempre custa mais que à vista — é assim que financiamento funciona de verdade. */
+const ENTRADA_PCT_LOJA = 0.20;      // 20% de entrada, padrão pra todo o catálogo
+const JUROS_FINANCIAMENTO_PCT = 0.15; // 15% de juro embutido sobre o saldo financiado (não sobre o total)
+
+function calcularFinanciamento(vista, parcelasCount){
+  const entrada = Math.round(vista * ENTRADA_PCT_LOJA);
+  const saldo = vista - entrada;
+  const saldoComJuros = Math.round(saldo * (1 + JUROS_FINANCIAMENTO_PCT));
+  const parcela = Math.round(saldoComJuros / parcelasCount);
+  const totalFinanciado = entrada + parcela * parcelasCount;
+  const jurosValor = totalFinanciado - vista;
+  return { entrada, parcela, parcelas: parcelasCount, totalFinanciado, jurosValor };
+}
+
+/* ===================== CRÉDITO REAL — comprar (e principalmente financiar) não é automático =====================
+   Três fricções que existem na vida real e não existiam no protótipo até aqui:
+   1) Aprovação de crédito: financiar depende da reputação — igual um banco olha seu histórico,
+      não só se você tem dinheiro pra entrada hoje.
+   2) Limite de endividamento: não dá pra financiar infinitamente. O total de parcelas que
+      ainda faltam pagar não pode passar de uma fração do seu patrimônio.
+   3) Parcelas de verdade: cada financiamento ativo cobra parcela real a cada 30 dias corridos
+      de obra (o relógio de dias que já existe no jogo) — atrasar tem consequência real. */
+const LIMITE_ENDIVIDAMENTO_PCT_PATRIMONIO = 1.2; // acima de um certo porte, teto = 120% do (patrimônio + faturamento acumulado)
+const LIMITE_ENDIVIDAMENTO_PISO = 150000; // piso — garante que dá pra financiar ao menos 1 máquina simples mesmo no começo do jogo
+const DIAS_ENTRE_PARCELAS = 30;
+let financiamentosAtivos = []; // { nome, parcela, parcelasRestantes, diasParaProxima }
+let diasGlobaisDecorridos = 0;
+
+function podeFinanciar(catalogKey){
+  const c = CATALOG[catalogKey];
+  const minRep = c.reputacaoMinFinanciamento || 0;
+  if(reputacao < minRep){
+    return { ok:false, motivo:`Reputação insuficiente para crédito — precisa de ${minRep}, você tem ${reputacao}.` };
+  }
+  const fin = calcularFinanciamento(c.vista, c.parcelasCount);
+  const debitoAtual = financiamentosAtivos.reduce((s,f) => s + f.parcela*f.parcelasRestantes, 0);
+  const debitoComEste = debitoAtual + fin.parcela*fin.parcelas;
+  const tetoEndividamento = Math.max(LIMITE_ENDIVIDAMENTO_PISO, Math.round((playerPatrimonio + faturamentoAcumulado) * LIMITE_ENDIVIDAMENTO_PCT_PATRIMONIO));
+  if(debitoComEste > tetoEndividamento){
+    return { ok:false, motivo:`Limite de endividamento atingido — seu patrimônio atual só sustenta até ${fmt(tetoEndividamento)} em parcelas futuras (já deve ${fmt(debitoAtual)}).` };
+  }
+  return { ok:true, motivo:"" };
+}
+
+function processarParcelasDoTempo(diasNovos){
+  diasGlobaisDecorridos += diasNovos;
+  financiamentosAtivos.forEach(f => {
+    if(f.parcelasRestantes <= 0) return;
+    f.diasParaProxima -= diasNovos;
+    while(f.diasParaProxima <= 0 && f.parcelasRestantes > 0){
+      if(playerCash >= f.parcela){
+        playerCash -= f.parcela;
+        totalParcelasPagas += f.parcela;
+        f.parcelasRestantes--;
+        registrarHistorico('💳', `Parcela paga: ${f.nome}`, `${fmt(f.parcela)} · restam ${f.parcelasRestantes} parcela(s)`);
+      } else {
+        ajustarReputacao(-5);
+        registrarHistorico('🔴', `Parcela em atraso: ${f.nome}`, `Caixa insuficiente para pagar ${fmt(f.parcela)} — reputação penalizada.`);
+      }
+      f.diasParaProxima += DIAS_ENTRE_PARCELAS;
+    }
+  });
+  financiamentosAtivos = financiamentosAtivos.filter(f => f.parcelasRestantes > 0);
+  updateFinanceDisplays();
+  renderFinancas();
+}
+
+/* ===================== PREÇO-BASE DE MERCADO POR TIPO DE MÁQUINA =====================
+   Fonte única de verdade pra hierarquia de valor entre tipos — evita preços isolados que não
+   conversam entre si. Ordem crescente reflete o mercado real de máquinas pesadas usadas:
+   retroescavadeira (uso geral, menor) < caminhão/pá carregadeira (não especializados)
+   < escavadeira hidráulica (especializada, mais precisa) < motoniveladora/trator de esteira
+   (maiores, mais potentes). Isso NÃO inclui ano de fabricação/depreciação — cada preço aqui
+   representa uma unidade "padrão"; variação por idade fica pra uma mecânica futura separada
+   (exigiria: idade da máquina, taxa de depreciação, e como isso se liga à saúde/manutenção —
+   decisão deliberadamente adiada por enquanto pra não complicar o sistema de preços agora).
+   Regra: escavadeira SEMPRE mais cara que retroescavadeira, nesta tabela e em qualquer catálogo. */
+const MARKET_BASE_PRICES = {
+  retro:          150000, // Retroescavadeira — uso geral, a mais barata
+  caminhao:       190000, // Caminhão Basculante — não especializado
+  pa:             210000, // Pá Carregadeira — não especializado, um pouco maior
+  escavadeira:    240000, // Escavadeira Hidráulica — especializada, mais cara que a retro
+  motoniveladora: 280000, // Motoniveladora — grande, alta precisão
+  trator:         340000  // Trator de Esteira — maior porte, mais potência
+};
+
+/* ===================== CICLO DE VIDA DA MÁQUINA (Fase 2) =====================
+   Idade -> Uso -> Desgaste -> Manutenção -> Condição -> Valor de mercado -> Decisão do jogador
+   (Manter / Reformar / Vender). Deliberadamente simples: só dois números por trás de tudo —
+   IDADE (dias desde a compra) e CONDIÇÃO (o `health` que já existe, 0-100) — sem desgaste
+   separado de motor/transmissão/pneu/hidráulico. O jogador só precisa sentir uma pergunta:
+   "essa máquina está velha, quanto vale, será que já é hora de trocar?" */
+const DEPRECIACAO_POR_DIA_PCT = 0.0007; // ~2%/mês de depreciação por idade
+const DEPRECIACAO_PISO_PCT = 0.30;      // nunca cai abaixo de 30% do preço de mercado (sempre tem valor de sucata/revenda)
+const DESGASTE_USO_MIN_POR_DIA = 0.3;   // condição cai entre 0,3 e 0,8 ponto por dia trabalhado
+const DESGASTE_USO_MAX_POR_DIA = 0.8;
+const DIAS_GRACA_MANUTENCAO_BASICA = 45; // dentro desse prazo desde a última manutenção, máquina parada não perde condição
+const DESGASTE_PARADA_MIN_POR_DIA = 0.05; // bem mais lento que o desgaste de uso — negligência, não trabalho
+const DESGASTE_PARADA_MAX_POR_DIA = 0.12;
+const VENDA_DESAGIO_PCT = 0.90;         // vender rápido não pega o valor cheio de mercado — negociação realista
+
+function valorMercadoAtual(machineKey){
+  const m = MACHINES[machineKey];
+  if(!m) return 0;
+  const precoBase = MARKET_BASE_PRICES[m.tipoKey] || 150000;
+  const fatorIdade = Math.max(DEPRECIACAO_PISO_PCT, 1 - (m.idadeDias||0) * DEPRECIACAO_POR_DIA_PCT);
+  const fatorCondicao = 0.5 + 0.5 * (m.health/100); // condição pesa até 50% do valor — nunca zera sozinha
+  return Math.round(precoBase * fatorIdade * fatorCondicao / 500) * 500;
+}
+
+/* ===================== FASE 3 — PATRIMÔNIO COMO VALOR DERIVADO, NÃO ACUMULADO =====================
+   Antes, patrimônio só somava em pontos soltos (compra, bônus de contrato) e nunca refletia a
+   depreciação real das máquinas — dois "patrimônios" diferentes coexistiam sem se falar. Agora
+   patrimônio é sempre recalculado a partir do valor de mercado de verdade da frota inteira —
+   uma única fonte, sempre atualizada, sem precisar lembrar de ajustar em cada evento novo. */
+function recalcularPatrimonio(){
+  const valorMaquinas = Object.keys(MACHINES).reduce((soma, k) => soma + valorMercadoAtual(k), 0);
+  const dividaFinanciamentos = financiamentosAtivos.reduce((soma, f) => soma + f.parcela*f.parcelasRestantes, 0);
+  playerPatrimonio = Math.max(0, valorMaquinas - dividaFinanciamentos);
+  return playerPatrimonio;
+}
+
+function atualizarStatusMaquina(m){
+  if(m.health >= 70){ m.status='green'; m.statusLabel='🟢 OK'; }
+  else if(m.health >= 40){ m.status='amber'; m.statusLabel='🟡 Atenção'; }
+  else { m.status='red'; m.statusLabel='🔴 Crítico'; }
+}
+
+// Libera de volta pro pátio as máquinas que estavam num contrato que acabou de concluir ou ser perdido.
+function liberarMaquinas(machineKeys){
+  (machineKeys||[]).forEach(k => {
+    const m = MACHINES[k];
+    if(!m) return;
+    m.inContract = false;
+    m.task = 'Disponível para novo contrato';
+    m.location = 'Base — Campinas, SP';
+  });
+}
+
+/* ===================== REALOCAÇÃO DE MÁQUINA ENTRE CONTRATOS =====================
+   O dono pode puxar uma máquina de um contrato ativo pra reforçar outro — assumindo o
+   atraso que isso pode causar na origem, e pagando o custo de mobilização/desmobilização
+   pra levar a máquina até o novo canteiro. Só compensa se o destino comportar mais de
+   uma unidade daquele tipo (senão a máquina extra não acelera nada). */
+const CUSTO_MOBILIZACAO_PCT = 0.025; // 2,5% do valor de mercado da máquina, ida + volta
+
+function calcularFatorProdutividade(ac, catalog){
+  const maquinasAtivas = ac.machineKeys.map(k => MACHINES[k]).filter(Boolean);
+  const avgHealth = maquinasAtivas.length ? maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length : 0;
+  const fatorSaude = 0.6 + 0.4 * (avgHealth/100);
+
+  const qtdMinima = (catalog.requiredMachineKeys||[]).reduce((s,r)=>s+r.qtd, 0) || 1;
+  const qtdAtual = ac.machineKeys.length;
+  // Menos máquina que o exigido = obra capenga (piso 15%, nunca trava 100%). Mais que o exigido = reforço, com teto.
+  const fatorQuantidade = Math.max(0.15, Math.min(1.5, qtdAtual/qtdMinima));
+
+  return fatorSaude * fatorQuantidade;
+}
+
+function opcoesDeRealocacao(origemIdx){
+  const origem = acceptedContracts[origemIdx];
+  if(!origem) return [];
+  const opcoes = [];
+  origem.machineKeys.forEach(machineKey => {
+    const tipo = MACHINES[machineKey]?.tipoKey;
+    if(!tipo) return;
+    acceptedContracts.forEach((destino, destinoIdx) => {
+      if(destinoIdx === origemIdx) return;
+      const catalogDestino = CONTRACTS[destino.key];
+      const precisaDesseTipo = (catalogDestino.requiredMachineKeys||[]).some(r => r.tipo === tipo);
+      if(precisaDesseTipo){
+        opcoes.push({ machineKey, origemIdx, destinoIdx, nomeMaquina: MACHINES[machineKey].name, nomeDestino: destino.name });
+      }
+    });
+  });
+  return opcoes;
+}
+
+function realocarMaquina(machineKey, origemIdx, destinoIdx){
+  const origem = acceptedContracts[origemIdx];
+  const destino = acceptedContracts[destinoIdx];
+  if(!origem || !destino || !origem.machineKeys.includes(machineKey)) return;
+
+  const custoMobilizacao = Math.round(valorMercadoAtual(machineKey) * CUSTO_MOBILIZACAO_PCT);
+  if(playerCash < custoMobilizacao){
+    showToast('🔒 Caixa insuficiente para o custo de mobilização.');
+    return;
+  }
+  playerCash -= custoMobilizacao;
+  origem.machineKeys = origem.machineKeys.filter(k => k !== machineKey);
+  destino.machineKeys.push(machineKey);
+  registrarHistorico('🔀', 'Máquina realocada', `${MACHINES[machineKey].name}: "${origem.name}" → "${destino.name}" · mobilização ${fmt(custoMobilizacao)}`);
+  updateFinanceDisplays();
+  renderContratosAndamento();
+  closeResultModal();
+  showResultModal('🔀', 'Máquina realocada', `${MACHINES[machineKey].name} agora reforça "${destino.name}".\n\nCusto de mobilização: ${fmt(custoMobilizacao)}\n\n"${origem.name}" vai render mais devagar até você repor uma máquina lá ou concluir antes.`);
+}
+
+function abrirRealocacao(origemIdx){
+  const opcoes = opcoesDeRealocacao(origemIdx);
+  if(opcoes.length === 0){
+    showResultModal('🔀', 'Nenhum destino disponível', 'Não há outro contrato em andamento que aproveite alguma das máquinas desse contrato agora.');
+    return;
+  }
+  const lista = opcoes.map((o,i) =>
+    `<div onclick="realocarMaquina('${o.machineKey}',${o.origemIdx},${o.destinoIdx})" style="text-align:left;background:var(--surface);border:1.5px solid var(--surface-border);border-radius:10px;padding:10px 12px;margin-top:8px;cursor:pointer;">
+      <b>${o.nomeMaquina}</b><br><span style="font-size:12px;color:var(--text-faint);">enviar para "${o.nomeDestino}" — custo ${fmt(Math.round(valorMercadoAtual(o.machineKey)*CUSTO_MOBILIZACAO_PCT))}</span>
+    </div>`
+  ).join('');
+  document.getElementById('resultModalIcon').textContent = '🔀';
+  document.getElementById('resultModalTitle').textContent = 'Realocar máquina';
+  document.getElementById('resultModalText').innerHTML = `Escolha o que enviar e para onde:${lista}`;
+  document.querySelector('.result-modal-box').classList.remove('success');
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+
+// Agrupa "Caminhão + Caminhão" em "2x Caminhão" pra lista de máquinas de um contrato não ficar redundante.
+function resumoMaquinas(machineKeys){
+  const contagem = {};
+  (machineKeys||[]).forEach(k => {
+    const nome = MACHINES[k]?.name.split(' ')[0] || '?';
+    contagem[nome] = (contagem[nome]||0) + 1;
+  });
+  const partes = Object.entries(contagem).map(([nome,qtd]) => qtd > 1 ? `${qtd}x ${nome}` : nome);
+  return partes.join(' + ') || 'Sem máquina vinculada';
+}
+
+// Chamado toda vez que dias passam no relógio global — envelhece a frota inteira,
+// e desgasta (reduz condição) só as máquinas que estão trabalhando de verdade.
+function envelhecerFrota(diasNovos){
+  Object.values(MACHINES).forEach(m => {
+    m.idadeDias = (m.idadeDias||0) + diasNovos;
+    m.diasDesdeUltimaManutencao = (m.diasDesdeUltimaManutencao||0) + diasNovos;
+    if(m.inContract){
+      const desgastePorDia = DESGASTE_USO_MIN_POR_DIA + Math.random()*(DESGASTE_USO_MAX_POR_DIA-DESGASTE_USO_MIN_POR_DIA);
+      m.health = Math.round(Math.max(0, m.health - desgastePorDia*diasNovos));
+      atualizarStatusMaquina(m);
+    } else if(m.diasDesdeUltimaManutencao > DIAS_GRACA_MANUTENCAO_BASICA){
+      // Parada, mas sem manutenção básica há tempo demais — desgasta bem mais devagar que uso ativo,
+      // mas desgasta: ferrugem, vedação ressecando, bateria descarregando, isso existe de verdade.
+      const desgasteParado = DESGASTE_PARADA_MIN_POR_DIA + Math.random()*(DESGASTE_PARADA_MAX_POR_DIA-DESGASTE_PARADA_MIN_POR_DIA);
+      m.health = Math.round(Math.max(0, m.health - desgasteParado*diasNovos));
+      atualizarStatusMaquina(m);
+    }
+  });
+}
+
+function venderMaquina(machineKey){
+  const m = MACHINES[machineKey];
+  if(!m) return;
+  if(m.inContract){
+    showToast('🔒 Não é possível vender uma máquina em contrato ativo.');
+    return;
+  }
+  const valorBase = valorMercadoAtual(machineKey);
+  const valorVenda = Math.round(valorBase * VENDA_DESAGIO_PCT);
+  playerCash += valorVenda;
+  registrarHistorico('💰', `Máquina vendida: ${m.name}`, `${fmt(valorVenda)} recebidos (valor de mercado ${fmt(valorBase)}, deságio de venda rápida de ${Math.round((1-VENDA_DESAGIO_PCT)*100)}%)`);
+  delete MACHINES[machineKey];
+  updateFinanceDisplays();
+  renderFinancas();
+  renderMaquinasList();
+  renderManutList();
+  recomputarDisponibilidadeContratos();
+  closeDetail('manutencao');
+  showResultModal('💰', 'Máquina vendida', `Você recebeu ${fmt(valorVenda)} pela venda.\n\nCaixa e patrimônio já foram atualizados.`);
+}
+
+const CATALOG = {
+  escavadeira2: {
+    name:"Escavadeira Hidráulica (2ª unidade)", cat:"Escavação",
+    photo:"https://images.unsplash.com/photo-1503708928676-1cb796a0891e?fm=jpg&q=70&w=300&auto=format&fit=crop",
+    vista:MARKET_BASE_PRICES.escavadeira, parcelasCount:12, reputacaoMinFinanciamento:110,
+    recommended:"3 contratos disponíveis esperam esse tipo de máquina agora.", payback:"4 a 5 meses"
+  },
+  trator2: {
+    name:"Trator de Esteira D8", cat:"Terraplenagem",
+    photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop",
+    vista:MARKET_BASE_PRICES.trator, parcelasCount:18, reputacaoMinFinanciamento:125,
+    recommended:null, payback:"6 a 8 meses"
+  },
+  motoniveladora: {
+    name:"Motoniveladora", cat:"Nivelamento",
+    photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop",
+    vista:MARKET_BASE_PRICES.motoniveladora, parcelasCount:14, reputacaoMinFinanciamento:120,
+    recommended:null, payback:"7 a 9 meses — categoria nova"
+  },
+  caminhao2: {
+    name:"Caminhão Basculante (2ª unidade)", cat:"Transporte",
+    photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=300&auto=format&fit=crop",
+    vista:MARKET_BASE_PRICES.caminhao, parcelasCount:10, reputacaoMinFinanciamento:0,
+    recommended:"Reduz dependência de frete terceirizado e dá backup pro Aterro Industrial.", payback:"3 a 4 meses"
+  },
+  retro2: {
+    name:"Retroescavadeira (2ª unidade)", cat:"Escavação leve",
+    photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=400&fit=crop&w=400",
+    vista:MARKET_BASE_PRICES.retro, parcelasCount:10, reputacaoMinFinanciamento:0,
+    recommended:"Sua única Retroescavadeira está em estado crítico — um backup evita parar o Desmatamento Fazenda Boa Vista.", payback:"3 a 4 meses"
+  }
+};
+
+/* ===================== O QUE CADA ITEM DO CATÁLOGO VIRA NA FROTA =====================
+   Corrige um bug real: comprar na Loja descontava o dinheiro mas nunca criava a máquina de
+   verdade. "tipoKey" identifica o TIPO de máquina (usado pra saber se um contrato passa a
+   ficar disponível) — se já existir uma desse tipo, a nova ganha uma chave com sufixo (2ª, 3ª...). */
+const MACHINE_TEMPLATES = {
+  escavadeira2: { tipoKey:'escavadeira', name:"Escavadeira Hidráulica CAT 320D", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
+    photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=75&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop" },
+  trator2: { tipoKey:'trator', name:"Trator de Esteira D6T", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
+    photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
+    thumb:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop" },
+  motoniveladora: { tipoKey:'motoniveladora', name:"Motoniveladora", cat:"Nivelamento", specs:"14 toneladas · lâmina 3,7 m",
+    photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
+    thumb:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop" },
+  caminhao2: { tipoKey:'caminhao', name:"Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
+    photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop" },
+  retro2: { tipoKey:'retro', name:"Retroescavadeira NH B110B", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
+    photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=500&fit=crop&w=800",
+    thumb:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" }
+};
+
+function chooseMachineKey(tipoKey){
+  if(!MACHINES[tipoKey]) return tipoKey; // primeira máquina desse tipo — chave limpa
+  let i = 2;
+  while(MACHINES[tipoKey + '_' + i]) i++;
+  return tipoKey + '_' + i;
+}
+
+function recomputarDisponibilidadeContratos(){
+  Object.keys(CONTRACTS).forEach(key => {
+    const c = CONTRACTS[key];
+    if(c.state !== 'DISPONIVEL' || !c.requiredMachineKeys || c.requiredMachineKeys.length === 0) return;
+    const { ok, missing } = calcularHasMachine(c.requiredMachineKeys);
+    c.hasMachine = ok; c.missing = missing;
+  });
+  renderContratosList();
+}
+
+/* ===================== NAV / SCREEN SWITCHING ===================== */
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.screen === screen));
+  document.getElementById('bottomNav').style.display = (screen === 'start') ? 'none' : 'flex';
+  closeEvento();
+  closeRegimeTributario();
+}
+document.getElementById('bottomNav').style.display = 'none'; // hidden until a machine is chosen
+
+/* ===================== CADASTRO / LOGIN (persistência local) ===================== */
+let companyName = "Operação Alpha";
+let ownerName = "";
+const LOGO_OPTIONS = ["🏛️","🏗️","🚜","⚙️","🏆","🦅","🛠️","⛰️","🔶","🐘"];
+let selectedLogo = LOGO_OPTIONS[0];
+const STORAGE_KEY = 'imperioDasMaquinas_conta';
+
+function renderLogoGrid(){
+  const el = document.getElementById('logoGrid');
+  el.innerHTML = LOGO_OPTIONS.map((icon, i) =>
+    `<div class="logo-option ${icon===selectedLogo?'selected':''}" data-icon="${icon}" onclick="selectLogo('${icon}', this)">${icon}</div>`
+  ).join('');
+}
+function selectLogo(icon, el){
+  selectedLogo = icon;
+  document.querySelectorAll('.logo-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function applyAccountToUI(){
+  document.querySelectorAll('.hub-company-name').forEach(el => el.textContent = companyName);
+  document.querySelectorAll('.hub-company-icon').forEach(el => el.textContent = selectedLogo);
+}
+
+function confirmSignup(){
+  const companyEl = document.getElementById('fieldCompany');
+  const ownerEl = document.getElementById('fieldOwner');
+  const errCompany = document.getElementById('errCompany');
+  const errOwner = document.getElementById('errOwner');
+  let valid = true;
+
+  if(companyEl.value.trim().length < 2){
+    companyEl.classList.add('error'); errCompany.classList.add('show'); valid = false;
+  } else {
+    companyEl.classList.remove('error'); errCompany.classList.remove('show');
+  }
+  if(ownerEl.value.trim().length < 2){
+    ownerEl.classList.add('error'); errOwner.classList.add('show'); valid = false;
+  } else {
+    ownerEl.classList.remove('error'); errOwner.classList.remove('show');
+  }
+  if(!valid) return;
+
+  companyName = companyEl.value.trim();
+  ownerName = ownerEl.value.trim();
+
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      companyName, ownerName, email: document.getElementById('fieldEmail').value.trim(), logo: selectedLogo
+    }));
+  } catch(e){ /* localStorage indisponível — segue sem persistir */ }
+
+  applyAccountToUI();
+  document.getElementById('screen-signup').classList.remove('active');
+  document.getElementById('screen-start').classList.add('active');
+}
+
+function confirmLogin(){
+  applyAccountToUI();
+  updateFinanceDisplays();
+  document.getElementById('screen-login').classList.remove('active');
+  goTo('hub');
+}
+
+function showSignupFromLogin(){
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-signup').classList.add('active');
+}
+
+function checkExistingAccount(){
+  let saved = null;
+  try{ saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e){}
+
+  renderLogoGrid();
+
+  if(saved && saved.companyName){
+    companyName = saved.companyName;
+    ownerName = saved.ownerName || "";
+    selectedLogo = saved.logo || LOGO_OPTIONS[0];
+
+    document.getElementById('loginCompanyName').textContent = companyName;
+    document.getElementById('loginOwnerName').textContent = ownerName ? ownerName : 'Bem-vindo de volta';
+    document.getElementById('loginIcon').textContent = selectedLogo;
+
+    document.getElementById('screen-signup').classList.remove('active');
+    document.getElementById('screen-login').classList.add('active');
+  }
+}
+checkExistingAccount();
+
+/* ===================== TELA INICIAL (3.1) ===================== */
+const START_MACHINES = {
+  retro: {
+    name:"Retroescavadeira", risk:"low", riskLabel:"Baixo",
+    photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=300&fit=crop&w=300",
+    price:"R$ 60.000 à vista", finance:"Sem financiamento necessário"
+  },
+  escavadeira: {
+    name:"Escavadeira Hidráulica", risk:"high", riskLabel:"Alto",
+    photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=300&auto=format&fit=crop",
+    price:"Entrada R$ 30.000", finance:"+ R$ 3.500/mês por 24x"
+  },
+  caminhao: {
+    name:"Caminhão Basculante", risk:"mid", riskLabel:"Médio",
+    photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=300&auto=format&fit=crop",
+    price:"Entrada R$ 25.000", finance:"+ R$ 2.400/mês por 24x"
+  }
+};
+let selectedStartMachine = null;
+let playerCash = 60000;
+let playerPatrimonio = 0;
+
+// Preço total financiado (entrada + parcelas) usado como estimativa de patrimônio do ativo
+// Máquinas iniciais (Tela 3.1) são unidades de entrada — mais baratas que o preço-base de mercado
+// acima, mas mantendo a MESMA hierarquia entre tipos (escavadeira > caminhão > retro), sem
+// precisar formalizar idade/depreciação: são só "menores/mais simples", não "mais velhas".
+const START_MACHINE_ECONOMICS = {
+  retro:       { cashAfter: 60000 - 60000, patrimonio: 60000 },   // à vista
+  escavadeira: { cashAfter: 60000 - 30000, patrimonio: 30000 + 3500*24 },  // entrada + financiado
+  caminhao:    { cashAfter: 60000 - 25000, patrimonio: 25000 + 2400*24 }
+};
+
+function calcularDiasOperacao(cash){
+  return cash > 0 ? Math.max(3, Math.round(cash / 1200)) : 0;
+}
+function updateFinanceDisplays(){
+  recalcularPatrimonio(); // fonte única — sempre soma o valor de mercado real da frota antes de mostrar
+  document.querySelectorAll('.js-cash').forEach(el => el.textContent = fmt(playerCash));
+  document.querySelectorAll('.js-patrimonio').forEach(el => el.textContent = fmt(playerPatrimonio));
+  document.querySelectorAll('.js-poder').forEach(el => el.textContent = fmt(Math.round(playerCash * 3)));
+  document.querySelectorAll('.js-saude').forEach(el => el.textContent = calcularDiasOperacao(playerCash) + ' dias');
+  const hubCashEl = document.getElementById('hubCash');
+  if(hubCashEl) hubCashEl.textContent = fmt(playerCash);
+}
+function renderStartList(){
+  const el = document.getElementById('startList');
+  el.innerHTML = Object.keys(START_MACHINES).map(key => {
+    const m = START_MACHINES[key];
+    const riskIcon = m.risk === 'low' ? '🟢' : m.risk === 'mid' ? '🟡' : '🔴';
+    return `<div class="start-card" id="startCard-${key}" onclick="selectStartMachine('${key}')">
+      <div class="start-card-top">
+        <div class="start-card-photo" style="background-image:url('${m.photo}');"></div>
+        <div class="start-card-body">
+          <div class="start-card-name">${m.name}</div>
+          <span class="risk-badge ${m.risk}" style="margin-top:5px;">${riskIcon} Risco ${m.riskLabel}</span>
+          <div class="start-card-price">${m.price}</div>
+          <div class="start-card-finance">${m.finance}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function selectStartMachine(key){
+  selectedStartMachine = key;
+  document.querySelectorAll('.start-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('startCard-' + key).classList.add('selected');
+  const btn = document.getElementById('startBuyBtn');
+  btn.classList.remove('locked');
+  btn.innerHTML = `🚜 Comprar e começar a operar<span class="sub">${START_MACHINES[key].name} selecionada — seu império começa agora!</span>`;
+}
+function confirmStartMachine(){
+  if(!selectedStartMachine) return;
+  const econ = START_MACHINE_ECONOMICS[selectedStartMachine];
+  playerCash = econ.cashAfter;
+  // ACHADO DA FASE 3: antes, as 5 máquinas iniciais ficavam todas na frota, não importa qual o
+  // jogador escolhesse aqui — a "escolha" nunca tinha efeito real. Agora remove de verdade as
+  // que não foram escolhidas, e o patrimônio é recalculado a partir da máquina que sobrou.
+  Object.keys(MACHINES).forEach(k => { if(k !== selectedStartMachine) delete MACHINES[k]; });
+  // A máquina que sobrou começa livre de verdade — sem contrato fictício vinculado do texto de mockup original.
+  MACHINES[selectedStartMachine].inContract = false;
+  MACHINES[selectedStartMachine].task = 'Disponível para novo contrato';
+  MACHINES[selectedStartMachine].location = 'Base — Campinas, SP';
+  recalcularPatrimonio();
+  historicoCaixa = [{ label:'Início', valor: playerCash }];
+  updateFinanceDisplays();
+  showToast('✅ Máquina adquirida! Bem-vindo ao seu império.');
+  setTimeout(() => goTo('hub'), 600);
+}
+renderStartList();
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => goTo(btn.dataset.screen));
+});
+
+const CURRENCY_SYMBOL = 'R$'; // única fonte — trocar aqui no futuro (US$, €) muda o app inteiro
+function fmt(n){ return CURRENCY_SYMBOL + ' ' + Math.round(n).toLocaleString('pt-BR'); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+let resultModalCallback = null;
+function showResultModal(icon, title, text, onContinue, tipo){
+  document.getElementById('resultModalIcon').textContent = icon;
+  document.getElementById('resultModalTitle').textContent = title;
+  document.getElementById('resultModalText').textContent = text;
+  resultModalCallback = onContinue || null;
+  const box = document.querySelector('.result-modal-box');
+  box.classList.toggle('success', tipo === 'success');
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+function closeResultModal(){
+  document.getElementById('resultModalOverlay').classList.remove('show');
+  if(resultModalCallback){ const cb = resultModalCallback; resultModalCallback = null; cb(); }
+}
+
+/* ===================== CELEBRAÇÃO DE COMPRA (flash + brilho + confete) ===================== */
+function gerarConfete(){
+  const container = document.getElementById('confeteContainer');
+  container.innerHTML = '';
+  const cores = ['#FFC24B','#FF7A3D','#33E0A0','#5AA8FF','#B98CFF','#FF5D7A'];
+  for(let i=0; i<32; i++){
+    const el = document.createElement('div');
+    el.className = 'confete';
+    const cor = cores[Math.floor(Math.random()*cores.length)];
+    const largura = 6 + Math.random()*6;
+    el.style.left = (Math.random()*100) + '%';
+    el.style.width = largura + 'px';
+    el.style.height = (largura*0.6) + 'px';
+    el.style.background = cor;
+    el.style.animationDuration = (1.3 + Math.random()*1.6) + 's';
+    el.style.animationDelay = (Math.random()*0.6) + 's';
+    container.appendChild(el);
+  }
+}
+function gerarFagulhas(){
+  const container = document.getElementById('compraSparkles');
+  const pos = [
+    {t:'8%', l:'12%'}, {t:'15%', l:'82%'}, {t:'55%', l:'6%'},
+    {t:'62%', l:'90%'}, {t:'85%', l:'20%'}, {t:'80%', l:'75%'}
+  ];
+  const icones = ['✨','📸','🎊','✨','📸','🎊'];
+  container.innerHTML = pos.map((p,i) =>
+    `<span class="compra-sparkle" style="top:${p.t};left:${p.l};animation-delay:${i*0.25}s;">${icones[i]}</span>`
+  ).join('');
+}
+function showCompraCelebration(nome, foto){
+  document.getElementById('compraNome').textContent = nome;
+  const fotoEl = document.getElementById('compraFoto');
+  fotoEl.style.backgroundImage = 'none';
+
+  function revelar(){
+    fotoEl.style.backgroundImage = `url('${foto}')`;
+    gerarConfete();
+    gerarFagulhas();
+    const flash = document.getElementById('compraFlash');
+    flash.style.animation = 'none';
+    void flash.offsetWidth; // força reiniciar a animação do flash toda vez
+    flash.style.animation = '';
+    document.getElementById('compraOverlay').classList.add('show');
+  }
+
+  // Pré-carrega a foto antes de abrir a tela — evita quadro vazio numa conexão lenta.
+  // Se em 1,2s a foto não tiver carregado, abre mesmo assim (a cor de fundo neutra cobre o resto).
+  const img = new Image();
+  let jaRevelou = false;
+  const timeoutSeguranca = setTimeout(() => { if(!jaRevelou){ jaRevelou = true; revelar(); } }, 1200);
+  img.onload = () => { if(!jaRevelou){ jaRevelou = true; clearTimeout(timeoutSeguranca); revelar(); } };
+  img.onerror = () => { if(!jaRevelou){ jaRevelou = true; clearTimeout(timeoutSeguranca); revelar(); } };
+  img.src = foto;
+}
+function closeCompraCelebration(){
+  document.getElementById('compraOverlay').classList.remove('show');
+}
+
+/* ===================== MÁQUINAS TAB (frota simples) ===================== */
+function renderMaquinasList(){
+  const el = document.getElementById('maquinasList');
+  el.innerHTML = Object.keys(MACHINES).map(key => {
+    const m = MACHINES[key];
+    return `<div class="m-card card-accent-blue ${m.status==='red'?'crit':''}" onclick="goTo('manutencao'); openMaintDetail('${key}');">
+      <div class="m-photo" style="background-image:url('${m.thumb}');"></div>
+      <div class="m-body">
+        <div class="m-name">${m.name}</div>
+        <div class="m-meta">${m.cat} · ${m.specs}</div>
+        <div class="m-meta">${m.hours}</div>
+        <div class="m-meta" style="color:var(--amber-1);font-weight:700;margin-top:3px;">📍 ${m.task} — ${m.location}</div>
+        <div class="m-health-row">
+          <div class="m-bar"><div class="m-bar-fill ${m.status}" style="width:${m.health}%;"></div></div>
+          <span class="m-health-pct">${m.health}%</span>
+        </div>
+        <div class="m-meta" style="margin-top:5px;">📊 Utilização: <b style="color:${m.utilizacao>=70?'var(--ok)':m.utilizacao>=30?'var(--amber-1)':'var(--text-faint)'};">${m.utilizacao}%</b></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ===================== CONTRATOS ===================== */
+function renderContratosList(){
+  const el = document.getElementById('contratosList');
+  const available = Object.keys(CONTRACTS).filter(key => CONTRACTS[key].state === 'DISPONIVEL');
+  el.innerHTML = available.map(key => {
+    const c = CONTRACTS[key];
+    return `<div class="cat-card card-accent-amber" onclick="openContractDetail('${key}')" style="position:relative;">
+      ${c.isNovo ? '<span style="position:absolute;top:-8px;right:10px;background:linear-gradient(160deg,var(--ok),#1FB8A8);color:var(--bg-1);font-size:12px;font-weight:800;padding:3px 9px;border-radius:8px;box-shadow:2px 2px 0 rgba(0,0,0,.25);">🆕 Novo</span>' : ''}
+      <div class="cat-photo" style="background-image:url('${c.photo}');"></div>
+      <div class="cat-body">
+        <div style="display:flex;justify-content:space-between;"><div class="cat-name">${c.name}</div><div class="cat-value">${fmt(c.value)}</div></div>
+        <div class="cat-meta">🏢 ${c.company} · 📍 ${c.location}</div>
+        <span class="risk-badge ${c.risk}" style="margin-top:6px;">${c.risk==='low'?'🟢':c.risk==='mid'?'🟡':'🔴'} ${c.riskLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let currentContractKey = null;
+let selectedSeguro = 'nenhum';
+let acceptedContracts = [];
+let completedContracts = [];
+let lostContracts = [];
+let historicoCaixa = []; // snapshots do caixa a cada contrato concluído/perdido — alimenta o gráfico
+
+function selectSeguro(tipo){
+  selectedSeguro = tipo;
+  renderContractRiskBlock();
+}
+
+function renderContractRiskBlock(){
+  const c = CONTRACTS[currentContractKey];
+  const exp = calcularExposicao(currentContractKey, selectedSeguro);
+  const custos = calcularCustosOperacionais(c.value);
+  const margem = c.value - custos.total - exp.custoSeguro;
+
+  document.getElementById('contractRiskBlock').innerHTML = `
+    <div class="info-box" style="background:rgba(255,150,50,0.13);border-color:rgba(255,150,50,.3);">
+      <div class="box-title" style="color:var(--amber-2);">🎲 Exposição ao risco</div>
+      <div class="box-text" style="margin-bottom:8px;">Risco operacional: <b style="color:var(--text);">${c.riskLabel}</b></div>
+      <div class="box-text" style="margin-bottom:8px;color:var(--text-faint);">${c.riskDesc}</div>
+      <div class="box-text">Probabilidade estimada de intercorrência: <b style="color:var(--amber-2);">${Math.round(exp.prob*100)}%</b></div>
+      <div class="box-text">Impacto potencial estimado: <b style="color:var(--danger);">${fmt(exp.impacto)}</b></div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,150,50,.2);">
+        ${exp.fatores.map(f => `<div class="box-text" style="margin-bottom:3px;">${f.icon} ${f.text}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="box-title">🛡️ Proteção contra risco</div>
+      <div style="display:flex;gap:6px;margin-top:6px;">
+        ${['nenhum','basica','completa'].map(tipo => {
+          const opt = SEGURO_OPTIONS[tipo];
+          const active = selectedSeguro === tipo;
+          return `<div onclick="selectSeguro('${tipo}')" style="flex:1;text-align:center;padding:8px 4px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:800;background:${active?'rgba(255,194,75,.12)':'rgba(255,255,255,.04)'};border:2px solid ${active?'var(--amber-1)':'rgba(255,255,255,.08)'};color:${active?'var(--amber-1)':'var(--text-faint)'};">
+            ${opt.label}<div style="font-size:13px;font-weight:700;margin-top:3px;color:${active?'var(--ok)':'var(--text-faint)'};">${opt.custoPct===0?'Grátis':fmt(Math.round(c.value*opt.custoPct))}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="box-title">💰 Receita, custos e margem</div>
+      <div class="plan-row"><span class="plan-label">Receita do contrato</span><span class="plan-value" style="color:var(--ok);">${fmt(c.value)}</span></div>
+      <div style="padding:4px 0 4px 4px;border-left:2px solid rgba(255,93,122,.25);margin:2px 0 2px 2px;">
+        ${custos.itens.map(i => `<div class="plan-row" style="padding:4px 0;"><span class="plan-label">${i.icon} ${i.label}</span><span class="plan-value" style="color:var(--danger);font-size:15.5px;">-${fmt(i.valor)}</span></div>`).join('')}
+      </div>
+      <div class="plan-row"><span class="plan-label" style="font-weight:700;">Custos operacionais previstos</span><span class="plan-value" style="color:var(--danger);">-${fmt(custos.total)}</span></div>
+      <div class="plan-row"><span class="plan-label">Custo do seguro</span><span class="plan-value" style="color:var(--danger);">-${fmt(exp.custoSeguro)}</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:800;">Margem prevista</span><span class="plan-value" style="color:${margem>=0?'var(--ok)':'var(--danger)'};font-size:18.5px;">${fmt(margem)}</span></div>
+      <div class="box-text" style="margin-top:6px;color:var(--text-faint);font-size:13.5px;">Despesas de manutenção vinculadas entram à parte, conforme forem pagas — acompanhe no painel "Em andamento".</div>
+    </div>
+  `;
+}
+
+function acceptContract(){
+  const c = CONTRACTS[currentContractKey];
+  if(c.state !== 'DISPONIVEL'){
+    // Proteção contra clique duplo/rápido: o contrato já foi aceito (ou nem existe mais nesse estado) — não faz nada de novo.
+    return;
+  }
+  if(!c.hasMachine){
+    showToast('🔒 Você precisa da máquina exigida antes de aceitar.');
+    return;
+  }
+  const disponibilidade = maquinasDisponiveisAgora(c.requiredMachineKeys);
+  if(!disponibilidade.ok){
+    showResultModal('🔒', 'Máquina ocupada', disponibilidade.motivo);
+    return;
+  }
+  const exp = calcularExposicao(currentContractKey, selectedSeguro);
+  if(playerCash < exp.custoSeguro){
+    showToast('🔒 Caixa insuficiente para pagar o seguro escolhido.');
+    return;
+  }
+  playerCash -= exp.custoSeguro;
+  updateFinanceDisplays();
+
+  const maquinasEscolhidas = selecionarMaquinasParaContrato(c.requiredMachineKeys);
+  maquinasEscolhidas.forEach(k => {
+    MACHINES[k].inContract = true;
+    MACHINES[k].task = `🚧 Em operação — ${c.name}`;
+  });
+
+  c.state = 'EM_ANDAMENTO'; c.accepted = true;
+  acceptedContracts.push({
+    key: currentContractKey, name: c.name, value: c.value, prazo: c.prazo, prazoDias: c.prazoDias,
+    diasDecorridos: 0, progress: 0, machineKeys: maquinasEscolhidas,
+    seguro: selectedSeguro, custoSeguroPago: exp.custoSeguro, custoRiscoAdministrado: 0, custoAtraso: 0, state: 'EM_ANDAMENTO', eventoAtivo: null
+  });
+  registrarHistorico('🔵', `Contrato aceito: ${c.name}`, selectedSeguro !== 'nenhum' ? `${SEGURO_OPTIONS[selectedSeguro].label} contratada por ${fmt(exp.custoSeguro)}` : 'Sem seguro contratado');
+  renderMaquinasList(); renderManutList();
+  renderContratosList();
+  renderContratosAndamento();
+  renderFinancas();
+  showToast(`✅ Contrato "${c.name}" aceito! Acompanhe em Contratos → Em andamento.`);
+  setTimeout(() => { closeDetail('contratos'); switchContratoTab('andamento'); }, 700);
+}
+
+function despesasDoContrato(machineKeys){
+  if(!machineKeys || machineKeys.length === 0) return { total: 0, itens: [] };
+  const nomes = machineKeys.filter(k => MACHINES[k]).map(k => MACHINES[k].name);
+  const itens = scheduledMaintenances.filter(sm => nomes.includes(sm.machineName));
+  return { total: itens.reduce((s, i) => s + i.price, 0), itens };
+}
+
+function switchContratoTab(tab){
+  document.querySelectorAll('.tab[data-tab]').forEach(t => {
+    const active = t.dataset.tab === tab;
+    t.style.background = active ? 'var(--amber-1)' : 'rgba(255,255,255,.04)';
+    t.style.color = active ? 'var(--bg-1)' : 'var(--text-faint)';
+    t.style.border = active ? 'none' : '1px solid rgba(255,255,255,.08)';
+  });
+  document.getElementById('tabContentDisponiveis').style.display = tab === 'disponiveis' ? 'block' : 'none';
+  document.getElementById('tabContentAndamento').style.display = tab === 'andamento' ? 'block' : 'none';
+  document.getElementById('tabContentConcluidos').style.display = tab === 'concluidos' ? 'block' : 'none';
+  if(tab === 'andamento') renderContratosAndamento();
+  if(tab === 'concluidos') renderContratosConcluidos();
+}
+
+const ESTADO_VISUAL = {
+  EM_ANDAMENTO: { icon:'🟡', label:'Em andamento', color:'var(--amber-1)' },
+  EM_RISCO:     { icon:'🟠', label:'Em risco',      color:'#FF8A3D' },
+  ATRASADO:     { icon:'🔴', label:'Atrasado',       color:'var(--danger)' }
+};
+
+function renderContratosAndamento(){
+  const el = document.getElementById('contratosAndamentoList');
+  if(acceptedContracts.length === 0){
+    el.innerHTML = '<div style="font-size:15.5px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato em andamento. Aceite um contrato na aba Disponíveis.</div>';
+    return;
+  }
+  el.innerHTML = acceptedContracts.map((ac, idx) => {
+    const catalog = CONTRACTS[ac.key];
+    const desp = despesasDoContrato(ac.machineKeys);
+    const custos = calcularCustosOperacionais(ac.value);
+    const custosAdmin = calcularCustosAdministrativos(Math.max(1, ac.diasDecorridos)); // estimativa corrente, cresce a cada dia decorrido
+    const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
+    const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
+    const btnLabel = ac.state === 'EM_RISCO' ? '⚠️ Resolver situação de risco' : '▶ Avançar 1 dia de obra';
+    const produtividadePct = Math.round(calcularFatorProdutividade(ac, catalog)*100);
+    return `
+    <div style="background:rgba(255,255,255,.03);border:1.5px solid ${ac.state==='EM_RISCO'?'rgba(255,138,61,.4)':ac.state==='ATRASADO'?'rgba(255,93,122,.4)':'rgba(255,194,75,.25)'};border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 ${ac.state==='EM_RISCO'?'rgba(255,138,61,.3)':ac.state==='ATRASADO'?'rgba(255,93,122,.3)':'rgba(255,194,75,.22)'};">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-size:18.5px;font-weight:800;">${ac.name}</div>
+          <div style="font-size:13.5px;color:${ev.color};font-weight:700;margin-top:2px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
+          <div style="font-size:13px;color:var(--text-faint);margin-top:3px;">🚜 ${resumoMaquinas(ac.machineKeys)} · 🛡️ ${SEGURO_OPTIONS[ac.seguro].label}</div>
+          <div style="font-size:12px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};margin-top:2px;">⚙️ Produtividade da frota: ${produtividadePct}% ${produtividadePct<85?'— máquina desgastada rendendo menos por dia':''}</div>
+          ${ac.state === 'EM_RISCO' ? `<div style="font-size:13.5px;color:var(--amber-2);margin-top:5px;background:rgba(255,150,50,.1);border-radius:7px;padding:5px 7px;">⚠️ ${ac.eventoAtivo}</div>` : ''}
+        </div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,194,75,.15);color:var(--amber-1);white-space:nowrap;">${ac.progress}%</div>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:9px;">
+        <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:3px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07);">
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Receita</div><div style="font-size:15px;font-weight:800;color:var(--ok);margin-top:2px;">${fmt(ac.value)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Custos+Despesas</div><div style="font-size:15px;font-weight:800;color:var(--danger);margin-top:2px;">${fmt(custos.total+custosAdmin.total+ac.custoSeguroPago+desp.total+ac.custoRiscoAdministrado+ac.custoAtraso)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Margem prevista</div><div style="font-size:15px;font-weight:800;color:${lucro>=0?'var(--ok)':'var(--danger)'};margin-top:2px;">${fmt(lucro)}</div></div>
+      </div>
+      <div style="font-size:12.5px;color:var(--text-faint);margin-top:7px;">${custos.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(custosAdmin.total)} administrativo${desp.total>0?` · 🔧 ${fmt(desp.total)} manutenção`:''}${ac.custoSeguroPago>0?` · 🛡️ ${fmt(ac.custoSeguroPago)} seguro`:''}${ac.custoRiscoAdministrado>0?` · ⚠️ ${fmt(ac.custoRiscoAdministrado)} risco administrado`:''}${ac.custoAtraso>0?` · 🔴 ${fmt(ac.custoAtraso)} multa de atraso`:''}</div>
+      <button onclick="avancarContrato(${idx})" style="width:100%;margin-top:10px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.35);color:var(--amber-1);font-weight:800;font-size:15px;border-radius:9px;padding:8px 0;">${btnLabel}</button>
+      <button onclick="abrirObra(${idx})" style="width:100%;margin-top:7px;background:rgba(51,224,160,.1);border:1px solid rgba(51,224,160,.3);color:var(--ok);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🎥 Ver obra</button>
+      ${acceptedContracts.length > 1 && ac.machineKeys.length > 0 ? `<button onclick="abrirRealocacao(${idx})" style="width:100%;margin-top:7px;background:rgba(90,168,255,.1);border:1px solid rgba(90,168,255,.3);color:var(--blue);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🔀 Realocar uma máquina daqui</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function abrirObra(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac) return;
+  const catalog = CONTRACTS[ac.key];
+  const video = VIDEO_POR_CONTRATO[ac.key];
+  const videoWrap = document.getElementById('obraVideoWrap');
+
+  if(video){
+    videoWrap.innerHTML = `<div class="obra-video-wrap">
+      <video autoplay muted loop playsinline poster="${video.poster}">
+        <source src="${video.url}" type="video/mp4">
+      </video>
+      <div class="obra-video-label">${ac.name}</div>
+    </div>`;
+  } else {
+    videoWrap.innerHTML = `<div class="obra-sem-video">
+      <div style="font-size:32px;">🎬</div>
+      <div style="font-size:13px;color:var(--text-faint);text-align:center;padding:0 30px;">Vídeo específico dessa obra ainda não disponível — em produção.</div>
+    </div>`;
+  }
+
+  const desp = despesasDoContrato(ac.machineKeys);
+  const custos = calcularCustosOperacionais(ac.value);
+  const custosAdmin = calcularCustosAdministrativos(Math.max(1, ac.diasDecorridos));
+  const lucro = ac.value - custos.total - custosAdmin.total - ac.custoSeguroPago - desp.total - ac.custoRiscoAdministrado - ac.custoAtraso;
+  const ev = ESTADO_VISUAL[ac.state] || ESTADO_VISUAL.EM_ANDAMENTO;
+  const produtividadePct = Math.round(calcularFatorProdutividade(ac, catalog)*100);
+
+  document.getElementById('obraDashboard').innerHTML = `
+    <div style="padding:16px;">
+      <div style="font-size:20px;font-weight:800;">${ac.name}</div>
+      <div style="font-size:14px;color:${ev.color};font-weight:700;margin-top:3px;">${ev.icon} ${ev.label} · Dia ${ac.diasDecorridos}/${ac.prazoDias}</div>
+      <div style="height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:12px;">
+        <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:4px;"></div>
+      </div>
+      <div style="font-size:13px;color:var(--text-faint);margin-top:6px;">${Math.round(ac.progress)}% concluído</div>
+
+      <div class="info-box" style="margin-top:16px;margin-left:0;margin-right:0;">
+        <div class="box-title">🚜 Frota nessa obra</div>
+        <div class="box-text">${resumoMaquinas(ac.machineKeys)}</div>
+        <div class="box-text" style="margin-top:5px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};">⚙️ Produtividade: ${produtividadePct}%${produtividadePct<85?' — rendendo abaixo do normal':''}</div>
+      </div>
+
+      <div class="finance-panel" style="margin-left:0;margin-right:0;margin-top:12px;">
+        <div class="fin-col"><div class="fin-label">Receita</div><div class="fin-value ok">${fmt(ac.value)}</div></div>
+        <div class="fin-col"><div class="fin-label">Custos+Despesas</div><div class="fin-value" style="color:#B03A2E;">${fmt(custos.total+custosAdmin.total+ac.custoSeguroPago+desp.total+ac.custoRiscoAdministrado+ac.custoAtraso)}</div></div>
+        <div class="fin-col"><div class="fin-label">Margem</div><div class="fin-value" style="color:${lucro>=0?'#1E7A45':'#B03A2E'};">${fmt(lucro)}</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('obraOverlay').classList.add('show');
+}
+
+function fecharObra(){
+  document.getElementById('obraOverlay').classList.remove('show');
+  document.getElementById('obraVideoWrap').innerHTML = ''; // pausa o vídeo de verdade, não só esconde
+}
+
+function avancarContrato(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac){
+    // Proteção: o contrato nesse índice já concluiu/foi removido (ex: toque duplo bem na hora da conclusão) — ignora silenciosamente.
+    renderContratosAndamento();
+    return;
+  }
+  const catalog = CONTRACTS[ac.key];
+  const exp = calcularExposicao(ac.key, ac.seguro);
+
+  if(ac.state === 'EM_RISCO'){
+    const escalar = Math.random() < 0.30;
+    if(escalar){
+      const multa = Math.round(ac.value * 0.10);
+      playerCash -= multa;
+      ajustarReputacao(-8);
+      registrarHistorico('🔴', `Contrato perdido: ${ac.name}`, `O risco escalou. Multa de cancelamento: ${fmt(multa)}`);
+      liberarMaquinas(ac.machineKeys);
+      acceptedContracts.splice(idx,1);
+      lostContracts.push({ name: ac.name, value: ac.value, machineKeys: ac.machineKeys, multa });
+      historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
+      regenerarContrato(ac.key);
+      atualizarMissoes('perdido');
+      updateFinanceDisplays();
+      renderContratosAndamento(); renderContratosConcluidos(); renderFinancas(); renderContratosList();
+      renderMaquinasList(); renderManutList();
+      switchContratoTab('concluidos');
+      showResultModal('💥', 'Contrato perdido', `O risco escalou em "${ac.name}". Multa de cancelamento: ${fmt(multa)}.`);
+      return;
+    } else {
+      playerCash -= exp.impacto;
+      ac.custoRiscoAdministrado += exp.impacto;
+      ajustarReputacao(-3);
+      ac.diasDecorridos += 3;
+      processarParcelasDoTempo(3);
+      envelhecerFrota(3);
+      ac.state = 'EM_ANDAMENTO';
+      ac.eventoAtivo = null;
+      registrarHistorico('🟡', `Risco administrado: ${ac.name}`, `Custo ${fmt(exp.impacto)} · +3 dias no prazo`);
+      updateFinanceDisplays();
+      showResultModal('⚠️', 'Risco administrado', `Custo de ${fmt(exp.impacto)} para resolver a situação, e o prazo aumentou em 3 dias.`);
+    }
+  } else {
+    const problemaOcorreu = Math.random() < exp.prob;
+    if(problemaOcorreu){
+      ac.state = 'EM_RISCO';
+      ac.eventoAtivo = catalog.riskDesc;
+      registrarHistorico('🟠', `Risco identificado: ${ac.name}`, catalog.riskDesc);
+      renderContratosAndamento(); renderFinancas();
+      showResultModal('🟠', 'Situação de risco', `${catalog.riskDesc}\n\nO contrato "${ac.name}" entrou em estado de risco — veja o painel "Em andamento" pra decidir o que fazer.`);
+      return;
+    }
+    // Desgaste afeta velocidade, e agora QUANTIDADE de máquina também — puxar uma máquina pra outra
+    // obra deixa a origem com menos gente trabalhando, entregando mais devagar.
+    const fatorProdutividade = calcularFatorProdutividade(ac, catalog);
+    ac.progress = Math.min(100, ac.progress + (100/catalog.prazoDias) * (0.85 + Math.random()*0.3) * fatorProdutividade);
+    ac.diasDecorridos += 1;
+    processarParcelasDoTempo(1);
+    envelhecerFrota(1);
+  }
+
+  if(ac.progress < 100 && ac.diasDecorridos > catalog.prazoDias && ac.state !== 'ATRASADO'){
+    ac.state = 'ATRASADO';
+    const diasAtraso = ac.diasDecorridos - catalog.prazoDias;
+    const multa = Math.round(ac.value * catalog.penaltyPctDia * diasAtraso);
+    playerCash -= multa;
+    ac.custoAtraso += multa;
+    ajustarReputacao(-3);
+    registrarHistorico('🔴', `Contrato atrasado: ${ac.name}`, `${diasAtraso} dia(s) de atraso · multa ${fmt(multa)}`);
+    updateFinanceDisplays();
+    showResultModal('🔴', 'Contrato atrasado', `"${ac.name}" passou do prazo (${diasAtraso} dia(s) de atraso). Multa aplicada: ${fmt(multa)}.`);
+  } else if(ac.progress < 100 && ac.state !== 'ATRASADO'){
+    ac.state = 'EM_ANDAMENTO';
+  }
+
+  if(ac.progress >= 100){
+    const custos = calcularCustosOperacionais(ac.value);
+    const custosAdmin = calcularCustosAdministrativos(ac.diasDecorridos);
+    const desp = despesasDoContrato(ac.machineKeys);
+    const noPrazo = ac.diasDecorridos <= catalog.prazoDias;
+
+    // CORREÇÃO (achado #2 do RELATORIO-DIAGNOSTICO-4A6): custos operacionais agora saem do caixa de verdade.
+    // Custos administrativos (sede, equipe, pró-labore) também saem — são fixos, não % do contrato.
+    // Seguro e despesas de manutenção já foram debitados antes (na aceitação/agendamento) — não duplicar aqui.
+    playerCash += ac.value - custos.total - custosAdmin.total;
+
+    // Resultado operacional = base para o imposto. Seguro, manutenção e risco administrado já eram custo
+    // real antes (saíram do caixa na hora que aconteceram) — entram aqui só pro cálculo, não são debitados de novo.
+    const resultadoOperacional = ac.value - custos.total - custosAdmin.total - desp.total - ac.custoSeguroPago - ac.custoRiscoAdministrado - ac.custoAtraso;
+
+    faturamentoAcumulado += ac.value;
+    faturamentoDesdeUltimoFechamento += ac.value;
+    const aliquota = calcularAliquotaEfetiva(faturamentoAcumulado);
+    const impostoContrato = resultadoOperacional > 0 ? Math.round(resultadoOperacional * aliquota) : 0;
+    impostosProvisionados += impostoContrato;
+
+    ajustarReputacao(noPrazo ? 2 : 1);
+    custosAdministrativosTotal += custosAdmin.total;
+    custosAdministrativosLog.unshift({ contrato: ac.name, dias: ac.diasDecorridos, total: custosAdmin.total, itens: custosAdmin.itens });
+    updateFinanceDisplays();
+    renderTaxDisplays();
+    liberarMaquinas(ac.machineKeys);
+    acceptedContracts.splice(idx,1);
+    completedContracts.push({
+      name: ac.name, value: ac.value, machineKeys: ac.machineKeys,
+      custosOperacionais: custos.total, custosItens: custos.itens,
+      custosAdministrativos: custosAdmin.total, custosAdminItens: custosAdmin.itens,
+      despesasManutencao: desp.total,
+      custoSeguro: ac.custoSeguroPago, custoRiscoAdministrado: ac.custoRiscoAdministrado, custoAtraso: ac.custoAtraso,
+      resultadoOperacional, aliquota, impostoContrato, noPrazo
+    });
+    historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
+    catalog.state = 'CONCLUIDO';
+    regenerarContrato(ac.key);
+    atualizarMissoes('concluido', { noPrazo, seguro: ac.seguro, risk: catalog.risk });
+    registrarHistorico('🟢', `Contrato concluído: ${ac.name}`, `${noPrazo?'No prazo':'Com atraso'} · Faturamento ${fmt(ac.value)} · Imposto provisionado ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`);
+    switchContratoTab('concluidos');
+    renderContratosList();
+    renderMaquinasList(); renderManutList();
+    showResultModal('🎉', 'Sucesso! Contrato concluído!', `${ac.name} — ${noPrazo?'entregue no prazo':'entregue com atraso'}.\n\nLíquido de custos operacionais: +${fmt(ac.value - custos.total)}\nImposto provisionado: ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`, null, 'success');
+  }
+
+  renderContratosAndamento();
+  renderFinancas();
+}
+
+function renderContratosConcluidos(){
+  const el = document.getElementById('contratosConcluidosList');
+  if(completedContracts.length === 0 && lostContracts.length === 0){
+    el.innerHTML = '<div style="font-size:15.5px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato concluído ainda.</div>';
+    return;
+  }
+  const concluidosHtml = completedContracts.map(cc => {
+    const totalCustos = cc.custosOperacionais + cc.custosAdministrativos + cc.custoSeguro + cc.despesasManutencao + (cc.custoRiscoAdministrado||0) + (cc.custoAtraso||0);
+    const lucro = cc.value - totalCustos;
+    return `
+    <div style="background:rgba(51,224,160,0.11);border:1.5px solid rgba(51,224,160,.25);border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(51,224,160,.22);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:18.5px;font-weight:800;">${cc.name}</div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(51,224,160,.15);color:var(--ok);">✅ ${cc.noPrazo?'Concluído no prazo':'Concluído com atraso'}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07);">
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Faturado</div><div style="font-size:15.5px;font-weight:800;color:var(--ok);margin-top:2px;">${fmt(cc.value)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Custos+Despesas</div><div style="font-size:15.5px;font-weight:800;color:var(--danger);margin-top:2px;">${fmt(totalCustos)}</div></div>
+        <div><div style="font-size:12.5px;font-weight:800;color:var(--text-faint);text-transform:uppercase;">Lucro real</div><div style="font-size:15.5px;font-weight:800;color:${lucro>=0?'var(--ok)':'var(--danger)'};margin-top:2px;">${fmt(lucro)}</div></div>
+      </div>
+      <div style="font-size:12.5px;color:var(--text-faint);margin-top:7px;">${(cc.custosItens||[]).map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · 🏢 ${fmt(cc.custosAdministrativos)} administrativo${cc.despesasManutencao>0?` · 🔧 ${fmt(cc.despesasManutencao)} manutenção`:''}${cc.custoSeguro>0?` · 🛡️ ${fmt(cc.custoSeguro)} seguro`:''}${cc.custoRiscoAdministrado>0?` · ⚠️ ${fmt(cc.custoRiscoAdministrado)} risco administrado`:''}${cc.custoAtraso>0?` · 🔴 ${fmt(cc.custoAtraso)} multa de atraso`:''}</div>
+    </div>`;
+  }).join('');
+  const perdidosHtml = lostContracts.map(lc => `
+    <div style="background:rgba(255,93,122,0.11);border:1.5px solid rgba(255,93,122,.25);border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(255,93,122,.22);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:18.5px;font-weight:800;">${lc.name}</div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(255,93,122,.15);color:var(--danger);">❌ Perdido</div>
+      </div>
+      <div class="box-text" style="margin-top:7px;">Multa de cancelamento paga: <b style="color:var(--danger);">${fmt(lc.multa)}</b> · Faturamento perdido: ${fmt(lc.value)}</div>
+    </div>`).join('');
+  el.innerHTML = concluidosHtml + perdidosHtml;
+}
+
+/* ===================== GRÁFICOS (SVG puro, sem biblioteca — precisa funcionar offline) ===================== */
+function svgLineChart(pontos, {width=340, height=110, color='#FFC24B'} = {}){
+  if(pontos.length < 2){
+    return `<div style="font-size:15px;color:var(--text-faint);padding:20px 0;text-align:center;">Conclua pelo menos 1 contrato pra ver a evolução do caixa.</div>`;
+  }
+  const pad = 22;
+  const valores = pontos.map(p => p.valor);
+  const min = Math.min(...valores, 0), max = Math.max(...valores, 1);
+  const range = (max - min) || 1;
+  const stepX = (width - pad*2) / (pontos.length - 1);
+  const coords = pontos.map((p, i) => {
+    const x = pad + i*stepX;
+    const y = height - pad - ((p.valor - min) / range) * (height - pad*2);
+    return { x, y, ...p };
+  });
+  const pathD = coords.map((c,i) => `${i===0?'M':'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+  const areaD = pathD + ` L${coords[coords.length-1].x.toFixed(1)},${height-pad} L${coords[0].x.toFixed(1)},${height-pad} Z`;
+  const dots = coords.map(c => `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="3" fill="${color}" />`).join('');
+  const zeroY = height - pad - ((0 - min) / range) * (height - pad*2);
+  return `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" style="display:block;">
+    <line x1="${pad}" y1="${zeroY.toFixed(1)}" x2="${width-pad}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="3,3" />
+    <path d="${areaD}" fill="${color}" opacity="0.12" />
+    <path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" />
+    ${dots}
+    <text x="${coords[0].x}" y="${height-4}" font-size="8" fill="rgba(255,255,255,.5)" text-anchor="start">${coords[0].label}</text>
+    <text x="${coords[coords.length-1].x}" y="${height-4}" font-size="8" fill="rgba(255,255,255,.5)" text-anchor="end">${coords[coords.length-1].label}</text>
+    <text x="${coords[coords.length-1].x}" y="${coords[coords.length-1].y-8}" font-size="9" font-weight="800" fill="${color}" text-anchor="end">${fmt(coords[coords.length-1].valor)}</text>
+  </svg>`;
+}
+
+function svgBarRow(itens){
+  const max = Math.max(...itens.map(i => i.valor), 1);
+  return itens.map(i => `
+    <div style="margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:3px;">
+        <span style="color:var(--text-dim);font-weight:700;">${i.icon} ${i.label}</span>
+        <span style="color:${i.color};font-weight:800;">${fmt(i.valor)}</span>
+      </div>
+      <div style="height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${Math.max(2, i.valor/max*100)}%;background:${i.color};border-radius:4px;"></div>
+      </div>
+    </div>`).join('');
+}
+
+function svgDonutSimples(fatias, {size=110} = {}){
+  const total = fatias.reduce((s,f) => s+f.valor, 0);
+  if(total <= 0){
+    return `<div style="font-size:15px;color:var(--text-faint);padding:16px 0;text-align:center;">Conclua contratos pra ver o resultado.</div>`;
+  }
+  const r = size/2 - 8, cx = size/2, cy = size/2, circ = 2*Math.PI*r;
+  let acumulado = 0;
+  const arcos = fatias.filter(f=>f.valor>0).map(f => {
+    const frac = f.valor/total;
+    const dash = frac*circ;
+    const offset = -acumulado*circ;
+    acumulado += frac;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${f.color}" stroke-width="14" stroke-dasharray="${dash.toFixed(1)} ${(circ-dash).toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" transform="rotate(-90 ${cx} ${cy})" />`;
+  }).join('');
+  return `<div style="display:flex;align-items:center;gap:14px;">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${arcos}
+      <text x="${cx}" y="${cy-3}" font-size="15" font-weight="800" fill="var(--text)" text-anchor="middle">${total}</text>
+      <text x="${cx}" y="${cy+11}" font-size="7.5" fill="var(--text-faint)" text-anchor="middle">contratos</text>
+    </svg>
+    <div style="flex:1;">
+      ${fatias.map(f => `<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+        <span style="width:9px;height:9px;border-radius:3px;background:${f.color};flex-shrink:0;"></span>
+        <span style="font-size:14.5px;color:var(--text-dim);flex:1;">${f.label}</span>
+        <span style="font-size:14.5px;font-weight:800;color:${f.color};">${f.valor}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderVisaoGeral(){
+  const el = document.getElementById('visaoGeralCharts');
+  if(!el) return;
+
+  const caixaChart = svgLineChart(historicoCaixa, { color: playerCash >= 0 ? '#33E0A0' : '#FF5D7A' });
+
+  const totalOper = completedContracts.reduce((s,c)=>s+c.custosOperacionais,0);
+  const totalAdmin = completedContracts.reduce((s,c)=>s+c.custosAdministrativos,0);
+  const totalSeguro = completedContracts.reduce((s,c)=>s+c.custoSeguro,0);
+  const totalManut = scheduledMaintenances.reduce((s,m)=>s+m.price,0);
+  const totalRisco = completedContracts.reduce((s,c)=>s+(c.custoRiscoAdministrado||0),0);
+  const totalAtraso = completedContracts.reduce((s,c)=>s+(c.custoAtraso||0),0);
+  const totalParcelas = totalParcelasPagas;
+  const totalImposto = completedContracts.reduce((s,c)=>s+c.impostoContrato,0);
+  const totalReceita = completedContracts.reduce((s,c)=>s+c.value,0);
+  const totalLucro = Math.max(0, totalReceita - totalOper - totalAdmin - totalSeguro - totalManut - totalRisco - totalAtraso - totalParcelas - totalImposto);
+  const composicao = svgBarRow([
+    { label:'Lucro líquido', icon:'💰', valor: totalLucro, color:'#33E0A0' },
+    { label:'Custos operacionais', icon:'👷', valor: totalOper, color:'#FFC24B' },
+    { label:'Custos administrativos', icon:'🏢', valor: totalAdmin, color:'#FF7A3D' },
+    { label:'Manutenção', icon:'🔧', valor: totalManut, color:'#5AA8FF' },
+    { label:'Seguro', icon:'🛡️', valor: totalSeguro, color:'#B98CFF' },
+    { label:'Risco administrado', icon:'⚠️', valor: totalRisco, color:'#FF9B54' },
+    { label:'Multa de atraso', icon:'🔴', valor: totalAtraso, color:'#B03A2E' },
+    { label:'Parcelas de financiamento', icon:'🏦', valor: totalParcelas, color:'#9891B0' },
+    { label:'Impostos', icon:'🧾', valor: totalImposto, color:'#FF5D7A' },
+  ]);
+
+  const noPrazo = completedContracts.filter(c=>c.noPrazo).length;
+  const comAtraso = completedContracts.filter(c=>!c.noPrazo).length;
+  const perdidos = lostContracts.length;
+  const donut = svgDonutSimples([
+    { label:'Concluídos no prazo', valor:noPrazo, color:'#33E0A0' },
+    { label:'Concluídos com atraso', valor:comAtraso, color:'#FFC24B' },
+    { label:'Perdidos', valor:perdidos, color:'#FF5D7A' },
+  ]);
+
+  el.innerHTML = `
+    <div class="info-box">
+      <div class="box-title">📈 Evolução do caixa</div>
+      ${caixaChart}
+    </div>
+    <div class="info-box">
+      <div class="box-title">🧩 Pra onde vai cada real faturado</div>
+      ${totalReceita > 0 ? composicao : '<div style="font-size:15px;color:var(--text-faint);padding:10px 0;text-align:center;">Conclua um contrato pra ver a composição.</div>'}
+    </div>
+    <div class="info-box">
+      <div class="box-title">🎯 Resultado dos contratos</div>
+      ${donut}
+    </div>
+  `;
+}
+
+function renderFinancas(){
+  // A tela sempre mostra o conteúdo — cada seção (contratos/despesas/custos/histórico) já tem
+  // sua própria mensagem de "nada ainda". Esconder a tela inteira só porque não há contrato
+  // em andamento escondia também o Regime Tributário e o Histórico, que não dependem disso.
+  renderVisaoGeral();
+  const totalReceber = acceptedContracts.reduce((sum, ac) => sum + ac.value, 0);
+  const totalDespesas = scheduledMaintenances.reduce((sum, sm) => sum + sm.price, 0);
+  document.getElementById('finQtdContratos').textContent = acceptedContracts.length;
+  document.getElementById('finTotalReceber').textContent = fmt(totalReceber);
+  document.getElementById('finImpostosProvisionados').textContent = fmt(impostosProvisionados);
+  document.getElementById('finCustosAdmin').textContent = fmt(custosAdministrativosTotal);
+  const custoDiarioEl = document.getElementById('financasCustosAdminExplicacao');
+  if(custoDiarioEl){
+    const numMaquinas = Object.keys(MACHINES).length;
+    custoDiarioEl.innerHTML = `Sede, equipe administrativa e pró-labore — cobrados a cada contrato concluído, pelos dias que ele levou. <b style="color:var(--amber-1);">Hoje: ${fmt(custoAdministrativoDiarioAtual())}/dia</b> (frota de ${numMaquinas} máquina${numMaquinas!==1?'s':''}${numMaquinas>1?` — cada uma além da 1ª soma ${fmt(CUSTO_ADICIONAL_POR_MAQUINA_DIA)}/dia`:''}).`;
+  }
+
+  const finTotalParcelasEl = document.getElementById('finTotalParcelas');
+  if(finTotalParcelasEl) finTotalParcelasEl.textContent = fmt(totalParcelasPagas);
+  const finEl = document.getElementById('financiamentosLista');
+  if(finEl){
+    finEl.innerHTML = financiamentosAtivos.length
+      ? financiamentosAtivos.map(f => `
+        <div style="background:var(--surface);border:1.5px solid var(--surface-border);border-radius:14px;padding:11px 12px;margin-bottom:9px;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-size:14.5px;font-weight:800;">🏦 ${f.nome}</span>
+            <span style="font-size:14.5px;font-weight:800;color:var(--danger);">${fmt(f.parcela)}/parcela</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--text-faint);margin-top:4px;">Faltam ${f.parcelasRestantes} parcela(s) · próxima em ${Math.max(0,f.diasParaProxima)} dia(s) · total restante: ${fmt(f.parcela*f.parcelasRestantes)}</div>
+        </div>`).join('')
+      : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum financiamento ativo — tudo pago ou comprado à vista.</div>';
+  }
+  const custosAdminEl = document.getElementById('financasCustosAdminList');
+  if(custosAdminEl){
+    custosAdminEl.innerHTML = custosAdministrativosLog.length
+      ? custosAdministrativosLog.slice(0,5).map(l => `
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px 11px;margin-bottom:7px;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-size:15.5px;font-weight:800;">${l.contrato}</span>
+            <span style="font-size:15.5px;font-weight:800;color:var(--danger);">-${fmt(l.total)}</span>
+          </div>
+          <div style="font-size:13px;color:var(--text-faint);margin-top:3px;">${l.itens.map(i=>`${i.icon} ${fmt(i.valor)}`).join(' · ')} · ${l.dias} dia(s)</div>
+        </div>`).join('')
+      : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum custo administrativo registrado ainda.</div>';
+  }
+  document.getElementById('finImpostosPagos').textContent = fmt(impostosPagosTotal);
+
+  document.getElementById('financasContratosList').innerHTML = acceptedContracts.length
+    ? acceptedContracts.map(ac => `
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:11px 13px;margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-size:18px;font-weight:800;">${ac.name}</div>
+          <div style="font-size:13.5px;color:var(--text-faint);margin-top:2px;">Prazo: ${ac.prazo}</div>
+        </div>
+        <div style="font-size:18px;font-weight:800;color:var(--ok);white-space:nowrap;">${fmt(ac.value)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+        <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:3px;"></div>
+        </div>
+        <span style="font-size:13.5px;font-weight:700;color:var(--text-dim);">${ac.progress}%</span>
+      </div>
+    </div>`).join('')
+    : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum contrato em andamento.</div>';
+
+  const despesasSection = document.getElementById('financasDespesasSection');
+  document.getElementById('finTotalDespesas').textContent = fmt(totalDespesas);
+  document.getElementById('financasDespesasList').innerHTML = scheduledMaintenances.length
+    ? scheduledMaintenances.map(sm => `
+    <div style="background:rgba(255,93,122,0.11);border:1px solid rgba(255,93,122,.2);border-radius:14px;padding:11px 13px;margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-size:18px;font-weight:800;">🔧 ${sm.machineName}</div>
+          <div style="font-size:13.5px;color:var(--text-faint);margin-top:2px;">${sm.partLabel} · pronta em ${sm.downtime}</div>
+        </div>
+        <div style="font-size:18px;font-weight:800;color:var(--danger);white-space:nowrap;">-${fmt(sm.price)}</div>
+      </div>
+    </div>`).join('')
+    : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhuma despesa registrada.</div>';
+}
+
+function openContractDetail(key){
+  currentContractKey = key;
+  selectedSeguro = 'nenhum';
+  const c = CONTRACTS[key];
+  c.isNovo = false;
+  document.getElementById('contratoDetailScroll').innerHTML = `
+    <div class="d-photo" style="background-image:url('${c.hero}');"></div>
+    <div class="d-title-row">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;"><div class="d-name">${c.name}</div><div class="d-value">${fmt(c.value)}</div></div>
+      <div style="font-size:15.5px;color:var(--text-faint);margin-top:6px;">🏢 ${c.company} · 📍 ${c.location}</div>
+    </div>
+    <div class="info-box">
+      <div class="box-title">Requisitos</div>
+      ${c.req.map(r => `<div class="box-text">${r}</div>`).join('')}
+    </div>
+    <div class="info-box">
+      <div class="box-title">Prazo &amp; Logística</div>
+      <div class="box-text">📅 ${c.prazo} · 📍 ${c.km}</div>
+    </div>
+    <div id="contractRiskBlock"></div>
+    <div class="info-box">
+      <div class="box-title danger">⚠️ Penalidades</div>
+      <div class="box-text">${c.penalty}</div>
+    </div>
+    <div class="action-zone">
+      ${c.hasMachine ? '' : `<div class="warn-box"><b>🚫 Você não possui a máquina necessária disponível.</b>${c.missing}</div>`}
+      <button class="action-btn ${c.hasMachine?'':'locked'}" onclick="acceptContract()">${c.hasMachine?'✅ Aceitar contrato':'🔒 Aceitar contrato'}<span class="sub">${c.hasMachine?'Máquina disponível — pronto para iniciar':'Disponibilize a máquina necessária'}</span></button>
+    </div>`;
+  renderContractRiskBlock();
+  document.getElementById('contratos-list-view').classList.remove('active');
+  document.getElementById('contratos-detail-view').classList.add('active');
+}
+function closeDetail(screen){
+  document.getElementById(screen === 'contratos' ? 'contratos-detail-view' : screen === 'manutencao' ? 'manut-detail-view' : 'loja-detail-view').classList.remove('active');
+  document.getElementById(screen === 'contratos' ? 'contratos-list-view' : screen === 'manutencao' ? 'manut-list-view' : 'loja-list-view').classList.add('active');
+}
+
+/* ===================== MANUTENÇÃO ===================== */
+function renderManutList(){
+  const el = document.getElementById('manutList');
+  el.innerHTML = Object.keys(MACHINES).map(key => {
+    const m = MACHINES[key];
+    return `<div class="m-card ${m.status==='red'?'crit':''}" onclick="openMaintDetail('${key}')">
+      <div class="m-photo" style="background-image:url('${m.thumb}');"><span class="status-dot ${m.status}" style="border:2px solid var(--bg-1);"></span></div>
+      <div class="m-body">
+        <div class="m-name">${m.name}</div>
+        <div class="m-meta">${m.hours}</div>
+        <div class="m-health-row">
+          <div class="m-bar"><div class="m-bar-fill ${m.status}" style="width:${m.health}%;"></div></div>
+          <span class="m-health-pct">${m.health}%</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let currentMaintKey = null, currentMaintPart = 'original';
+function openMaintDetail(key){
+  currentMaintKey = key; currentMaintPart = 'original';
+  renderMaintDetail();
+  document.getElementById('manut-list-view').classList.remove('active');
+  document.getElementById('manut-detail-view').classList.add('active');
+}
+function selectPart(part){
+  currentMaintPart = part;
+  renderMaintDetail();
+}
+function renderMaintDetail(){
+  const m = MACHINES[currentMaintKey];
+  const part = m[currentMaintPart];
+  document.getElementById('manutDetailScroll').innerHTML = `
+    <div class="d-photo" style="background-image:url('${m.photo}');"></div>
+    <div class="d-title-row">
+      <div class="d-name">${m.name}</div>
+      <span class="d-status-chip" style="background:${m.status==='red'?'rgba(255,93,122,.15)':m.status==='amber'?'rgba(255,194,75,.15)':'rgba(51,224,160,.15)'};color:${m.status==='red'?'#FF5D7A':m.status==='amber'?'#FFC24B':'#33E0A0'};">${m.statusLabel} — ${m.health}% de saúde</span>
+    </div>
+    <div class="info-box">
+      <div class="box-title">⚙️ Especificações</div>
+      <div class="box-text">${m.cat} · <b style="color:var(--text);">${m.specs}</b></div>
+      <div class="box-text" style="margin-top:5px;">📊 Utilização da frota: <b style="color:${m.utilizacao>=70?'var(--ok)':m.utilizacao>=30?'var(--amber-1)':'var(--text-faint)'};">${m.utilizacao}%</b> ${m.utilizacao<30 ? '<span style="color:var(--text-faint);">— capacidade ociosa</span>' : ''}</div>
+    </div>
+    <div class="info-box" style="background:rgba(255,194,75,.06);border-color:rgba(255,194,75,.25);">
+      <div class="box-title" style="color:var(--amber-1);">💰 Ciclo de vida</div>
+      <div class="plan-row"><span class="plan-label">Idade</span><span class="plan-value">${Math.floor((m.idadeDias||0)/30)} meses (${m.idadeDias||0} dias)</span></div>
+      <div class="plan-row"><span class="plan-label">Condição atual</span><span class="plan-value" style="color:${m.health>=70?'var(--ok)':m.health>=40?'var(--amber-1)':'var(--danger)'};">${Math.round(m.health)}%</span></div>
+      <div class="plan-row"><span class="plan-label">Dias sem manutenção</span><span class="plan-value" style="color:${(m.diasDesdeUltimaManutencao||0)>DIAS_GRACA_MANUTENCAO_BASICA?'var(--danger)':'var(--text-dim)'};">${m.diasDesdeUltimaManutencao||0} dias</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:700;">Valor de mercado hoje</span><span class="plan-value" style="color:var(--ok);font-size:15px;">${fmt(valorMercadoAtual(currentMaintKey))}</span></div>
+      <div class="box-text" style="margin-top:8px;color:var(--text-faint);">Idade e condição juntas determinam o valor. ${!m.inContract ? `Parada, ela não perde condição por até ${DIAS_GRACA_MANUTENCAO_BASICA} dias sem manutenção — depois disso, começa a se deteriorar sozinha (bem mais devagar que uma máquina em uso, mas deteriora).` : ''}</div>
+    </div>
+    <div class="info-box">
+      <div class="box-title" style="color:var(--blue);">📍 Onde está / o que está fazendo</div>
+      <div class="box-text"><b style="color:var(--text);">${m.task}</b><br>${m.location}</div>
+    </div>
+    <div class="info-box">
+      <div class="box-title danger">⚠️ Problema detectado</div>
+      <div class="box-text">${m.problem}</div>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-btn ${currentMaintPart==='original'?'active':''}" onclick="selectPart('original')">Peça original — ${fmt(m.original.price)}</div>
+      <div class="toggle-btn ${currentMaintPart==='alt'?'active':''}" onclick="selectPart('alt')">Alternativa — ${fmt(m.alt.price)}</div>
+    </div>
+    <div class="plan-box">
+      <div class="plan-row"><span class="plan-label">Disponibilidade</span><span class="plan-value">${part.downtime}</span></div>
+      <div class="plan-row"><span class="plan-label">Preço</span><span class="plan-value" style="color:var(--ok);">${fmt(part.price)}</span></div>
+      <div class="plan-row"><span class="plan-label">Confiabilidade</span><span class="plan-value">${currentMaintPart==='original'?'Alta':'Média'}</span></div>
+    </div>
+    ${m.inContract ? `<div class="warn-box"><b>⚠️ Máquina ficará parada por ${part.downtime}.</b>Impacto estimado: -${fmt(part.impact)} no contrato ativo (${part.contract}).</div>` : ''}
+    <div class="info-box" style="background:rgba(51,224,160,0.13);border-color:rgba(51,224,160,.3);">
+      <div class="box-title" style="color:var(--ok);">🔧 Por que manter em dia</div>
+      <div class="box-text">Manutenção preventiva é a mitigação mais forte do jogo: reduz em até 70% a chance de um evento futuro escalar para algo grave (contrato paralisado + multa), mais do que o próprio seguro.</div>
+    </div>
+    <div class="action-zone">
+      <button class="action-btn" onclick="scheduleMaint()">🔧 Agendar manutenção — ${fmt(part.price)}</button>
+      ${m.inContract
+        ? `<button class="action-btn locked" style="margin-top:9px;" disabled>🔒 Vender — indisponível (máquina em contrato)</button>`
+        : `<button onclick="confirmarVenda('${currentMaintKey}')" style="width:100%;margin-top:9px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,93,122,.35);color:var(--danger);font-weight:800;font-size:14.5px;border-radius:12px;padding:13px;">💰 Vender por ${fmt(valorMercadoAtual(currentMaintKey) * VENDA_DESAGIO_PCT)}</button>`}
+    </div>
+    <div style="height:6px;"></div>`;
+}
+let scheduledMaintenances = [];
+function confirmarVenda(machineKey){
+  const m = MACHINES[machineKey];
+  const valor = Math.round(valorMercadoAtual(machineKey) * VENDA_DESAGIO_PCT);
+  showResultModal('❓', 'Confirmar venda', `Vender ${m.name} por ${fmt(valor)}?\n\nEssa máquina sai da sua frota — se ela for a única disponível pra algum contrato, esse contrato pode ficar indisponível até você comprar outra.\n\nToque em "Entendi, continuar" para confirmar a venda agora.`, () => venderMaquina(machineKey));
+}
+
+function scheduleMaint(){
+  const m = MACHINES[currentMaintKey];
+  const part = m[currentMaintPart];
+
+  if(playerCash < part.price){
+    showToast('🔒 Caixa insuficiente para essa manutenção agora.');
+    return;
+  }
+
+  playerCash -= part.price;
+  updateFinanceDisplays();
+
+  scheduledMaintenances.push({
+    machineName: m.name,
+    partLabel: currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa',
+    price: part.price,
+    downtime: part.downtime
+  });
+
+  // Manutenção agora de fato melhora a condição da máquina — peça original recupera mais que alternativa.
+  const recuperacao = currentMaintPart === 'original' ? 45 : 25;
+  m.health = Math.min(100, m.health + recuperacao);
+  m.diasDesdeUltimaManutencao = 0;
+  atualizarStatusMaquina(m);
+  m.task = `🔧 Em manutenção — pronta em ${part.downtime}`;
+  registrarHistorico('🔧', `Manutenção realizada: ${m.name}`, `${currentMaintPart === 'original' ? 'Peça original' : 'Peça alternativa'} · ${fmt(part.price)} · condição +${recuperacao}`);
+  atualizarMissoes('manutencao', { maquinaKey: currentMaintKey });
+  renderManutList();
+  renderFinancas();
+
+  showToast(`✅ Manutenção paga (${fmt(part.price)}) — pronta em ${part.downtime}.`);
+  setTimeout(() => closeDetail('manutencao'), 900);
+}
+
+/* ===================== LOJA / EXPANSÃO ===================== */
+function renderLojaList(){
+  const el = document.getElementById('lojaList');
+  el.innerHTML = Object.keys(CATALOG).map(key => {
+    const c = CATALOG[key];
+    return `<div class="cat-card card-accent-teal ${c.recommended?'recommended':''}" style="${c.recommended?'border-color:rgba(255,194,75,.55);background:linear-gradient(135deg,rgba(255,194,75,.1),rgba(255,255,255,.02));box-shadow:3px 3px 0 rgba(255,194,75,.3);':''}" onclick="openLojaDetail('${key}')">
+      <div class="cat-photo" style="background-image:url('${c.photo}');"></div>
+      <div class="cat-body">
+        <div class="cat-cat">${c.cat}</div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-meta">À vista: <b style="color:var(--ok);">${fmt(c.vista)}</b></div>
+        ${c.recommended ? `<div class="cat-meta" style="color:var(--amber-1);margin-top:4px;">⭐ ${c.recommended}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+let currentLojaKey = null, currentLojaMode = 'vista';
+function openLojaDetail(key){
+  currentLojaKey = key; currentLojaMode = 'vista';
+  renderLojaDetail();
+  document.getElementById('loja-list-view').classList.remove('active');
+  document.getElementById('loja-detail-view').classList.add('active');
+}
+function selectLojaMode(mode){ currentLojaMode = mode; renderLojaDetail(); }
+function renderLojaDetail(){
+  const c = CATALOG[currentLojaKey];
+  const fin = calcularFinanciamento(c.vista, c.parcelasCount);
+  let planHtml, cashHtml, remaining, pct, risky, btnLabel;
+  const diasAntes = calcularDiasOperacao(playerCash);
+  if(currentLojaMode === 'vista'){
+    remaining = playerCash - c.vista; pct = playerCash > 0 ? remaining/playerCash : 0; risky = pct < 0.25;
+    planHtml = `<div class="plan-row"><span class="plan-label">Forma</span><span class="plan-value">À vista</span></div>
+      <div class="plan-row"><span class="plan-label">Valor</span><span class="plan-value" style="color:var(--ok);">${fmt(c.vista)}</span></div>`;
+    btnLabel = `🏗️ Comprar — ${fmt(c.vista)}`;
+  } else {
+    remaining = playerCash - fin.entrada; pct = playerCash > 0 ? remaining/playerCash : 0; risky = pct < 0.25;
+    planHtml = `<div class="plan-row"><span class="plan-label">Entrada (20%)</span><span class="plan-value" style="color:var(--ok);">${fmt(fin.entrada)}</span></div>
+      <div class="plan-row"><span class="plan-label">Parcelas</span><span class="plan-value" style="color:var(--amber-1);">${fin.parcelas}x ${fmt(fin.parcela)}</span></div>
+      <div class="plan-row"><span class="plan-label">Total financiado</span><span class="plan-value">${fmt(fin.totalFinanciado)}</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:700;">Juro embutido</span><span class="plan-value" style="color:var(--danger);">+${fmt(fin.jurosValor)} (${Math.round(JUROS_FINANCIAMENTO_PCT*100)}% sobre o saldo)</span></div>`;
+    btnLabel = `🏗️ Financiar — ${fmt(fin.entrada)} de entrada`;
+  }
+  const aprovacaoCredito = currentLojaMode === 'financiado' ? podeFinanciar(currentLojaKey) : { ok:true, motivo:'' };
+  const creditoHtml = currentLojaMode === 'financiado' ? `
+    <div class="info-box" style="${aprovacaoCredito.ok?'background:rgba(51,224,160,.1);border-color:rgba(51,224,160,.3);':'background:rgba(255,93,122,.15);border-color:rgba(255,93,122,.3);'}">
+      <div class="box-title" style="${aprovacaoCredito.ok?'color:var(--ok);':'color:var(--danger);'}">${aprovacaoCredito.ok?'🏦 Crédito pré-aprovado':'🏦 Crédito não aprovado'}</div>
+      <div class="box-text">${aprovacaoCredito.ok ? `Sua reputação (${reputacao}) e patrimônio atendem aos critérios do banco pra esse financiamento.` : aprovacaoCredito.motivo}</div>
+    </div>` : '';
+  const diasDepois = calcularDiasOperacao(Math.max(0,remaining));
+  cashHtml = `<div class="box-title ${risky?'danger':''}">${risky?'⚠️ Impacto no caixa — atenção':'💰 Impacto no caixa'}</div>
+    <div class="box-text">Caixa após a compra: <b>${fmt(remaining)}</b> (${Math.round(pct*100)}% do capital atual)</div>
+    <div class="box-text" style="margin-top:6px;">Dias de operação: <b>${diasAntes}</b> → <b style="color:${diasDepois<diasAntes*0.5?'var(--danger)':'var(--ok)'};">${diasDepois}</b></div>`;
+
+  document.getElementById('lojaDetailScroll').innerHTML = `
+    <div class="d-photo" style="background-image:url('${c.photo}');"></div>
+    <div class="d-title-row">
+      <div class="cat-cat">${c.cat}</div>
+      <div class="d-name">${c.name}</div>
+      ${c.recommended ? `<div class="box-text" style="margin-top:5px;"><b style="color:var(--amber-1);">⭐ Recomendado:</b> ${c.recommended}</div>` : ''}
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-btn ${currentLojaMode==='vista'?'active':''}" onclick="selectLojaMode('vista')">💵 À vista</div>
+      <div class="toggle-btn ${currentLojaMode==='financiado'?'active':''}" onclick="selectLojaMode('financiado')">📄 Financiar</div>
+    </div>
+    <div class="plan-box">${planHtml}</div>
+    ${creditoHtml}
+    <div class="info-box" style="${risky?'background:rgba(255,93,122,0.15);border-color:rgba(255,93,122,.3);':''}">${cashHtml}</div>
+    <div class="info-box">
+      <div class="box-title" style="color:var(--blue);">⏳ Retorno estimado</div>
+      <div class="box-text">Payback em cerca de <b>${c.payback}</b> de operação constante.</div>
+    </div>
+    <div class="action-zone">
+      <button class="action-btn ${risky||!aprovacaoCredito.ok?'risky':''}" onclick="buyMachine()">${aprovacaoCredito.ok?btnLabel:'🔒 Financiamento indisponível'}<span class="sub">${aprovacaoCredito.ok?`Capital restante: ${fmt(remaining)}`:'Toque para ver o motivo'}</span></button>
+    </div>
+    <div style="height:6px;"></div>`;
+}
+function buyMachine(){
+  const c = CATALOG[currentLojaKey];
+  const fin = calcularFinanciamento(c.vista, c.parcelasCount);
+  const custo = currentLojaMode === 'vista' ? c.vista : fin.entrada;
+
+  if(currentLojaMode === 'financiado'){
+    const aprovacao = podeFinanciar(currentLojaKey);
+    if(!aprovacao.ok){
+      showResultModal('🏦', 'Crédito não aprovado', aprovacao.motivo);
+      return;
+    }
+  }
+  if(playerCash < custo){
+    showToast('🔒 Caixa insuficiente para essa compra.');
+    return;
+  }
+  playerCash -= custo;
+  // Patrimônio não é mais incrementado manualmente aqui — a máquina nova entra em MACHINES
+  // logo abaixo, e o valor dela já conta sozinho na próxima vez que recalcularPatrimonio() rodar.
+
+  if(currentLojaMode === 'financiado'){
+    financiamentosAtivos.push({
+      nome: c.name, parcela: fin.parcela, parcelasRestantes: fin.parcelas, diasParaProxima: DIAS_ENTRE_PARCELAS
+    });
+  }
+
+  const tpl = MACHINE_TEMPLATES[currentLojaKey];
+  let nomeMaquina = c.name;
+  let fotoCelebracao = c.photo;
+  if(tpl){
+    const novaChave = chooseMachineKey(tpl.tipoKey);
+    MACHINES[novaChave] = {
+      tipoKey: tpl.tipoKey, idadeDias: 0, diasDesdeUltimaManutencao: 0,
+      name: tpl.name, cat: tpl.cat, specs: tpl.specs, photo: tpl.photo, thumb: tpl.thumb,
+      health:100, status:'green', statusLabel:'🟢 OK', hours:'0h (nova)', utilizacao:0,
+      problem:'Nenhum problema detectado — máquina recém-adquirida.',
+      original:{price:1800, downtime:'3h', impact:0, contract:null},
+      alt:{price:1100, downtime:'6h', impact:0, contract:null},
+      inContract:false, task:'Disponível para novo contrato', location:'Base — Campinas, SP'
+    };
+    nomeMaquina = tpl.name;
+    fotoCelebracao = tpl.photo;
+    renderMaquinasList(); renderManutList();
+    recomputarDisponibilidadeContratos();
+  }
+
+  updateFinanceDisplays();
+  renderFinancas();
+  registrarHistorico('🛒', `Máquina adquirida: ${nomeMaquina}`, `${currentLojaMode === 'vista' ? 'À vista' : `Financiado (juro de ${fmt(fin.jurosValor)})`} · ${fmt(custo)}`);
+  showCompraCelebration(nomeMaquina, fotoCelebracao);
+}
+
+/* ===================== EVENTO (overlay) ===================== */
+function renderTaxDisplays(){
+  const el = document.getElementById('hubImpostos');
+  if(el) el.textContent = fmt(impostosProvisionados);
+}
+
+function openRegimeTributario(){
+  const aliquotaAtual = calcularAliquotaEfetiva(faturamentoAcumulado);
+  const proxima = proximaFaixa(faturamentoAcumulado);
+  const faixaAtualLabel = TAX_BRACKETS.find(f => f.aliquota === aliquotaAtual);
+  const faltamParaProxima = proxima && proxima.ate !== Infinity ? proxima.ate - faturamentoAcumulado : null;
+
+  document.getElementById('regimeTributarioScroll').innerHTML = `
+    <div class="hub-header" style="padding:6px 16px 10px;">
+      <div class="hub-title" style="font-size:27.5px;">🧾 Regime Tributário</div>
+      <div style="font-size:15.5px;color:var(--text-faint);margin-top:3px;">Entenda como os impostos afetam sua empresa.</div>
+    </div>
+
+    <div class="info-box">
+      <div class="box-title">Seu regime atual</div>
+      <div class="plan-row"><span class="plan-label">Faturamento acumulado</span><span class="plan-value" style="color:var(--ok);">${fmt(faturamentoAcumulado)}</span></div>
+      <div class="plan-row"><span class="plan-label">Faixa atual</span><span class="plan-value">até ${faixaAtualLabel.ate===Infinity?'sem limite':fmt(faixaAtualLabel.ate)}</span></div>
+      <div class="plan-row"><span class="plan-label">Alíquota efetiva</span><span class="plan-value" style="color:var(--amber-1);font-size:18.5px;">${Math.round(aliquotaAtual*100)}%</span></div>
+      <div class="plan-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:8px;"><span class="plan-label" style="font-weight:800;">Impostos provisionados</span><span class="plan-value" style="color:var(--danger);font-size:18.5px;">${fmt(impostosProvisionados)}</span></div>
+    </div>
+
+    <div class="info-box">
+      <div class="box-title">Como funciona</div>
+      <div class="box-text">Faturamento → Custos operacionais → Manutenção → Seguro → <b style="color:var(--text);">Resultado operacional</b> → Impostos → <b style="color:var(--text);">Lucro líquido</b> → Caixa</div>
+      <div class="box-text" style="margin-top:8px;color:var(--text-faint);">O imposto é calculado sobre o resultado operacional de cada contrato concluído, na alíquota da sua faixa de faturamento acumulado — e fica <b style="color:var(--text);">provisionado</b> até você pagar.</div>
+    </div>
+
+    <div class="info-box" style="background:rgba(255,194,75,0.13);border-color:rgba(255,194,75,.3);">
+      <div class="box-title" style="color:var(--amber-1);">💡 Regra de ouro</div>
+      <div class="box-text" style="font-weight:700;">Faturamento não é lucro.</div>
+      <div class="box-text" style="font-weight:700;">Lucro não é caixa disponível.</div>
+      <div class="box-text" style="margin-top:6px;color:var(--text-faint);">O que está provisionado já tem dono — não é seu pra gastar.</div>
+    </div>
+
+    ${proxima ? `
+    <div class="info-box">
+      <div class="box-title">📈 Se sua empresa crescer...</div>
+      <div class="plan-row"><span class="plan-label">Faixa atual</span><span class="plan-value">${fmt(faturamentoAcumulado)}</span></div>
+      <div class="plan-row"><span class="plan-label">Próxima faixa em</span><span class="plan-value" style="color:var(--amber-1);">${faltamParaProxima!==null?fmt(faltamParaProxima)+' de faturamento':'já está na faixa máxima'}</span></div>
+      ${faltamParaProxima!==null ? `<div class="plan-row"><span class="plan-label">Nova alíquota</span><span class="plan-value" style="color:var(--danger);">${Math.round(proxima.aliquota*100)}%</span></div>` : ''}
+      <div class="box-text" style="margin-top:8px;color:var(--text-faint);">Crescer aumenta sua capacidade de faturar, mas também pode aumentar suas obrigações tributárias — não é punição, é planejamento.</div>
+    </div>` : ''}
+
+    <div class="action-zone">
+      ${impostosProvisionados > 0
+        ? `<button class="action-btn" onclick="pagarImpostos()">💸 Pagar impostos — ${fmt(impostosProvisionados)}</button>`
+        : `<button class="action-btn locked">Nenhum imposto pendente<span class="sub">Conclua contratos para provisionar impostos</span></button>`}
+      <button onclick="closeRegimeTributario()" style="width:100%;margin-top:10px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.15);color:var(--text-dim);font-weight:800;font-size:17.5px;border-radius:12px;padding:12px 0;">← Fechar e voltar ao Hub</button>
+    </div>
+    <div style="height:6px;"></div>
+  `;
+  document.getElementById('regimeOverlay').classList.add('show');
+}
+function closeRegimeTributario(){
+  document.getElementById('regimeOverlay').classList.remove('show');
+}
+function pagarImpostos(){
+  if(impostosProvisionados <= 0) return;
+  if(playerCash < impostosProvisionados){
+    showToast('🔒 Caixa insuficiente para pagar os impostos agora.');
+    return;
+  }
+  playerCash -= impostosProvisionados;
+  impostosPagosTotal += impostosProvisionados;
+  registrarHistorico('🧾', 'Impostos pagos', `${fmt(impostosProvisionados)} · Faturamento do período: ${fmt(faturamentoDesdeUltimoFechamento)}`);
+  impostosProvisionados = 0;
+  faturamentoDesdeUltimoFechamento = 0;
+  updateFinanceDisplays();
+  renderTaxDisplays();
+  showToast('✅ Impostos pagos — provisionamento zerado.');
+  openRegimeTributario();
+}
+
+function openEvento(){
+  document.getElementById('eventoOverlay').classList.add('show');
+}
+function closeEvento(){
+  document.getElementById('eventoOverlay').classList.remove('show');
+}
+let selectedEventChoice = null;
+function selectEventChoice(el){
+  document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedEventChoice = el.dataset.choice;
+  const btn = document.getElementById('eventoConfirmBtn');
+  btn.classList.remove('locked');
+  btn.innerHTML = 'Confirmar escolha<span class="sub">Opção ' + selectedEventChoice + ' selecionada</span>';
+}
+const EVENTO_CONSEQUENCIAS = {
+  '1': { label:"Pagar equipe extra", custo:8000, reputacao:2, texto:"Prazo recuperado com equipe extra." },
+  '2': { label:"Aceitar atraso",     custo:24000, reputacao:-3, texto:"Atraso de 3 dias aceito, multa contratual paga." },
+  '3': { label:"Realocar máquina",   custo:5000, reputacao:-1, texto:"Máquina realocada de outro contrato." }
+};
+function confirmEvento(){
+  if(!selectedEventChoice) return;
+  const cons = EVENTO_CONSEQUENCIAS[selectedEventChoice];
+  playerCash -= cons.custo;
+  ajustarReputacao(cons.reputacao);
+  updateFinanceDisplays();
+  registrarHistorico(cons.reputacao >= 0 ? '🟡' : '🔴', `Evento administrado: Chuva forte`, `${cons.label} — ${cons.texto} Custo: ${fmt(cons.custo)}`);
+  showResultModal('✅', 'Escolha confirmada', `${cons.label} — ${cons.texto}\n\nCusto: ${fmt(cons.custo)}\nReputação: ${cons.reputacao>=0?'+':''}${cons.reputacao}`, closeEvento);
+}
+
+/* ===================== CLOCK ===================== */
+function updateClock(){
+  const now = new Date();
+  document.getElementById('clock').textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+/* ===================== INIT ===================== */
+renderMaquinasList();
+renderContratosList();
+renderManutList();
+renderLojaList();
+renderFinancas();
+renderHubExtras();
+renderMissoes();
+renderTierBanner();
+renderTaxDisplays();
+</script>
+
+</body>
+</html>

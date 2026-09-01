@@ -1,0 +1,273 @@
+{
+  "sistemadeOficinas": {
+    "descricao": "Hub de manutenção com 3 opções: genérica, parceira real, ou própria",
+    "mecanica": "Trade-off entre custo, tempo e qualidade"
+  },
+  "tiposDeOficina": [
+    {
+      "id": "generia",
+      "nome": "Oficina Genérica",
+      "descricao": "Rápido, caro, questionável. Nada de patrocínio.",
+      "custo": 5000,
+      "tempoParada": 5,
+      "eficienciaRestaurada": 0.8,
+      "bonusEficiencia": 0,
+      "diasBonusAplicados": 0,
+      "selecionavelAtir": 1,
+      "marcaRequerida": false,
+      "patrocinio": false,
+      "descricaoJogador": "Rápido mas improviso. Máquina volta com 80% de eficiência."
+    },
+    {
+      "id": "parceira",
+      "nome": "Oficina Parceira Real",
+      "descricao": "Profissional, confiável, com logo da marca. Gera patrocínio.",
+      "custo": 8000,
+      "tempoParada": 2,
+      "eficienciaRestaurada": 1.0,
+      "bonusEficiencia": 0.1,
+      "diasBonusAplicados": 30,
+      "selecionavelAtir": 2,
+      "marcaRequerida": true,
+      "patrocinio": true,
+      "descricaoJogador": "Profissional. Máquina volta com 100% + 10% bônus por 30 dias.",
+      "mecanicasAcionadas": [
+        "Exibe logo e vídeo de 5s da marca",
+        "Botão 'Ver Catálogo' redirecionamento",
+        "Registra impressão pra analytics",
+        "Incrementa fidelidade com marca"
+      ]
+    },
+    {
+      "id": "propria",
+      "nome": "Oficina Própria",
+      "descricao": "Construída pelo jogador. Custo inicial alto, mas ROI garantido.",
+      "desbloqueio": "Nível 3+",
+      "custoConstruction": 500000,
+      "custoManutencao": 3000,
+      "tempoParada": 1,
+      "eficienciaRestaurada": 1.0,
+      "bonusEficiencia": 0,
+      "diasBonusAplicados": 0,
+      "selecionavelAtir": 3,
+      "marcaRequerida": false,
+      "patrocinio": false,
+      "descricaoJogador": "Sua própria oficina. 1 dia de parada, custo 40% menor.",
+      "notas": "Ainda precisa comprar peças de fornecedores (gerando patrocínio indireto)",
+      "requisitos": [
+        "Sede Nível 3+",
+        "Patrimônio > R$1M",
+        "Reputação > 70"
+      ]
+    }
+  ],
+  "marcasParceirasFicticias": [
+    {
+      "id": "marca_01_pneus",
+      "nome": "RoadForce Pneus",
+      "categoria": "Pneus Industriais",
+      "descricao_marketing": "Especialista em pneus para construção. Durabilidade garantida.",
+      "logo": "/assets/logos/roadforce.svg",
+      "cores": ["#FF6B35", "#004E89"],
+      "website": "www.roadforce-construcao.com.br",
+      "contato": "vendas@roadforce.com.br",
+      "custoServico": 8000,
+      "eficienciaBonus": 0.15,
+      "desgasteReducao": 0.2,
+      "fidelidade": {
+        "missao": "10 manutenções RoadForce",
+        "recompensa": "Pneu Premium RoadForce (desgaste -30% por 60 dias)"
+      }
+    },
+    {
+      "id": "marca_02_oleo",
+      "nome": "SynthFlow Óleos",
+      "categoria": "Óleos e Fluídos",
+      "descricao_marketing": "Sintético de alta performance. Protege motor em qualquer condição.",
+      "logo": "/assets/logos/synthflow.svg",
+      "cores": ["#1B998B", "#2D3436"],
+      "website": "www.synthflow-industrial.com.br",
+      "contato": "comercial@synthflow.com.br",
+      "custoServico": 7500,
+      "eficienciaBonus": 0.12,
+      "maintenanceInterval": -15,
+      "fidelidade": {
+        "missao": "8 revisões SynthFlow",
+        "recompensa": "Óleo Premium SynthFlow (intervalo manutenção -20%)"
+      }
+    },
+    {
+      "id": "marca_03_pecas",
+      "nome": "MegaParts Peças",
+      "categoria": "Peças Originais",
+      "descricao_marketing": "Peças genuínas com garantia. Compatíveis com todas as máquinas.",
+      "logo": "/assets/logos/megaparts.svg",
+      "cores": ["#F2CC8F", "#2D1B00"],
+      "website": "www.megaparts-construcao.com.br",
+      "contato": "suporte@megaparts.com.br",
+      "custoServico": 8500,
+      "eficienciaBonus": 0.18,
+      "confiabilidade": 0.95,
+      "fidelidade": {
+        "missao": "12 compras MegaParts",
+        "recompensa": "Peça Certificada MegaParts (confiabilidade +25%)"
+      }
+    },
+    {
+      "id": "marca_04_combustivel",
+      "nome": "PowerFuel Combustíveis",
+      "categoria": "Combustível Premium",
+      "descricao_marketing": "Combustível premium com aditivos. Melhor performance, menos consumo.",
+      "logo": "/assets/logos/powerfuel.svg",
+      "cores": ["#FF0000", "#FFD700"],
+      "website": "www.powerfuel-construcao.com.br",
+      "contato": "vendas@powerfuel.com.br",
+      "custoServico": 6500,
+      "consumoReducao": 0.15,
+      "eficienciaBonus": 0.08,
+      "fidelidade": {
+        "missao": "50 abastecimentos PowerFuel",
+        "recompensa": "Desconto Permanente PowerFuel (-15% combustível)"
+      }
+    },
+    {
+      "id": "marca_05_oficina",
+      "nome": "TechRep Serviços",
+      "categoria": "Reparos Técnicos",
+      "descricao_marketing": "Diagnóstico informatizado. Reparo certificado com garantia.",
+      "logo": "/assets/logos/techrep.svg",
+      "cores": ["#0066CC", "#00CC66"],
+      "website": "www.techrep-industrial.com.br",
+      "contato": "agendamento@techrep.com.br",
+      "custoServico": 9500,
+      "tempoParada": 1.5,
+      "eficienciaBonus": 0.22,
+      "diagnosticoAutomatic": true,
+      "fidelidade": {
+        "missao": "5 reparos completos TechRep",
+        "recompensa": "Diagnóstico Gratuito Vitalício TechRep"
+      }
+    }
+  ],
+  "fluxoManutenção": {
+    "gatilho": "Máquina precisa manutenção (a cada 60 dias de uso ou evento quebra)",
+    "tela": "Modal 'Escolha sua Oficina'",
+    "opcoes": [
+      {
+        "posicao": 1,
+        "tipo": "generia",
+        "icone": "🔧",
+        "informacoes": "Custo / Tempo / Qualidade",
+        "botao": "Reparar Aqui (R$5k, 5 dias, 80%)"
+      },
+      {
+        "posicao": 2,
+        "tipo": "parceira",
+        "icone": "🏢",
+        "informacoes": "[Logo da marca] + video 5s",
+        "botao": "Confiar em [Marca] (R$8k, 2 dias, 100%+10bônus)"
+      },
+      {
+        "posicao": 3,
+        "tipo": "propria",
+        "icone": "🏭",
+        "informacoes": "Sua oficina (se construída)",
+        "botao": "Usar Oficina Própria (R$3k, 1 dia, 100%)"
+      }
+    ],
+    "aposEscolha": {
+      "exibir": "Confirmação + animação de reparo",
+      "registrar": {
+        "oficina_escolhida": "tipo",
+        "marca_se_parceira": "id",
+        "custo": "valor",
+        "duracao": "dias",
+        "eficiencia_resultado": "porcentagem",
+        "timestamp": "data/hora"
+      },
+      "analytics": {
+        "impressao_de_marca": "+1",
+        "engajamento": "registrado",
+        "lead_potencial": "qualificado"
+      }
+    }
+  },
+  "mecanicaFidelidade": {
+    "descricao": "Repetir manutenção com mesma marca desbloqueia recompensas",
+    "contador": {
+      "tipo": "Manutenções com marca X",
+      "resetar": false,
+      "persiste": "toda a carreira"
+    },
+    "recompensas": [
+      {
+        "marca": "RoadForce Pneus",
+        "marco": 10,
+        "recompensa": "Pneu Premium RoadForce",
+        "efeito": {
+          "desgaste": -0.3,
+          "duracao": "60 dias"
+        }
+      },
+      {
+        "marca": "SynthFlow Óleos",
+        "marco": 8,
+        "recompensa": "Óleo Premium SynthFlow",
+        "efeito": {
+          "intervaloManutencao": -0.2,
+          "duracao": "permanente"
+        }
+      },
+      {
+        "marca": "MegaParts Peças",
+        "marco": 12,
+        "recompensa": "Peça Certificada MegaParts",
+        "efeito": {
+          "confiabilidade": 0.95,
+          "duracao": "permanente"
+        }
+      },
+      {
+        "marca": "PowerFuel Combustíveis",
+        "marco": 50,
+        "recompensa": "Desconto Permanente",
+        "efeito": {
+          "custoAbastecimento": -0.15,
+          "duracao": "permanente"
+        }
+      },
+      {
+        "marca": "TechRep Serviços",
+        "marco": 5,
+        "recompensa": "Diagnóstico Gratuito Vitalício",
+        "efeito": {
+          "diagnosticoAutomatico": true,
+          "duracao": "permanente"
+        }
+      }
+    ]
+  },
+  "integracaoMonetizacao": {
+    "como_funciona": [
+      "1. Jogador escolhe oficina parceira",
+      "2. Marca real recebe impressão qualificada",
+      "3. Video de 5s cria engagement",
+      "4. Catálogo da marca é divulgado",
+      "5. Dados de uso informam ROI"
+    ],
+    "dadosColetados": [
+      "Quantas manutenções/mês por marca",
+      "Tempo médio de sessão durante serviço",
+      "Click-through no catálogo",
+      "Fidelidade (quantos repeats)",
+      "Demo do jogador (país, idioma)"
+    ],
+    "futuroSubstituicao": {
+      "marca_01_pneus": "SERÁ: Pirelli, Michelin, Goodyear ou semelhante",
+      "marca_02_oleo": "SERÁ: Mobil, Shell, Castrol ou semelhante",
+      "marca_03_pecas": "SERÁ: Caterpillar, Komatsu, JCB ou semelhante",
+      "marca_04_combustivel": "SERÁ: Petrobras, Shell, Esso ou semelhante",
+      "marca_05_oficina": "SERÁ: Rede autorizada de marca parceira"
+    }
+  }
+}

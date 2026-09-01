@@ -1,0 +1,242 @@
+{
+  "missoesDeFidelidade": {
+    "descricao": "Objetivos secundários que recompensam fidelidade com marcas e sedes",
+    "categoria": "Repeatable, vinculadas a sedeAtual"
+  },
+  "manutenção": [
+    {
+      "id": "manutencao_roadforce_01",
+      "nome": "Mecânico Especial RoadForce",
+      "descricao": "Faça 10 manutenções na RoadForce Pneus",
+      "marca": "marca_01_pneus",
+      "tipo": "fidelidade",
+      "objetivo": 10,
+      "progresso": "0/10",
+      "recompensa": {
+        "dinheiro": 5000,
+        "reputacao": 10,
+        "item": "Pneu Premium RoadForce",
+        "efeito_desgaste": -0.3,
+        "duracao_dias": 60
+      },
+      "ativo": true
+    },
+    {
+      "id": "manutencao_synthflow_01",
+      "nome": "Especialista em Óleos SynthFlow",
+      "descricao": "Complete 8 revisões de óleo na SynthFlow",
+      "marca": "marca_02_oleo",
+      "tipo": "fidelidade",
+      "objetivo": 8,
+      "progresso": "0/8",
+      "recompensa": {
+        "dinheiro": 4000,
+        "reputacao": 8,
+        "item": "Óleo Premium SynthFlow",
+        "efeito_intervalo_manutencao": -0.2,
+        "duracao": "permanente"
+      },
+      "ativo": true
+    },
+    {
+      "id": "manutencao_megaparts_01",
+      "nome": "Confiança em MegaParts",
+      "descricao": "Use peças MegaParts em 12 manutenções",
+      "marca": "marca_03_pecas",
+      "tipo": "fidelidade",
+      "objetivo": 12,
+      "progresso": "0/12",
+      "recompensa": {
+        "dinheiro": 6000,
+        "reputacao": 15,
+        "item": "Peça Certificada MegaParts",
+        "efeito_confiabilidade": 0.95,
+        "duracao": "permanente"
+      },
+      "ativo": true
+    },
+    {
+      "id": "manutencao_techrep_01",
+      "nome": "Diagnóstico Técnico TechRep",
+      "descricao": "Complete 5 reparos completos na TechRep",
+      "marca": "marca_05_oficina",
+      "tipo": "fidelidade",
+      "objetivo": 5,
+      "progresso": "0/5",
+      "recompensa": {
+        "dinheiro": 8000,
+        "reputacao": 20,
+        "beneficio": "Diagnóstico Gratuito Vitalício",
+        "efeito": "Nunca pague por diagnóstico"
+      },
+      "ativo": true
+    }
+  ],
+  "combustivel": [
+    {
+      "id": "combustivel_powerfuel_01",
+      "nome": "Fornecedor Oficial PowerFuel",
+      "descricao": "Abastça 50 vezes com PowerFuel",
+      "marca": "marca_04_combustivel",
+      "tipo": "fidelidade",
+      "objetivo": 50,
+      "progresso": "0/50",
+      "recompensa": {
+        "dinheiro": 10000,
+        "reputacao": 25,
+        "beneficio": "Desconto Permanente PowerFuel",
+        "efeito": "Combustível -15% para sempre"
+      },
+      "ativo": true
+    }
+  ],
+  "manutenção_zero": [
+    {
+      "id": "zero_problems_01",
+      "nome": "Manutenção Preventiva",
+      "descricao": "Mantenha qualquer máquina sem quebras por 30 dias",
+      "tipo": "desafio_temporal",
+      "duracao_dias": 30,
+      "recompensa": {
+        "dinheiro": 3000,
+        "reputacao": 5
+      },
+      "resetavel": true
+    },
+    {
+      "id": "zero_problems_02",
+      "nome": "Frota Zero Incidentes",
+      "descricao": "90 dias sem quebra em nenhuma máquina (requer manutenção premium)",
+      "tipo": "desafio_extremo",
+      "duracao_dias": 90,
+      "recompensa": {
+        "dinheiro": 25000,
+        "reputacao": 50,
+        "beneficio": "Bônus de Confiabilidade +10%"
+      },
+      "resetavel": false,
+      "desbloqueio": "Nível 3+"
+    }
+  ],
+  "desafioDeMarcas": [
+    {
+      "id": "desafio_lubrax_01",
+      "nome": "Desafio RoadForce",
+      "descricao": "Complete manutenção de pneus em 5 máquinas diferentes em 7 dias",
+      "marca": "marca_01_pneus",
+      "tipo": "desafio_tempo",
+      "duracao_dias": 7,
+      "objetivo": 5,
+      "recompensa": {
+        "dinheiro": 12000,
+        "reputacao": 30,
+        "bonus_permanente": "Aumento de 5% em eficiência"
+      },
+      "resetavel": true,
+      "periodo_repeticao_dias": 30
+    },
+    {
+      "id": "desafio_synthflow_01",
+      "nome": "Desafio SynthFlow",
+      "descricao": "Troque óleo de 8 máquinas no mesmo mês",
+      "marca": "marca_02_oleo",
+      "tipo": "desafio_volume",
+      "duracao_dias": 30,
+      "objetivo": 8,
+      "recompensa": {
+        "dinheiro": 10000,
+        "reputacao": 25,
+        "bonus_temporario": "Intervalo manutenção -10% por 30 dias"
+      },
+      "resetavel": true,
+      "periodo_repeticao_dias": 30
+    },
+    {
+      "id": "desafio_megaparts_01",
+      "nome": "Desafio MegaParts",
+      "descricao": "Use exclusivamente peças MegaParts em 3 manutenções completas",
+      "marca": "marca_03_pecas",
+      "tipo": "desafio_exclusividade",
+      "objetivo": 3,
+      "recompensa": {
+        "dinheiro": 8000,
+        "reputacao": 20,
+        "bonus": "Confiabilidade MegaParts +15% por 60 dias"
+      },
+      "resetavel": true,
+      "periodo_repeticao_dias": 30
+    }
+  ],
+  "missoesDeSede": [
+    {
+      "id": "sede_nivel_2_maintenance",
+      "nome": "Oficina Profissional",
+      "descricao": "Use Oficina Parceira 10 vezes na Garagem com Oficina",
+      "sedeRequerida": 2,
+      "tipo": "habituacao_sede",
+      "objetivo": 10,
+      "recompensa": {
+        "dinheiro": 5000,
+        "reputacao": 10
+      }
+    },
+    {
+      "id": "sede_nivel_3_logistics",
+      "nome": "Maestro Logístico",
+      "descricao": "Complete 15 contratos Tier 2 na Sede Média",
+      "sedeRequerida": 3,
+      "tipo": "volume_contratos",
+      "objetivo": 15,
+      "recompensa": {
+        "dinheiro": 20000,
+        "reputacao": 50
+      }
+    },
+    {
+      "id": "sede_nivel_4_empire",
+      "nome": "Construtor de Império",
+      "descricao": "Gerencie 2 filiais simultaneamente por 60 dias",
+      "sedeRequerida": 4,
+      "tipo": "escalabilidade",
+      "duracao_dias": 60,
+      "recompensa": {
+        "dinheiro": 50000,
+        "reputacao": 100
+      }
+    }
+  ],
+  "sistemaProgresso": {
+    "descricao": "Cada missão rastreia progresso independente",
+    "persistencia": "Carreira completa (não reseta em novo game+)",
+    "exibicao": "Menu de Missões mostra: Nome / Progresso / Recompensa / Tempo restante",
+    "notificacao": "Pop-up ao completar marco importante"
+  },
+  "recompensasAcumuladas": {
+    "descricao": "Bônus bônus ao completar X missões de mesma marca",
+    "tier_1": {
+      "quantidade": 3,
+      "recompensa": "Badge de Confiança (cosmético) + 1% desconto permanente"
+    },
+    "tier_2": {
+      "quantidade": 5,
+      "recompensa": "Badge de Parceiro + 3% desconto permanente"
+    },
+    "tier_3": {
+      "quantidade": 10,
+      "recompensa": "Badge de Embaixador + 5% desconto permanente + Acesso VIP"
+    }
+  },
+  "futuroIntegracaoMonetizacao": {
+    "como_sera_usado": [
+      "Marca real verá dados de: quantos jogadores completaram missão com ela",
+      "Engagement: tempo dedicado às manutenções da marca",
+      "Fidelidade: quantos repeats em 30 dias",
+      "Virabilidade: quantos amigos novo player convida pra fazer mesma missão"
+    ],
+    "metricas": {
+      "CPM_customizado": "Marca paga por impressão qualificada (não por banner cego)",
+      "CPA_customizado": "Marca paga por ação (manutenção completada)",
+      "Lifetime_Value": "Quanto o jogador 'gastaria' com marca ao longo da carreira"
+    }
+  }
+}

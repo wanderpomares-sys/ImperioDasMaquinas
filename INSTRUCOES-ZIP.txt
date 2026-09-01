@@ -1,0 +1,122 @@
+================================================================================
+🎮 IMPÉRIO DAS MÁQUINAS — PACOTE ATUALIZADO v2.0+
+================================================================================
+
+📦 CONTEÚDO DO ARQUIVO ZIP
+================================================================================
+
+ImperioDasMaquinas-ATUALIZADO.zip (1.5 MB) contém:
+
+✅ ARQUIVOS CORRIGIDOS:
+   • app.html ................... Correções de safe-area-inset
+   • manifest.json .............. Atualizado com maskable icons
+
+🆕 NOVOS ARQUIVOS:
+   • icon-192-maskable.png ...... Ícone maskable 192×192
+   • icon-512-maskable.png ...... Ícone maskable 512×512
+
+📖 DOCUMENTAÇÃO:
+   • README-ATUALIZACOES.md .... Explicação completa das correções
+
+✓ MANTIDOS (sem alterações):
+   • index.html ................. Game logic
+   • sw.js ...................... Service Worker
+   • icon-192.png, icon-512.png . Fallback icons
+   • Vídeos ..................... Assets do jogo
+
+
+🚀 COMO USAR — 3 PASSOS
+================================================================================
+
+PASSO 1: Extrair o ZIP
+   → Descompacte ImperioDasMaquinas-ATUALIZADO.zip
+   → Você terá uma pasta "ImperioDasMaquinas/"
+
+PASSO 2: Sincronizar com seu repositório
+   → Copie TODOS os arquivos para o seu repositório local
+   → (Substitua os antigos pelas versões atualizadas)
+
+PASSO 3: Fazer commit e push
+   → git add .
+   → git commit -m "🔧 Fix: safe-area-inset e PWA icons com maskable support"
+   → git push origin main
+
+✅ PRONTO! O app está atualizado e pronto para deploy.
+
+
+🧪 COMO TESTAR AS CORREÇÕES
+================================================================================
+
+TESTE 1: Header na safe area
+   ① Abra o app em um dispositivo móvel (real ou emulado)
+   ② Verifique se o título "Império das Máquinas" fica ABAIXO dos ícones de status
+   ✅ Não deve haver sobreposição
+
+TESTE 2: Logo na instalação (PWA)
+   ① Android: Chrome → Menu → "Instalar app"
+   ② iOS: Safari → Compartilhar → "Adicionar à Tela Inicial"
+   ✅ O logo deve aparecer na tela de instalação
+
+TESTE 3: Verificar manifest
+   ① Abra DevTools (F12)
+   ② Vá para Application → Manifest
+   ✅ Deve aparecer 4 ícones (2×"any" + 2×"maskable")
+
+
+📊 O QUE FOI CORRIGIDO
+================================================================================
+
+PROBLEMA 1: Header invadindo a barra de status
+   ANTES: "Império das Máquinas" sobreposto aos ícones de sinal/bateria
+   DEPOIS: Header sempre abaixo da barra de status ✅
+
+PROBLEMA 2: Logo não aparecia na instalação
+   ANTES: App desaparecia ou sem logo na tela de instalação
+   DEPOIS: Logo aparece corretamente em todos dispositivos ✅
+
+
+🔗 LINKS ÚTEIS
+================================================================================
+
+Documentação das correções:
+   → /mnt/user-data/outputs/CORRECOES_IMPLEMENTADAS.md
+
+Arquivo individual do manifest corrigido:
+   → /mnt/user-data/outputs/manifest.json
+
+Ícones maskable gerados:
+   → /mnt/user-data/outputs/icon-192-maskable.png
+   → /mnt/user-data/outputs/icon-512-maskable.png
+
+
+💡 DICAS
+================================================================================
+
+• Limpe o cache do navegador (Ctrl+Shift+Delete) antes de testar
+• Desinstale e reinstale o PWA para ver as mudanças
+• Use Chrome ou Safari em dispositivos reais para melhor resultado
+• Abra o DevTools (F12) e verifique a aba "Application" para debug
+
+
+❓ DÚVIDAS?
+================================================================================
+
+Se algo não funcionar:
+
+1. Verifique que TODOS os arquivos foram copiados
+2. Limpe o cache do navegador e do PWA
+3. Teste em um dispositivo físico (DevTools nem sempre mostra problemas reais)
+4. Veja a aba "Console" do DevTools para erros
+
+Se precisar de mais informações, leia:
+   → README-ATUALIZACOES.md (dentro do ZIP)
+   → CORRECOES_IMPLEMENTADAS.md (arquivo separado)
+
+
+================================================================================
+✨ Versão: 2.0+ com correções de mobile
+✅ Status: Pronto para produção
+📅 Data: Agosto 31, 2026
+
+Divirta-se com o Império das Máquinas! 🎮⚙️
+================================================================================

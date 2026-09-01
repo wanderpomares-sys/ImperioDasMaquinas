@@ -1,0 +1,295 @@
+{
+  "sedes": [
+    {
+      "id": 1,
+      "nome": "O Barraço",
+      "descricao": "Terreno de chão batido, ferrugem, lama. Improviso total.",
+      "imagem": "/assets/sedes/hq_1_real.png",
+      "status": "INICIAL",
+      "custoUpgrade": 0,
+      "frotas": {
+        "maxMaquinas": 1,
+        "tiposDesbloqueados": ["Retroescavadeira Simples"]
+      },
+      "contratos": {
+        "tiersDesbloqueados": [1],
+        "maximo": 3,
+        "custoOperacional": {
+          "multiplicador": 1.2,
+          "razao": "Manutenção no improviso (+20% de custo)"
+        }
+      },
+      "objetivos": {
+        "titulo": "Primeiros Passos",
+        "descricao": "Ganhe experiência com contratos básicos",
+        "requisitos": [
+          {
+            "tipo": "contratos_completos",
+            "valor": 10,
+            "descricao": "Conclua 10 contratos Tier 1 sem atraso"
+          }
+        ],
+        "recompensas": {
+          "dinheiro": 0,
+          "reputacao": 10,
+          "desbloqueia": [2]
+        }
+      },
+      "beneficios": [],
+      "penalidades": [
+        "Manutenção 20% mais cara",
+        "Contatos limitados a Tier 1"
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "Garagem com Oficina",
+      "descricao": "Piso de concreto, oficina organizada, pequeno escritório admin. 2-3 máquinas.",
+      "imagem": "/assets/sedes/hq_2_real.png",
+      "status": "DESBLOQUEÁVEL",
+      "custoUpgrade": 180000,
+      "frotas": {
+        "maxMaquinas": 3,
+        "tiposDesbloqueados": ["Retroescavadeira Simples", "Rolo Compactador", "Motoniveladora"]
+      },
+      "contratos": {
+        "tiersDesbloqueados": [1, 1.5],
+        "maximo": 8,
+        "custoOperacional": {
+          "multiplicador": 1.0,
+          "razao": "Operação normal"
+        }
+      },
+      "objetivos": {
+        "titulo": "Diversificação e Confiabilidade",
+        "descricao": "Expanda sua frota e ganhe reputação",
+        "requisitos": [
+          {
+            "tipo": "tipos_maquina",
+            "valor": 3,
+            "descricao": "Tenha 3 tipos diferentes de máquina"
+          },
+          {
+            "tipo": "contratos_cliente",
+            "valor": 15,
+            "descricao": "Conclua 15 contratos para a mesma construtora (fidelidade)"
+          },
+          {
+            "tipo": "dias_sem_multa",
+            "valor": 60,
+            "descricao": "Mantenha 60 dias consecutivos sem multa"
+          },
+          {
+            "tipo": "reserva_caixa",
+            "valor": 300000,
+            "duracao_dias": 30,
+            "descricao": "Mantenha R$300k em caixa por 30 dias seguidos"
+          }
+        ],
+        "recompensas": {
+          "dinheiro": 50000,
+          "reputacao": 25,
+          "desbloqueia": [3]
+        },
+        "requisitos_simultaneos": 3,
+        "descricao_requisitos": "Precisa fazer 3 de 4"
+      },
+      "beneficios": [
+        "Acesso a Tier 1 Premium (R$18k/contrato)",
+        "Oficina Parceira pode ser contratada"
+      ],
+      "penalidades": []
+    },
+    {
+      "id": 3,
+      "nome": "Sede Média",
+      "descricao": "Prédio de 2 andares com vidro, pátio pavimentado, 3-4 máquinas novas.",
+      "imagem": "/assets/sedes/hq_3_real.png",
+      "status": "DESBLOQUEÁVEL",
+      "custoUpgrade": 650000,
+      "frotas": {
+        "maxMaquinas": 4,
+        "tiposDesbloqueados": ["Retroescavadeira Simples", "Rolo Compactador", "Motoniveladora", "Escavadeira Hidráulica"]
+      },
+      "contratos": {
+        "tiersDesbloqueados": [1, 1.5, 2],
+        "maximo": 12,
+        "custoOperacional": {
+          "multiplicador": 0.95,
+          "razao": "Operação profissional com eficiência"
+        }
+      },
+      "cadeiaLogistica": {
+        "nome": "Transformação Logística",
+        "etapas": [
+          {
+            "id": 1,
+            "nome": "Transporte Pesado",
+            "descricao": "Mova 5 máquinas entre obras diferentes",
+            "recompensa": "Desbloqueia etapa 2"
+          },
+          {
+            "id": 2,
+            "nome": "Just-in-Time",
+            "descricao": "Complete 3 Tier 2 com 1 dia de antecedência (sem atraso)",
+            "recompensa": "Desbloqueia Centro Logístico"
+          }
+        ],
+        "recompensaFinal": {
+          "nome": "Centro Logístico",
+          "efeito": "Custo de máquina parada reduz de R$50/dia para R$20/dia"
+        }
+      },
+      "cadeiaTecnica": {
+        "nome": "Transformação Técnica",
+        "etapas": [
+          {
+            "id": 1,
+            "nome": "Obra Complexa",
+            "descricao": "Complete 1 contrato que exige 3 máquinas simultaneamente",
+            "recompensa": "Desbloqueia etapa 2"
+          },
+          {
+            "id": 2,
+            "nome": "Certificação ISO",
+            "descricao": "Pague R$200k em treinamento + tenha Reputação > 80",
+            "recompensa": "Desbloqueia Tier 3"
+          }
+        ],
+        "recompensaFinal": {
+          "nome": "Tier 3 Liberado",
+          "efeito": "Acesso a contratos Tier 3 (R$90k-150k)"
+        }
+      },
+      "objetivos": {
+        "titulo": "Profissionalização",
+        "descricao": "Cadeias de logística e técnica",
+        "requisitos": [
+          "Completar Cadeia Logística",
+          "Completar Cadeia Técnica"
+        ],
+        "recompensas": {
+          "dinheiro": 150000,
+          "reputacao": 50,
+          "desbloqueia": [4]
+        }
+      },
+      "beneficios": [
+        "Tier 2 e Tier 3 disponíveis (com cadeias)",
+        "2 máquinas adicionais",
+        "Eficiência +5%"
+      ],
+      "penalidades": []
+    },
+    {
+      "id": 4,
+      "nome": "Sede Grande",
+      "descricao": "Galpão industrial grande, escritório de 3 andares, painéis solares, frota de 6-8 máquinas.",
+      "imagem": "/assets/sedes/hq_4_real.png",
+      "status": "DESBLOQUEÁVEL",
+      "custoUpgrade": 1200000,
+      "frotas": {
+        "maxMaquinas": 8,
+        "tiposDesbloqueados": ["Todas as máquinas do jogo"]
+      },
+      "contratos": {
+        "tiersDesbloqueados": [1, 1.5, 2, 3],
+        "maximo": 18,
+        "custoOperacional": {
+          "multiplicador": 0.90,
+          "razao": "Operação em escala com eficiência máxima"
+        }
+      },
+      "filiais": {
+        "maximo": 2,
+        "desbloqueadas": true
+      },
+      "objetivos": {
+        "titulo": "Império Regional",
+        "descricao": "Escale sua operação para múltiplas filiais",
+        "requisitos": [
+          {
+            "tipo": "megaobra",
+            "valor": 3,
+            "descricao": "Complete 3 contratos Tier 3"
+          },
+          {
+            "tipo": "patrimonio",
+            "valor": 8000000,
+            "descricao": "Acumule patrimônio total > R$8M"
+          },
+          {
+            "tipo": "filiais_ativas",
+            "valor": 2,
+            "descricao": "Tenha 2 filiais ativas simultaneamente"
+          }
+        ],
+        "recompensas": {
+          "dinheiro": 300000,
+          "reputacao": 100,
+          "desbloqueia": [5]
+        }
+      },
+      "beneficios": [
+        "Tier 3 completo",
+        "2 filiais simultâneas",
+        "Painéis solares: -10% custo administrativo",
+        "Workshop avançado: manutenção 15% mais barata"
+      ],
+      "penalidades": []
+    },
+    {
+      "id": 5,
+      "nome": "IMPÉRIO",
+      "descricao": "Torre de vidro com heliponto, garagem para 20 máquinas, oficina de fabricação própria. Endgame.",
+      "imagem": "/assets/sedes/hq_5_real.png",
+      "status": "DESBLOQUEÁVEL",
+      "custoUpgrade": 4000000,
+      "frotas": {
+        "maxMaquinas": 20,
+        "tiposDesbloqueados": ["Todas as máquinas + Premium"]
+      },
+      "contratos": {
+        "tiersDesbloqueados": [1, 1.5, 2, 3, 4],
+        "maximo": 9999,
+        "custoOperacional": {
+          "multiplicador": 0.85,
+          "razao": "Operação à escala máxima"
+        }
+      },
+      "filiais": {
+        "maximo": 9999,
+        "desbloqueadas": true
+      },
+      "modoLivre": true,
+      "objetivos": {
+        "titulo": "New Game+",
+        "descricao": "Você conquistou o Império. Jogue como quiser.",
+        "requisitos": [],
+        "recompensas": {
+          "dinheiro": 500000,
+          "reputacao": 250,
+          "desbloqueia": []
+        }
+      },
+      "beneficios": [
+        "Modo livre total",
+        "Oficina própria de fabricação",
+        "Heliponto para transporte de máquinas",
+        "Pesquisa & Desenvolvimento desbloqueado",
+        "Máquinas Premium disponíveis",
+        "Bônus de reputação +50% em todos os contratos"
+      ],
+      "penalidades": []
+    }
+  ],
+  "sistemaSedes": {
+    "descricao": "Progression visual com desbloqueios mecânicos",
+    "mecanica": {
+      "cada_upgrade": "Desbloqueia features, não compra itens",
+      "custos_operacionais": "Variam por sede",
+      "filiais": "Múltiplas sedes para escalabilidade",
+      "cadeias": "Objetivos em cadeia incentivam estratégia"
+    }
+  }
+}
