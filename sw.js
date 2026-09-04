@@ -1,28 +1,19 @@
 // Service Worker — Império das Máquinas
-// Sempre que atualizar o app.html, AUMENTE o número da versão abaixo
-// (v1 -> v2 -> v3...), senão o celular das pessoas continua mostrando
-// a versão antiga em cache.
-const CACHE_VERSION = 'imperio-v31';
+// Como o jogo inteiro (fotos de sede, vídeos de obra) já vem embutido em base64 dentro do
+// index.html, cachear só os arquivos essenciais já dá acesso offline completo — não precisa
+// de uma lista longa de assets.
 
-const ARQUIVOS_PARA_CACHE = [
+const CACHE_NAME = 'imperio-das-maquinas-v1';
+const ARQUIVOS_ESSENCIAIS = [
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
   './icon-192-maskable.png',
-  './icon-512-maskable.png',
-  './video-desmatamento.mp4',
-  './video-cascalho.mp4',
-  './video-entulho.mp4',
-  './foto-cascalho-thumb.jpg',
-  './foto-cascalho-hero.jpg',
-  './foto-loteamento-thumb.jpg',
-  './foto-loteamento-hero.jpg'
+  './icon-512-maskable.png'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_VERSION).then((cache) => cache.addAll(ARQUIVOS_PARA_CACHE))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ARQUIVOS_ESSENCIAIS))
   );
   self.skipWaiting();
 });
@@ -30,16 +21,23 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((nomes) =>
-      Promise.all(
-        nomes.filter((nome) => nome !== CACHE_VERSION).map((nome) => caches.delete(nome))
-      )
+      Promise.all(nomes.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
     )
   );
   self.clients.claim();
 });
 
+// Estratégia: tenta a rede primeiro (pra sempre pegar a versão mais nova quando online),
+// cai pro cache se estiver offline. Assim, atualização do jogo aparece na próxima visita
+// com internet, mas nunca trava o jogador sem conexão.
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((resposta) => resposta || fetch(event.request))
+    fetch(event.request)
+      .then((resposta) => {
+        const copia = resposta.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copia));
+        return resposta;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
