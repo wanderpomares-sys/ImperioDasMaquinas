@@ -8,15 +8,15 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 04/09/2026 (sessão 31)
+**Data da última atualização:** 05/09/2026 (sessão 33)
 
-**Arquivo do jogo:** `01-JOGO/app.html` (~1,30 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
+**Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
-**Fase 2 do Roadmap de Game Feel completa (sessão 29). Fase 3 iniciada (sessão 31):** item 9 (identidade das máquinas — apelido, histórico, selo de veterana) fechado e testado. Faltam itens 10 (marcos da empresa), 11 (mentor) e 12 (diário mais vivo).
+**Fase 3 em andamento:** item 9 (identidade das máquinas, sessão 30) e item 11 (Consultor, sessão 33) fechados e testados. Faltam itens 10 (marcos da empresa) e 12 (diário mais vivo — parcialmente atendido pelo Consultor).
 
-**Atenção para testes automatizados futuros:** com o arquivo maior, renderizar a tela de Sedes ou o overlay "Ver obra" **repetidas vezes** num mesmo teste jsdom fica lento. Teste de forma leve: valide a lógica via `w.eval()` direto nas funções de dados (não navegue a tela via `goTo()` dezenas de vezes), e faça no máximo 1-2 renders reais de tela por teste. Ver `teste-embed-base64-leve.js` como modelo. **Animações via `requestAnimationFrame` precisam de um `setTimeout` de verdade no teste (~700ms) antes de checar o valor final — checar no mesmo tick sempre mostra o valor antigo, não é bug do jogo.** **Ciclos completos de aceite+avanço+conclusão são pesados — no máximo 1 ciclo completo por script, senão estoura o tempo do bash_tool** (achado na sessão 21).
+**Atenção para testes automatizados futuros:** com o arquivo maior, renderizar a tela de Sedes ou o overlay "Ver obra" **repetidas vezes** num mesmo teste jsdom fica lento. Teste de forma leve: valide a lógica via `w.eval()` direto nas funções de dados (não navegue a tela via `goTo()` dezenas de vezes), e faça no máximo 1-2 renders reais de tela por teste. Ver `teste-embed-base64-leve.js` como modelo. **Animações via `requestAnimationFrame` precisam de um `setTimeout` de verdade no teste (~700ms) antes de checar o valor final — checar no mesmo tick sempre mostra o valor antigo, não é bug do jogo.** **Ciclos completos de aceite+avanço+conclusão são pesados — no máximo 1 ciclo completo por script, senão estoura o tempo do bash_tool** (achado na sessão 21). **Ao mexer em números de missão/campanha, os testes `teste6.js` e `teste-fumaca-final.js` têm os limiares antigos hardcoded — atualizar junto, senão a falha parece bug e não é** (achado na sessão 33).
 
-**Direção estratégica vigente:** Fases 1 e 2 do roadmap de game feel completas; Fase 3 em andamento (item 9 fechado na sessão 30). Playtest humano formal (`GUIA-PLAYTEST.md`) segue pendente — a última rodada de feedback humano real e espontâneo foi a sessão 21, e 9 sessões de feature nova (22-30) já foram construídas em cima disso sem nova validação formal. Recomendação registrada (seção 3) é considerar pausar antes de continuar a Fase 3.
+**Direção estratégica vigente:** o primeiro playtest humano real (30 min, sessão 33) já aconteceu — trouxe 3 achados concretos (travamento de contrato por falta de máquina, missões curtas demais, sensação de jogo "morto fora da obra"), todos investigados e corrigidos na mesma sessão. O `GUIA-PLAYTEST.md` formal continua sem ser preenchido como formulário, mas o feedback real já está chegando organicamente e sendo tratado com prioridade assim que aparece — esse é o padrão que está funcionando, não precisa forçar o formulário.
 
 **O que funciona, testado e validado (86/86 + 20/20 + 18/18 + 8/8 + 12/12 + 3/3 + 15/15 + 11/11 + 76/76 na última regressão completa, sessão 21):**
 - **Bug corrigido:** classificação de atraso não é mais silenciosa — contrato que cruza o prazo e conclui na mesma jogada agora sempre gera multa, histórico e mensagem consistentes (antes, esse caso específico não avisava nada e ainda assim aparecia como "atrasado" na mensagem final) (sessão 21)
@@ -55,6 +55,67 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### Sessão 33 — 05/09/2026 — Primeiro playtest real (30 min) + travamento de contratos, missões recalibradas, e o Consultor
+**Pedido:** o usuário jogou 30 minutos de verdade e trouxe 3 relatos: chegou fácil na 3ª sede (missões muito curtas), teve um momento em que quase todos os contratos disponíveis pediam máquina que ele não tinha (travou, só um contrato dava pra pegar), e apontou que o jogo "fica morto fora da obra" — sugerindo um consultor que desse conselhos reais, com exemplos concretos de fala.
+
+**Isso é o primeiro playtest formal de verdade desde a sessão 20** — o `GUIA-PLAYTEST.md` nunca foi preenchido like formulário, mas esse relato cobre praticamente as mesmas perguntas centrais dele, com dado real de 30 minutos de jogo.
+
+**1. Travamento de contratos — confirmado, não presumido:**
+- Simulação confirmou: 37,5% do catálogo de 40 arquétipos pede máquina que a frota inicial não possui (achado original da sessão 22, nunca resolvido até agora)
+- No sorteio específico gerado durante a investigação, só 3 dos 5 slots visíveis eram `hasMachine:true` — bate com o relato do usuário
+- **Corrigido:** `regenerarContrato()` agora sorteia com peso — 80% das vezes vem de um arquétipo que a frota já cumpre, 20% do catálogo inteiro (mantém a aspiração de "preciso comprar tal máquina" sem deixar isso dominar os slots). Medido por simulação de 300 rodadas: média de slots usáveis subiu de ~3,1 para 4,68 de 5.
+
+**2. Missões recalibradas — curva inteira, não só remendo pontual:**
+- Campanha 2 (Garagem com Oficina): 3→6 contratos no prazo, 2→3 manutenções, R$150k→R$280k faturamento
+- Campanha 3 (Sede Média): 1→2 contratos de alto risco, 3→5 usos de oficina, R$500k→R$900k faturamento, 8→15 contratos no prazo
+- Campanhas 4 e 5 ajustadas proporcionalmente (~1,4-1,5x) pra manter a curva coerente, incluindo o limiar embutido em `_marcasConsolidadas()` (10→14)
+- Testes de campanha (`teste6.js`, `teste-fumaca-final.js`) tinham os números antigos hardcoded — atualizados pros novos limiares, não é regressão real
+
+**3. O Consultor — Fase 3, item 11, agora com especificação real do usuário:**
+- Pessoa fixa e recorrente (Marisa Andrade, foto real), diferente dos contatos de cliente que trocam a cada contrato
+- `gerarConselhoConsultor()` analisa o estado real do jogo em ordem de prioridade — nunca fala à toa: máquina quebrada (mais urgente) → sem contrato ativo com opção disponível → quase completando a próxima sede → caixa apertado → contrato pedindo máquina que falta (sugere vender uma ociosa e focar no tipo pedido, ou só sugere compra se não houver candidata a vender) → caixa saudável → nada urgente, fica quieto
+- Moderação de verdade: só fala no Hub, cooldown de ~100s reais, e mesmo assim só 45% de chance por visita
+- 2 bugs de texto encontrados e corrigidos durante o próprio teste: concordância de plural errada ("disponívelis") e um trecho que pegava só o primeiro caractere de `missing` por tratá-lo como array quando na verdade é uma string única
+
+**Validado:**
+- 10 verificações do consultor (cada condição isolada, moderação/cooldown funcionando, só fala com Hub visível, foto/nome/cargo corretos)
+- 2 verificações da nova distribuição de sorteio de contrato
+- Regressão completa: 44 (campanhas, com números atualizados) + 12 (Hub vivo) + 13 (fumaça completa) = 69/69, mais os 80/80 já confirmados nas correções de pool — nada quebrou
+
+**Arquivos gerados:** `teste-pool-pesado.js`, `teste-consultor.js`, `diag-pool-atual.js`.
+
+**Próximo passo real:** sincronizar a versão final pro pacote GitHub e reempacotar. Depois, itens 10 (marcos da empresa) e 12 (diário de notícias mais vivo) da Fase 3 seguem pendentes — mas o consultor já cobre boa parte do "morto fora da obra" que motivava o item 12.
+
+---
+
+### Sessão 32 — 05/09/2026 — BUG CRÍTICO: restauração de jogo nunca funcionou de verdade
+**Pedido:** usuário instalou o jogo, jogou, saiu, e ao voltar o progresso tinha zerado.
+
+**Investigação (do sintoma até a causa raiz):**
+1. Primeira hipótese: `acceptedContracts` (contratos em andamento) não estava sendo salvo em `salvarGameState()` — confirmado por leitura, era real, mas não explicava "zerou tudo", só explicaria perder o contrato específico em andamento.
+2. Segunda hipótese: `beforeunload` não dispara de forma confiável quando um PWA instalado é fechado no celular (o sistema pode matar o processo sem esse evento) — real e relevante, mas ainda não explicava um "zero" completo.
+3. **Causa raiz de verdade, achada testando o carregamento real da página (não manipulando estado direto via código, como todos os testes anteriores faziam):** `checkExistingAccount()` — a função que decide se mostra tela de login (jogador antigo) ou cadastro (novo) e que chama `restaurarGameState()` — era invocada na linha do arquivo **logo depois de ser definida**, mas `playerCash` (e outras variáveis de estado) só eram declaradas com `let` **centenas de linhas depois**. Isso é erro de zona morta temporal em JavaScript: toda vez que um jogador com conta e save existentes abria o jogo, `restaurarGameState()` lançava `ReferenceError: Cannot access 'playerCash' before initialization` — só que esse erro caía dentro do `try/catch` da própria função, que apenas registrava no console e retornava `false` **silenciosamente**. O jogo seguia carregando normalmente, só que com todas as variáveis nos valores padrão de um jogo novo. **Isso significa que a restauração de save nunca funcionou de verdade, em nenhuma das 31 sessões anteriores** — só não tinha sido descoberto porque nenhum teste automatizado simulava o carregamento real de um jogador retornando (todos manipulavam estado depois da página já carregada, pulando exatamente o caminho de código que tinha o problema).
+
+**Corrigido:**
+- `checkExistingAccount()` agora é chamada só no final do script, depois que toda variável de estado já foi declarada — eliminando o erro de zona morta temporal de vez
+- `salvarGameState()`/`restaurarGameState()` ampliadas pra cobrir o que também estava faltando: `acceptedContracts`, `completedContracts`, `lostContracts`, `financiamentosAtivos`, `historico`, `historicoCaixa`, `scheduledMaintenances`, o estado atual do catálogo de contratos (`CONTRACTS`), e a identidade de máquina da Fase 3 (apelido, dias de empresa, contratos realizados, faturamento gerado, manutenções feitas, estado de quebrada) — nenhuma dessas era salva antes
+- Reforço de confiabilidade pra PWA em mobile: além do `beforeunload` (que já existia) e do auto-save a cada 30s, agora também salva em `visibilitychange` (quando a aba/app fica escondida) e `pagehide` — muito mais confiáveis que `beforeunload` quando o sistema operacional do celular suspende ou mata o app
+
+**Validado com o cenário exato do problema relatado — carregamento real da página com conta e save pré-existentes no localStorage, não manipulação de estado pós-carregamento:**
+- 11 verificações: nenhum erro de zona morta temporal, caixa/sede/reputação/faturamento restaurados com o valor salvo (não o padrão), **o contrato em andamento sobrevive** (a perda mais grave do problema original), histórico e financiamento preservados, tela de login mostra "jogo restaurado"
+- 3 verificações confirmando que jogador **novo** (sem save nenhum) continua indo pra tela de cadastro normalmente — a correção não quebrou esse caminho
+- Regressão completa no arquivo corrigido: 44 (campanhas) + 13 (fumaça completa) + 10 (quebra de máquina) + 15 (identidade de máquina) + 5 (mensagem de risco) = 87/87, nada quebrou
+
+**Lição registrada para não se repeter:** testes que manipulam estado diretamente via `w.eval()` depois da página já ter carregado **não testam o caminho real de carregamento inicial**. Qualquer bug que more especificamente na sequência de inicialização (ordem de declaração, `checkExistingAccount`, primeira renderização) fica invisível pra esse estilo de teste. Daqui pra frente, mudanças que tocam nessa área precisam de teste com `beforeParse()` populando `localStorage` **antes** do HTML carregar, replicando o cenário real de um jogador retornando — exatamente como foi feito nesta sessão.
+
+**Arquivo corrigido:** `01-JOGO/app.html`, `_PACOTE-GITHUB/index.html`, `_PACOTE-GITHUB/app.html`, `github-package.zip` (todos ressincronizados e re-testados).
+
+**Arquivos de teste gerados:** `teste-restore-fix.js`, `teste-jogador-novo.js`, `teste-crash-restore.js` (diagnóstico).
+
+**Próximo passo real:** subir a versão corrigida pro GitHub (a que já estava lá, se chegou a subir, tinha esse bug). Depois, testar de novo no celular — instalar, jogar um pouco, fechar de verdade (não só minimizar), reabrir, confirmar que o progresso persiste.
+
+---
 
 ### Sessão 31 — 04/09/2026 — Pacote para GitHub + 3 bugs de PWA encontrados e corrigidos
 **Pedido:** montar o pacote pronto pra subir no repositório GitHub.
@@ -745,8 +806,9 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 **Onde as coisas estão de verdade:**
 
 - ✅ Fase 0-2 do roadmap de game feel — completas (sessões 14-29)
-- ✅ **Fase 3, item 9 (sessão 31):** identidade das máquinas — apelido, histórico (dias de empresa, contratos, faturamento, manutenções), selo de veterana
-- ✅ `GUIA-PLAYTEST.md` pronto (sessão 20) — o formulário formal nunca foi preenchido; a última rodada de feedback humano real e espontâneo foi a sessão 21, antes de 10 sessões seguidas de feature nova (21-30)
+- ✅ **Fase 3, item 9 (sessão 30):** identidade das máquinas — apelido, histórico, selo de veterana
+- ✅ **Fase 3, item 11 (sessão 33):** Consultor — conselhos reais baseados em estado do jogo, com moderação
+- ✅ **Primeiro playtest humano real recebido e tratado (sessão 33):** 30 minutos de jogo trouxeram 3 achados concretos, todos investigados e corrigidos na mesma sessão — travamento de contrato por falta de máquina (sorteio agora ponderado 80/20), missões recalibradas (curva inteira, não só remendo), e o Consultor construído com a especificação exata que o usuário deu
 
 **Decisões de design que ficaram pendentes, ainda sem resposta do usuário:**
 
@@ -755,13 +817,14 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 **Resolvido, não é mais pendência:** a dúvida da sessão 21 sobre aceitar contrato sem máquina certa — o jogo já bloqueia isso.
 
-- ⬜ Fase 3, itens 10-12: marcos e conquistas da empresa, mentor, diário de notícias mais vivo
+- ⬜ Fase 3, item 10: marcos e conquistas da empresa
+- ⬜ Fase 3, item 12: diário de notícias mais vivo — parcialmente já atendido pelo Consultor (sessão 33), vale revisar se ainda falta algo específico do diário em si antes de investir mais tempo nisso
 - ⬜ Fase 4 do roadmap — não iniciada (som, transições, identidade visual)
 - ⬜ A4/A5/A7/A8 da Fase A original — seguem soltas, sem bloqueio
 
-**Nota técnica que vale carregar pra próxima sessão:** a fórmula de prazo recalibrada (sessões 22-24) fez os contratos ficarem mais curtos e previsíveis — isso é bom pro jogo, mas quebrou a suposição de um teste da sessão 29 que assumia "200 tentativas = quase certeza estatística" pra um evento de 7%/dia. Hoje um contrato não vive tempo suficiente pra isso valer mais. Qualquer teste futuro que dependa de "deixar o tempo passar dentro de 1 contrato só" precisa considerar que a vida útil do contrato agora é curta — testado e corrigido na sessão 30 usando retry através de múltiplos contratos.
+**Nota técnica que vale carregar pra próxima sessão:** a fórmula de prazo recalibrada (sessões 22-24) fez os contratos ficarem mais curtos e previsíveis — isso é bom pro jogo, mas quebra a suposição de testes que assumem "muitas tentativas = quase certeza estatística" pra eventos raros dentro de 1 contrato só (achado nas sessões 30 e continua valendo). Testes desse tipo precisam de retry através de múltiplos contratos, não confiar só no tempo de vida de 1 único.
 
-**Recomendação:** a mesma de duas sessões atrás, agora com um item a mais de trabalho em cima: considerar seriamente pausar pra playtest antes de continuar a Fase 3. Não é mais só "2 fases sem validação" — é 2 fases e meia.
+**Recomendação:** a pausa que vinha sendo sugerida há várias sessões **já aconteceu na prática** — o usuário trouxe playtest real, não precisou de um pedido formal. Isso valida que o padrão "jogar organicamente e trazer o que incomodou" está funcionando melhor que esperar o preenchimento do `GUIA-PLAYTEST.md`. Sugiro manter esse ritmo: seguir pra próxima peça do roadmap (item 10 ou 12) até o próximo playtest real trazer o próximo ajuste de rota.
 
 ---
 
