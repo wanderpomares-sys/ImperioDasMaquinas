@@ -1226,7 +1226,7 @@ function _fidelidadeMax(){
   return v.length ? Math.max.apply(null, v) : 0;
 }
 function _marcasConsolidadas(){
-  return Object.values(fidelidadeMarcas).filter(function(n){ return n >= 10; }).length;
+  return Object.values(fidelidadeMarcas).filter(function(n){ return n >= 14; }).length;
 }
 function _tamanhoFrota(){
   return Object.keys(MACHINES).length;
@@ -1241,62 +1241,62 @@ const REQUISITOS_SEDE = {
 
 const MISSOES_POR_SEDE = {
   2: [
-    { id:'s2a', tipo:'normal', titulo:'\ud83d\udce6 Primeiras entregas', desc:'Conclua 3 contratos no prazo.',
-      meta:3, valor:function(){ return stats.contratosNoPrazo; },
+    { id:'s2a', tipo:'normal', titulo:'\ud83d\udce6 Primeiras entregas', desc:'Conclua 6 contratos no prazo.',
+      meta:6, valor:function(){ return stats.contratosNoPrazo; },
       recompensaTexto:'+R$5.000', recompensaFn:function(){ playerCash += 5000; } },
-    { id:'s2b', tipo:'normal', titulo:'\ud83d\udd27 Frota em dia', desc:'Faca manutencao em 2 maquinas diferentes.',
-      meta:2, valor:function(){ return maquinasComManutencaoRealizada.size; },
+    { id:'s2b', tipo:'normal', titulo:'\ud83d\udd27 Frota em dia', desc:'Faca manutencao em 3 maquinas diferentes.',
+      meta:3, valor:function(){ return maquinasComManutencaoRealizada.size; },
       recompensaTexto:'+5 reputacao', recompensaFn:function(){ ajustarReputacao(5); } },
-    { id:'s2c', tipo:'normal', titulo:'\ud83d\udcb0 Primeiro caixa', desc:'Fature R$150.000 acumulados.',
-      meta:150000, valor:function(){ return faturamentoAcumulado; },
+    { id:'s2c', tipo:'normal', titulo:'\ud83d\udcb0 Primeiro caixa', desc:'Fature R$280.000 acumulados.',
+      meta:280000, valor:function(){ return faturamentoAcumulado; },
       recompensaTexto:'+R$8.000', recompensaFn:function(){ playerCash += 8000; } }
   ],
   3: [
-    { id:'s3a', tipo:'desafio', titulo:'\ud83d\udd25 Encara o risco', desc:'Conclua 1 contrato de alto risco.',
-      meta:1, valor:function(){ return contratosTier3Completos; },
+    { id:'s3a', tipo:'desafio', titulo:'\ud83d\udd25 Encara o risco', desc:'Conclua 2 contratos de alto risco.',
+      meta:2, valor:function(){ return contratosTier3Completos; },
       recompensaTexto:'+R$15.000', recompensaFn:function(){ playerCash += 15000; } },
-    { id:'s3b', tipo:'normal', titulo:'\ud83c\udfed Parceria de oficina', desc:'Use uma Oficina Parceira 3 vezes.',
-      meta:3, valor:function(){ return stats.oficinasUsadas; },
+    { id:'s3b', tipo:'normal', titulo:'\ud83c\udfed Parceria de oficina', desc:'Use uma Oficina Parceira 5 vezes.',
+      meta:5, valor:function(){ return stats.oficinasUsadas; },
       recompensaTexto:'+6 reputacao', recompensaFn:function(){ ajustarReputacao(6); } },
-    { id:'s3c', tipo:'normal', titulo:'\ud83d\udcb0 Faturamento solido', desc:'Fature R$500.000 acumulados.',
-      meta:500000, valor:function(){ return faturamentoAcumulado; },
+    { id:'s3c', tipo:'normal', titulo:'\ud83d\udcb0 Faturamento solido', desc:'Fature R$900.000 acumulados.',
+      meta:900000, valor:function(){ return faturamentoAcumulado; },
       recompensaTexto:'+R$20.000', recompensaFn:function(){ playerCash += 20000; } },
-    { id:'s3d', tipo:'normal', titulo:'\ud83d\udce6 Constancia', desc:'Conclua 8 contratos no prazo.',
-      meta:8, valor:function(){ return stats.contratosNoPrazo; },
+    { id:'s3d', tipo:'normal', titulo:'\ud83d\udce6 Constancia', desc:'Conclua 15 contratos no prazo.',
+      meta:15, valor:function(){ return stats.contratosNoPrazo; },
       recompensaTexto:'+8 reputacao', recompensaFn:function(){ ajustarReputacao(8); } }
   ],
   4: [
-    { id:'s4a', tipo:'desafio', titulo:'\ud83d\udd25 Especialista em risco', desc:'Conclua 3 contratos de alto risco.',
-      meta:3, valor:function(){ return contratosTier3Completos; },
+    { id:'s4a', tipo:'desafio', titulo:'\ud83d\udd25 Especialista em risco', desc:'Conclua 5 contratos de alto risco.',
+      meta:5, valor:function(){ return contratosTier3Completos; },
       recompensaTexto:'+R$40.000', recompensaFn:function(){ playerCash += 40000; } },
-    { id:'s4b', tipo:'normal', titulo:'\ud83e\udd1d Marca de confianca', desc:'Chegue a 5 manutencoes na mesma marca.',
-      meta:5, valor:function(){ return _fidelidadeMax(); },
+    { id:'s4b', tipo:'normal', titulo:'\ud83e\udd1d Marca de confianca', desc:'Chegue a 7 manutencoes na mesma marca.',
+      meta:7, valor:function(){ return _fidelidadeMax(); },
       recompensaTexto:'+10 reputacao', recompensaFn:function(){ ajustarReputacao(10); } },
-    { id:'s4c', tipo:'normal', titulo:'\ud83d\udcb0 Operacao robusta', desc:'Fature R$1.500.000 acumulados.',
-      meta:1500000, valor:function(){ return faturamentoAcumulado; },
+    { id:'s4c', tipo:'normal', titulo:'\ud83d\udcb0 Operacao robusta', desc:'Fature R$2.200.000 acumulados.',
+      meta:2200000, valor:function(){ return faturamentoAcumulado; },
       recompensaTexto:'+R$50.000', recompensaFn:function(){ playerCash += 50000; } },
-    { id:'s4d', tipo:'normal', titulo:'\ud83d\udce6 Reputacao de entrega', desc:'Conclua 15 contratos no prazo.',
-      meta:15, valor:function(){ return stats.contratosNoPrazo; },
+    { id:'s4d', tipo:'normal', titulo:'\ud83d\udce6 Reputacao de entrega', desc:'Conclua 22 contratos no prazo.',
+      meta:22, valor:function(){ return stats.contratosNoPrazo; },
       recompensaTexto:'+10 reputacao', recompensaFn:function(){ ajustarReputacao(10); } },
-    { id:'s4e', tipo:'normal', titulo:'\ud83d\ude9c Frota respeitavel', desc:'Tenha 7 maquinas na frota.',
-      meta:7, valor:function(){ return _tamanhoFrota(); },
+    { id:'s4e', tipo:'normal', titulo:'\ud83d\ude9c Frota respeitavel', desc:'Tenha 9 maquinas na frota.',
+      meta:9, valor:function(){ return _tamanhoFrota(); },
       recompensaTexto:'+R$30.000', recompensaFn:function(){ playerCash += 30000; } }
   ],
   5: [
-    { id:'s5a', tipo:'desafio', titulo:'\ud83d\udd25 Dominio do risco', desc:'Conclua 8 contratos de alto risco.',
-      meta:8, valor:function(){ return contratosTier3Completos; },
+    { id:'s5a', tipo:'desafio', titulo:'\ud83d\udd25 Dominio do risco', desc:'Conclua 11 contratos de alto risco.',
+      meta:11, valor:function(){ return contratosTier3Completos; },
       recompensaTexto:'+R$100.000', recompensaFn:function(){ playerCash += 100000; } },
-    { id:'s5b', tipo:'normal', titulo:'\ud83e\udd1d Duas parcerias solidas', desc:'Chegue a 10 manutencoes em 2 marcas.',
+    { id:'s5b', tipo:'normal', titulo:'\ud83e\udd1d Duas parcerias solidas', desc:'Chegue a 14 manutencoes em 2 marcas.',
       meta:2, valor:function(){ return _marcasConsolidadas(); },
       recompensaTexto:'+12 reputacao', recompensaFn:function(){ ajustarReputacao(12); } },
-    { id:'s5c', tipo:'normal', titulo:'\ud83d\udcb0 Imperio financeiro', desc:'Fature R$5.000.000 acumulados.',
-      meta:5000000, valor:function(){ return faturamentoAcumulado; },
+    { id:'s5c', tipo:'normal', titulo:'\ud83d\udcb0 Imperio financeiro', desc:'Fature R$7.000.000 acumulados.',
+      meta:7000000, valor:function(){ return faturamentoAcumulado; },
       recompensaTexto:'+R$150.000', recompensaFn:function(){ playerCash += 150000; } },
-    { id:'s5d', tipo:'normal', titulo:'\ud83d\udce6 Nome no mercado', desc:'Conclua 30 contratos no prazo.',
-      meta:30, valor:function(){ return stats.contratosNoPrazo; },
+    { id:'s5d', tipo:'normal', titulo:'\ud83d\udce6 Nome no mercado', desc:'Conclua 40 contratos no prazo.',
+      meta:40, valor:function(){ return stats.contratosNoPrazo; },
       recompensaTexto:'+12 reputacao', recompensaFn:function(){ ajustarReputacao(12); } },
-    { id:'s5e', tipo:'normal', titulo:'\ud83d\ude9c Frota de imperio', desc:'Tenha 10 maquinas na frota.',
-      meta:10, valor:function(){ return _tamanhoFrota(); },
+    { id:'s5e', tipo:'normal', titulo:'\ud83d\ude9c Frota de imperio', desc:'Tenha 12 maquinas na frota.',
+      meta:12, valor:function(){ return _tamanhoFrota(); },
       recompensaTexto:'+R$80.000', recompensaFn:function(){ playerCash += 80000; } }
   ]
 };
@@ -1604,6 +1604,70 @@ let caixaUltimaVisitaHub = null;
 // rodar. Achado registrado como pendência desde a sessão 21, corrigido agora.
 let ultimoCaixaPainelComando = null;
 let ultimaReputacaoPainelComando = null;
+
+// ===================== CONSULTOR (Fase 3, item 11 — pedido explícito do usuário após playtest) =====================
+// "fora da obra fica morto... um consultor poderia dar sugestões de ações... tipo 'suas contas
+// estão boas!', 'precisamos de mais contratos!', 'o que acha de vender X e comprar Y...'"
+// Diferente dos contatos de cliente (que trocam a cada contrato): o consultor é UMA pessoa fixa,
+// recorrente, que analisa o estado real do jogo — não é texto solto, é sempre baseado em dado
+// de verdade (caixa, contratos disponíveis, frota parada, missão quase concluída).
+const CONSULTOR = {
+  nome: 'Marisa Andrade', cargo: 'Consultora de Negócios — parceira da empresa',
+  foto: 'https://images.pexels.com/photos/7580821/pexels-photo-7580821.jpeg?auto=compress&cs=tinysrgb&w=240&h=240&fit=crop'
+};
+
+let ultimoConselhoTimestamp = 0;
+const INTERVALO_MIN_CONSELHO_MS = 100000; // ~100s reais — "com moderação pra não atrapalhar"
+
+// Retorna UM conselho relevante (o mais urgente primeiro) ou null se nada de especial pra dizer
+// agora. Nunca inventa — cada condição lê o estado real do jogo.
+function gerarConselhoConsultor(){
+  const maquinaQuebrada = Object.values(MACHINES).find(m => m.quebrada);
+  if(maquinaQuebrada){
+    return `Sua ${maquinaQuebrada.name} está parada, quebrada. Cada dia sem reparar é dinheiro deixado na mesa — dá uma olhada na Manutenção assim que puder.`;
+  }
+
+  const contratosDisponiveisUsaveis = Object.values(CONTRACTS).filter(c => c.state === 'DISPONIVEL' && c.hasMachine).length;
+  if(acceptedContracts.length === 0 && contratosDisponiveisUsaveis > 0){
+    return `Precisamos de mais contratos rodando! Você tem ${contratosDisponiveisUsaveis} ${contratosDisponiveisUsaveis > 1 ? 'contratos disponíveis' : 'contrato disponível'} que sua frota já dá conta de pegar — a frota parada não paga as contas sozinha.`;
+  }
+
+  const st = statusCompraSede();
+  if(!st.maximo && st.missoesOk && st.repOk && !st.cashOk && (st.req.custo - playerCash) < st.req.custo * 0.15){
+    return `Você está quase lá pra ${st.nome}! Falta só ${fmt(st.req.custo - playerCash)} em caixa — mais um ou dois contratos e você compra.`;
+  }
+
+  if(playerCash < 15000){
+    return `Suas contas estão apertadas — caixa baixo. Eu seguraria compra grande agora e focaria em fechar os contratos que já estão rodando.`;
+  }
+
+  const contratoSemMaquina = Object.values(CONTRACTS).find(c => c.state === 'DISPONIVEL' && !c.hasMachine);
+  if(contratoSemMaquina && contratoSemMaquina.missing){
+    const tipoFaltando = contratoSemMaquina.missing;
+    const maquinaOciosa = Object.entries(MACHINES).find(([k,m]) => !m.inContract && !m.quebrada && (m.utilizacao||0) < 25 && m.health > 50);
+    if(maquinaOciosa){
+      return `O que acha de vender a ${maquinaOciosa[1].name} — ela está praticamente parada — e focar em ${tipoFaltando}? Apareceu contrato pedindo isso e acho que compensa mais que deixar essa máquina murchando no pátio.`;
+    }
+    return `Reparei que apareceu um contrato pedindo ${tipoFaltando} e a gente não tem isso na frota. Vale pensar numa compra, se o caixa permitir.`;
+  }
+
+  if(playerCash > (st.req && !st.maximo ? st.req.custo * 1.6 : 300000)){
+    return `Suas contas estão boas! Caixa saudável, sobra margem — bom momento pra reinvestir em vez de deixar parado.`;
+  }
+
+  return null; // nada urgente agora — melhor não falar por falar
+}
+
+function tentarFalarComConsultor(){
+  const hubVisivel = document.getElementById('screen-hub') && document.getElementById('screen-hub').classList.contains('active');
+  if(!hubVisivel) return;
+  if(Date.now() - ultimoConselhoTimestamp < INTERVALO_MIN_CONSELHO_MS) return;
+  if(Math.random() > 0.45) return; // nem toda visita ao Hub puxa conversa — moderação de verdade
+  const conselho = gerarConselhoConsultor();
+  if(!conselho) return;
+  ultimoConselhoTimestamp = Date.now();
+  abrirMensagemCliente(CONSULTOR, conselho, null);
+}
 
 function renderHubExtras(){
   renderPainelComando();
@@ -2069,9 +2133,18 @@ function regenerarContrato(key){
   if(precisaForcar){
     arquetipo = cumpriveisNoPool[Math.floor(Math.random()*cumpriveisNoPool.length)];
   } else {
+    // CORREÇÃO (jogador relatou travamento real: "a maioria dos contratos pediam máquina que eu não
+    // tinha, só tinha 1 que dava pra pegar"). Confirmado por simulação: 37,5% do catálogo pede
+    // máquina fora da frota inicial — sorteio 100% uniforme deixava isso acontecer com frequência
+    // real, não só em teoria. Agora sorteia com peso: 80% das vezes vem de um arquétipo que a frota
+    // JÁ cumpre (mantém a sensação de "sempre tenho o que fazer"), 20% das vezes vem do catálogo
+    // inteiro — mantém a aspiração de "preciso comprar tal máquina pra pegar esse tipo de obra"
+    // sem deixar isso dominar os 5 slots ao mesmo tempo.
+    const usarPoolRestrito = cumpriveisNoPool.length > 0 && Math.random() < 0.80;
+    const origemSorteio = usarPoolRestrito ? cumpriveisNoPool : CONTRACT_POOL;
     do {
-      arquetipo = CONTRACT_POOL[Math.floor(Math.random()*CONTRACT_POOL.length)];
-    } while (arquetipo.nome === c.name && CONTRACT_POOL.length > 1);
+      arquetipo = origemSorteio[Math.floor(Math.random()*origemSorteio.length)];
+    } while (arquetipo.nome === c.name && origemSorteio.length > 1);
   }
 
   const { ok, missing } = calcularHasMachine(arquetipo.req);
@@ -2532,7 +2605,12 @@ function goTo(screen){
   if(screen === 'financas')  renderFinancas();
   if(screen === 'sedes')     renderSedesScreen();
   if(screen === 'missoes')   renderMissoesScreen();
-  if(screen === 'hub'){ renderHubExtras(); renderMissoes(); renderTierBanner(); }
+  if(screen === 'hub'){
+    renderHubExtras(); renderMissoes(); renderTierBanner();
+    // Pequeno atraso pra nunca competir com uma mensagem de cliente que acabou de fechar
+    // (ex: aceitar contrato -> fecha msg -> vai pro hub) — o consultor espera a poeira baixar.
+    setTimeout(tentarFalarComConsultor, 600);
+  }
 }
 document.getElementById('bottomNav').style.display = 'none'; // hidden until a machine is chosen
 
@@ -2613,7 +2691,7 @@ function showSignupFromLogin(){
 function salvarGameState(){
   try{
     const gameState = {
-      versao: 2,
+      versao: 3,
       playerCash, playerPatrimonio, playerSedeNivel,
       fidelidadeMarcas,
       contratosTier3Completos, objetivosCumpridos,
@@ -2622,7 +2700,14 @@ function salvarGameState(){
       diasGlobaisDecorridos,
       stats, missoesResgatadas, noticias, missoesNotificadasConcluidas,
       maquinasComManutencao: Array.from(maquinasComManutencaoRealizada),
-      // Estado real da frota: idade, condição e alocação de cada máquina
+      // CORREÇÃO (jogador reportou "começou do zero" ao reabrir depois de instalar como PWA):
+      // faltava salvar contratos em andamento/concluídos/perdidos, financiamentos ativos,
+      // histórico, o estado atual do catálogo de contratos, e a identidade da máquina
+      // (apelido/histórico da Fase 3) — tudo isso sumia mesmo quando o resto salvava certo.
+      acceptedContracts, completedContracts, lostContracts, financiamentosAtivos,
+      historico, historicoCaixa, scheduledMaintenances,
+      contractsPool: Object.keys(CONTRACTS).reduce((acc, k) => { acc[k] = CONTRACTS[k]; return acc; }, {}),
+      // Estado real da frota: idade, condição, alocação E identidade (apelido/histórico) de cada máquina
       maquinas: Object.keys(MACHINES).reduce((acc, k) => {
         const m = MACHINES[k];
         acc[k] = {
@@ -2630,7 +2715,11 @@ function salvarGameState(){
           diasDesdeUltimaManutencao: m.diasDesdeUltimaManutencao || 0,
           health: m.health,
           status: m.status,
-          inContract: !!m.inContract
+          inContract: !!m.inContract,
+          quebrada: !!m.quebrada,
+          apelido: m.apelido, diasNaEmpresa: m.diasNaEmpresa||0,
+          contratosRealizados: m.contratosRealizados||0, faturamentoGerado: m.faturamentoGerado||0,
+          manutencoesFeitas: m.manutencoesFeitas||0
         };
         return acc;
       }, {}),
@@ -2662,6 +2751,22 @@ function restaurarGameState(){
     missoesNotificadasConcluidas = saved.missoesNotificadasConcluidas || {};
     maquinasComManutencaoRealizada = new Set(saved.maquinasComManutencao || []);
 
+    // CORREÇÃO: restaura o que a versão anterior nunca salvava — contratos em andamento eram
+    // o mais grave (sumiam por completo), mas financiamento, histórico e o catálogo de contratos
+    // também se perdiam silenciosamente.
+    acceptedContracts = saved.acceptedContracts || [];
+    completedContracts = saved.completedContracts || [];
+    lostContracts = saved.lostContracts || [];
+    financiamentosAtivos = saved.financiamentosAtivos || [];
+    historico = saved.historico || [];
+    historicoCaixa = saved.historicoCaixa || [];
+    scheduledMaintenances = saved.scheduledMaintenances || [];
+    if(saved.contractsPool){
+      Object.keys(saved.contractsPool).forEach(k => {
+        if(CONTRACTS[k]) Object.assign(CONTRACTS[k], saved.contractsPool[k]);
+      });
+    }
+
     if(saved.maquinas){
       Object.keys(saved.maquinas).forEach(k => {
         if(!MACHINES[k]) return;
@@ -2671,6 +2776,12 @@ function restaurarGameState(){
         MACHINES[k].health = s.health;
         MACHINES[k].status = s.status;
         MACHINES[k].inContract = s.inContract;
+        MACHINES[k].quebrada = !!s.quebrada;
+        if(s.apelido) MACHINES[k].apelido = s.apelido;
+        MACHINES[k].diasNaEmpresa = s.diasNaEmpresa || 0;
+        MACHINES[k].contratosRealizados = s.contratosRealizados || 0;
+        MACHINES[k].faturamentoGerado = s.faturamentoGerado || 0;
+        MACHINES[k].manutencoesFeitas = s.manutencoesFeitas || 0;
       });
     }
     return true;
@@ -2702,7 +2813,6 @@ function checkExistingAccount(){
     document.getElementById('screen-login').classList.add('active');
   }
 }
-checkExistingAccount();
 
 /* ===================== TELA INICIAL (3.1) ===================== */
 const START_MACHINES = {
@@ -5119,6 +5229,27 @@ window.addEventListener('load', () => {
       // do mesmo jeito — só perde o cache offline explícito, não é bloqueante.
     });
   }
+});
+
+// CORREÇÃO CRÍTICA (jogador reportou "começou do zero" ao reabrir o jogo instalado):
+// checkExistingAccount() precisa rodar DEPOIS que todo o estado (playerCash, acceptedContracts,
+// etc.) já foi declarado — antes disso, a chamada ficava logo depois da própria função, muito
+// cedo no arquivo, e toda tentativa de restaurar caía em erro de "variável antes da inicialização"
+// (zona morta temporal), silenciosamente engolido pelo try/catch de restaurarGameState(). Isso
+// significa que a restauração NUNCA funcionou de verdade — nenhuma das 31 sessões de teste pegou
+// isso porque os testes sempre manipulavam o estado direto via código, sem simular o carregamento
+// real de um jogador que já tinha conta e save salvos.
+checkExistingAccount();
+
+// CORREÇÃO (mesmo problema): `beforeunload` não é confiável em PWA instalado no celular — o
+// sistema pode matar o app sem disparar esse evento, perdendo até 30s de progresso (o intervalo
+// do auto-save). `visibilitychange` e `pagehide` dão muito mais garantia de rodar antes do app
+// sumir de verdade, então salvam nos dois momentos como reforço, não substituição do que já existia.
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'hidden') salvarGameState();
+});
+window.addEventListener('pagehide', () => {
+  salvarGameState();
 });
 
 </script>
