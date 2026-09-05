@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Império das Máquinas - Demo Sistema de Eventos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .demo-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      overflow: hidden;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .content {
+      padding: 32px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section h2 {
+      font-size: 16px;
+      color: #1f2937;
+      margin-bottom: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-success {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+    }
+
+    .controls {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .control-group {
+      margin-bottom: 12px;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #374151;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1f2937;
+      font-family: 'Monaco', monospace;
+    }
+
+    .event-list {
+      background: #f9fafb;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .event-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 12px;
+      font-family: 'Monaco', monospace;
+      color: #374151;
+    }
+
+    .event-item:last-child {
+      border-bottom: none;
+    }
+
+    .event-success {
+      color: #059669;
+      background: #ecfdf5;
+    }
+
+    .event-warning {
+      color: #b45309;
+      background: #fffbeb;
+    }
+
+    .event-danger {
+      color: #dc2626;
+      background: #fee2e2;
+    }
+
+    .footer {
+      padding: 16px 32px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 32px 20px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <div class="header">
+      <h1>🏗️ Império das Máquinas</h1>
+      <p>Demo - Sistema de Eventos v2.1</p>
+    </div>
+
+    <div class="content">
+      <!-- Controles -->
+      <div class="section">
+        <h2>⚙️ Configuração</h2>
+        <div class="controls">
+          <div class="control-group">
+            <label for="sede">Nível da Sede:</label>
+            <select id="sede">
+              <option value="1">1 - O Barraço (R$ 500/mês)</option>
+              <option value="2">2 - Garagem Oficina (R$ 2.500/mês)</option>
+              <option value="3" selected>3 - Sede Média (R$ 8.000/mês)</option>
+              <option value="4">4 - Sede Grande (R$ 18.000/mês)</option>
+              <option value="5">5 - IMPÉRIO (R$ 45.000/mês)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="section">
+        <h2>📊 Estatísticas</h2>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Caixa</div>
+            <div class="stat-value" id="caixa">R$ 50.000</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Reputação</div>
+            <div class="stat-value" id="reputacao">50</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Eventos</div>
+            <div class="stat-value" id="eventCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Custo Adm.</div>
+            <div class="stat-value" id="adminCost">R$ 8k</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="section">
+        <h2>🎮 Ações</h2>
+        <div class="button-grid">
+          <button class="btn btn-primary" onclick="triggerRandomEvent()">
+            🎲 Evento Aleatório
+          </button>
+          <button class="btn btn-success" onclick="triggerSuccess()">
+            ✅ Sucesso
+          </button>
+          <button class="btn btn-warning" onclick="triggerWarning()">
+            ⚠️ Aviso
+          </button>
+          <button class="btn btn-danger" onclick="triggerCritical()">
+            🆘 Crítico
+          </button>
+          <button class="btn btn-secondary" onclick="applyMonthlyCosts()">
+            💰 Custo Mensal
+          </button>
+          <button class="btn btn-secondary" onclick="resetStats()">
+            🔄 Resetar
+          </button>
+        </div>
+      </div>
+
+      <!-- Histórico de Eventos -->
+      <div class="section">
+        <h2>📜 Histórico</h2>
+        <div class="event-list" id="eventList">
+          <div class="event-item" style="color: #999;">
+            (nenhum evento ainda)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      ℹ️ Este é um demo interativo. Use os botões acima para testar eventos.
+    </div>
+  </div>
+
+  <script src="imperio-das-maquinas-events-system.js"></script>
+  <script>
+    // Instancia sistema de eventos
+    const eventos = new ImperioEventsSystem();
+
+    // Estado do demo
+    let playerData = {
+      caixa: 50000,
+      currentSede: 3,
+      reputacao: 50,
+      gastoAdministrativo: 0,
+      gameover: false
+    };
+
+    let eventHistory = [];
+
+    // Atualiza UI
+    function updateUI() {
+      document.getElementById('caixa').textContent = `R$ ${(playerData.caixa / 1000).toFixed(1)}k`;
+      document.getElementById('reputacao').textContent = playerData.reputacao;
+      document.getElementById('eventCount').textContent = eventHistory.length;
+      document.getElementById('adminCost').textContent = `R$ ${(eventos.getAdministrativeCost(playerData.currentSede) / 1000).toFixed(0)}k`;
+    }
+
+    // Adiciona evento ao histórico
+    function addEventToHistory(name, type) {
+      const time = new Date().toLocaleTimeString('pt-BR');
+      eventHistory.unshift({ name, type, time });
+      eventHistory = eventHistory.slice(0, 10);
+
+      const list = document.getElementById('eventList');
+      list.innerHTML = eventHistory.map(e => {
+        let className = 'event-item';
+        if (e.type === 'success') className += ' event-success';
+        else if (e.type === 'warning') className += ' event-warning';
+        else if (e.type === 'danger') className += ' event-danger';
+
+        return `<div class="${className}">${e.time} - ${e.name}</div>`;
+      }).join('');
+    }
+
+    // Eventos
+    function triggerRandomEvent() {
+      playerData.currentSede = parseInt(document.getElementById('sede').value);
+
+      const eventKey = Object.keys(eventos.eventConfigs)[
+        Math.floor(Math.random() * Object.keys(eventos.eventConfigs).length)
+      ];
+
+      const config = eventos.eventConfigs[eventKey];
+      addEventToHistory(`[${eventKey}]`, config.type);
+
+      eventos.showEventModal(config, eventKey);
+
+      // Simula impacto (simplificado)
+      if (config.type.includes('success')) {
+        playerData.reputacao += 5;
+      } else if (config.type.includes('critical')) {
+        playerData.reputacao -= 20;
+        playerData.caixa -= Math.random() * 50000;
+      }
+
+      updateUI();
+    }
+
+    function triggerSuccess() {
+      const successEvents = ['projectComplete', 'teamSuccess', 'megaContract', 'bigProfit'];
+      const key = successEvents[Math.floor(Math.random() * successEvents.length)];
+
+      addEventToHistory(`✅ ${key}`, 'success');
+      eventos.showEventModal(eventos.eventConfigs[key], key);
+
+      playerData.reputacao += 10;
+      playerData.caixa += 20000;
+      updateUI();
+    }
+
+    function triggerWarning() {
+      const warningEvents = ['minorProblem', 'heavyRain'];
+      const key = warningEvents[Math.floor(Math.random() * warningEvents.length)];
+
+      addEventToHistory(`⚠️ ${key}`, 'warning');
+      eventos.showEventModal(eventos.eventConfigs[key], key);
+
+      playerData.reputacao -= 5;
+      playerData.caixa -= 5000;
+      updateUI();
+    }
+
+    function triggerCritical() {
+      const criticalEvents = ['accident', 'clientDamage', 'stolenMachinery', 'contractCancelled'];
+      const key = criticalEvents[Math.floor(Math.random() * criticalEvents.length)];
+
+      addEventToHistory(`🆘 ${key}`, 'danger');
+      eventos.showEventModal(eventos.eventConfigs[key], key);
+
+      playerData.reputacao -= 25;
+      playerData.caixa -= 100000;
+      updateUI();
+    }
+
+    function applyMonthlyCosts() {
+      playerData.currentSede = parseInt(document.getElementById('sede').value);
+      const cost = eventos.applyMonthlyCosts(playerData);
+
+      addEventToHistory(`Custo adm: R$ ${cost}`, 'warning');
+      updateUI();
+    }
+
+    function resetStats() {
+      playerData = {
+        caixa: 50000,
+        currentSede: 3,
+        reputacao: 50,
+        gastoAdministrativo: 0,
+        gameover: false
+      };
+      eventHistory = [];
+
+      document.getElementById('eventList').innerHTML = `
+        <div class="event-item" style="color: #999;">
+          (nenhum evento ainda)
+        </div>
+      `;
+
+      updateUI();
+    }
+
+    // Atualiza sede
+    document.getElementById('sede').addEventListener('change', (e) => {
+      playerData.currentSede = parseInt(e.target.value);
+      updateUI();
+    });
+
+    // Inicializa
+    updateUI();
+  </script>
+</body>
+</html>

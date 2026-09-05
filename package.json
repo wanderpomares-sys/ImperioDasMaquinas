@@ -1,0 +1,49 @@
+{
+  "name": "imperio-das-maquinas-events-system",
+  "version": "2.1.0",
+  "description": "Sistema de eventos 50/50 para Império das Máquinas - PWA de gestão de máquinas pesadas",
+  "main": "src/js/imperio-das-maquinas-events-system.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wanderpomares-sys/ImperioDasMaquinas-Events.git"
+  },
+  "homepage": "https://github.com/wanderpomares-sys/ImperioDasMaquinas-Events#readme",
+  "bugs": {
+    "url": "https://github.com/wanderpomares-sys/ImperioDasMaquinas-Events/issues"
+  },
+  "keywords": [
+    "imperio-das-maquinas",
+    "game",
+    "pwa",
+    "events",
+    "modal",
+    "browser",
+    "javascript",
+    "construccion",
+    "machinery"
+  ],
+  "author": "Wanderson",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "start": "http-server . -p 8080",
+    "dev": "http-server . -p 8080 -c-1",
+    "serve": "python -m http.server 8000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "files": [
+    "src/js/imperio-das-maquinas-events-system.js",
+    "assets/",
+    "docs/",
+    "demo/",
+    "config/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ]
+}
