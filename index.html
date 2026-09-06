@@ -2708,21 +2708,12 @@ function salvarGameState(){
       historico, historicoCaixa, scheduledMaintenances,
       contractsPool: Object.keys(CONTRACTS).reduce((acc, k) => { acc[k] = CONTRACTS[k]; return acc; }, {}),
       // Estado real da frota: idade, condição, alocação E identidade (apelido/histórico) de cada máquina
-      maquinas: Object.keys(MACHINES).reduce((acc, k) => {
-        const m = MACHINES[k];
-        acc[k] = {
-          idadeDias: m.idadeDias || 0,
-          diasDesdeUltimaManutencao: m.diasDesdeUltimaManutencao || 0,
-          health: m.health,
-          status: m.status,
-          inContract: !!m.inContract,
-          quebrada: !!m.quebrada,
-          apelido: m.apelido, diasNaEmpresa: m.diasNaEmpresa||0,
-          contratosRealizados: m.contratosRealizados||0, faturamentoGerado: m.faturamentoGerado||0,
-          manutencoesFeitas: m.manutencoesFeitas||0
-        };
-        return acc;
-      }, {}),
+      // CORREÇÃO (jogador reportou: dinheiro e sede voltaram, máquinas compradas não — só as 5
+      // iniciais permaneciam): o save anterior guardava só um subconjunto de campos (nem foto,
+      // nome ou preço de manutenção entravam), e a restauração só ATUALIZAVA máquina que já
+      // existisse na inicialização fresca da página — máquina comprada tem chave nova, que nunca
+      // existe nesse momento, então era descartada silenciosamente. Agora salva o objeto inteiro.
+      maquinas: MACHINES,
       timestamp: new Date().toISOString()
     };
     localStorage.setItem('IMPERIO_GAME_STATE', JSON.stringify(gameState));
@@ -2768,21 +2759,11 @@ function restaurarGameState(){
     }
 
     if(saved.maquinas){
-      Object.keys(saved.maquinas).forEach(k => {
-        if(!MACHINES[k]) return;
-        const s = saved.maquinas[k];
-        MACHINES[k].idadeDias = s.idadeDias;
-        MACHINES[k].diasDesdeUltimaManutencao = s.diasDesdeUltimaManutencao;
-        MACHINES[k].health = s.health;
-        MACHINES[k].status = s.status;
-        MACHINES[k].inContract = s.inContract;
-        MACHINES[k].quebrada = !!s.quebrada;
-        if(s.apelido) MACHINES[k].apelido = s.apelido;
-        MACHINES[k].diasNaEmpresa = s.diasNaEmpresa || 0;
-        MACHINES[k].contratosRealizados = s.contratosRealizados || 0;
-        MACHINES[k].faturamentoGerado = s.faturamentoGerado || 0;
-        MACHINES[k].manutencoesFeitas = s.manutencoesFeitas || 0;
-      });
+      // MACHINES é const — não dá pra reatribuir a variável, mas dá pra limpar e repor as
+      // propriedades do mesmo objeto. Isso corrige de vez o problema de máquina comprada
+      // sumindo: antes só ATUALIZAVA quem já existia, agora REPÕE tudo que foi salvo.
+      Object.keys(MACHINES).forEach(k => delete MACHINES[k]);
+      Object.assign(MACHINES, saved.maquinas);
     }
     return true;
   } catch(e){ console.error('Falha ao restaurar:', e); return false; }

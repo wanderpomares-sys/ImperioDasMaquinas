@@ -8,7 +8,7 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 05/09/2026 (sessão 33)
+**Data da última atualização:** 06/09/2026 (sessão 34)
 
 **Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
@@ -55,6 +55,29 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### Sessão 34 — 06/09/2026 — Bug real: máquina comprada não sobrevivia à restauração + diagnóstico de cache de navegador
+**Pedido:** o usuário reportou que, depois de instalar o jogo corrigido (sessão 32), o dinheiro e a sede restauravam certo, mas as 4 máquinas que ele tinha comprado sumiam — voltava sempre pras 5 iniciais. Relatou também "interação zero no Hub... cadê as imagens, os eventos" — o que descreveria um jogo sem praticamente nada construído desde a sessão 8.
+
+**Bug 1 — máquina comprada não restaurava (confirmado e corrigido):**
+- Achado por leitura: `restaurarGameState()` (sessão 32) tinha `if(!MACHINES[k]) return;` — só ATUALIZAVA máquina que já existisse na inicialização fresca da página (as 5 iniciais). Máquina comprada ganha uma chave nova, que nunca existe nesse momento — era descartada silenciosamente.
+- Pior ainda: mesmo corrigindo esse filtro, `salvarGameState()` só guardava um subconjunto de campos (nem nome, foto ou preço de manutenção entravam) — não daria pra reconstruir a máquina comprada de forma completa.
+- **Corrigido:** agora salva o objeto `MACHINES` inteiro (confirmado sem funções embutidas, seguro pra serializar), e a restauração limpa e repõe o objeto inteiro (`MACHINES` é `const`, então não dá pra reatribuir a variável — mas dá pra limpar e copiar as propriedades de volta no mesmo objeto).
+- Validado com o cenário exato: comprar 4 máquinas de verdade pelo fluxo real (`buyMachine()`), salvar, simular reabertura completa da página com esse save, confirmar 9 máquinas (não 5), nomes/fotos/preços intactos. 7/7. Repetido no arquivo já extraído do zip final, mesmo resultado.
+
+**Bug 2 (investigado, não é bug de código) — "cadê as imagens, os eventos":**
+- Antes de suspeitar de cache, confirmei que o arquivo atual TEM todas as funcionalidades: painel de comando (5 ocorrências), eventos dinâmicos (4), mensagem do contratante (7), fotos de sede em base64 (5), quebra de máquina (5), Consultor (5) — nada foi perdido ou ficou de fora do arquivo real
+- Perguntado o fluxo exato do usuário: ele desinstalou o PWA antigo, subiu tudo de novo pro GitHub, visitou o link, reinstalou, jogou
+- **Diagnóstico:** desinstalar o atalho do PWA da tela inicial NÃO limpa o cache do navegador nem desregistra o service worker daquele endereço — isso fica guardado no Chrome por origem (domínio), independente do atalho existir ou não. Se o mesmo link do GitHub Pages já tinha sido visitado antes (em qualquer sessão anterior desta conversa, testando qualquer versão anterior), o navegador pode estar servindo arquivo antigo do cache HTTP normal ou do cache do service worker, mesmo com o app reinstalado do zero.
+- **Não foi possível confirmar 100% sem acesso ao dispositivo do usuário** — fica registrado como diagnóstico mais provável, não certeza absoluta. Passo recomendado: limpar dados do site (não só desinstalar o atalho) nas configurações do navegador antes de revisitar.
+
+**Regressão:** 7 (máquina comprada) + 11 (restauração geral, sessão 32) + 44 (campanhas) + 13 (fumaça completa) = 75/75, nada quebrou.
+
+**Arquivo gerado:** `teste-restore-maquina-comprada.js`.
+
+**Próximo passo real:** aguardar confirmação do usuário sobre se limpar os dados do site resolveu o "jogo sem interação" — se não resolver, é preciso investigar mais fundo (possível problema na própria configuração do GitHub Pages, não no código).
+
+---
 
 ### Sessão 33 — 05/09/2026 — Primeiro playtest real (30 min) + travamento de contratos, missões recalibradas, e o Consultor
 **Pedido:** o usuário jogou 30 minutos de verdade e trouxe 3 relatos: chegou fácil na 3ª sede (missões muito curtas), teve um momento em que quase todos os contratos disponíveis pediam máquina que ele não tinha (travou, só um contrato dava pra pegar), e apontou que o jogo "fica morto fora da obra" — sugerindo um consultor que desse conselhos reais, com exemplos concretos de fala.
@@ -807,8 +830,8 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 - ✅ Fase 0-2 do roadmap de game feel — completas (sessões 14-29)
 - ✅ **Fase 3, item 9 (sessão 30):** identidade das máquinas — apelido, histórico, selo de veterana
-- ✅ **Fase 3, item 11 (sessão 33):** Consultor — conselhos reais baseados em estado do jogo, com moderação
-- ✅ **Primeiro playtest humano real recebido e tratado (sessão 33):** 30 minutos de jogo trouxeram 3 achados concretos, todos investigados e corrigidos na mesma sessão — travamento de contrato por falta de máquina (sorteio agora ponderado 80/20), missões recalibradas (curva inteira, não só remendo), e o Consultor construído com a especificação exata que o usuário deu
+- ✅ **Fase 3, item 11 (sessão 34):** Consultor — conselhos reais baseados em estado do jogo, com moderação
+- ✅ **Primeiro playtest humano real recebido e tratado (sessão 34):** 30 minutos de jogo trouxeram 3 achados concretos, todos investigados e corrigidos na mesma sessão — travamento de contrato por falta de máquina (sorteio agora ponderado 80/20), missões recalibradas (curva inteira, não só remendo), e o Consultor construído com a especificação exata que o usuário deu
 
 **Decisões de design que ficaram pendentes, ainda sem resposta do usuário:**
 
@@ -818,7 +841,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 **Resolvido, não é mais pendência:** a dúvida da sessão 21 sobre aceitar contrato sem máquina certa — o jogo já bloqueia isso.
 
 - ⬜ Fase 3, item 10: marcos e conquistas da empresa
-- ⬜ Fase 3, item 12: diário de notícias mais vivo — parcialmente já atendido pelo Consultor (sessão 33), vale revisar se ainda falta algo específico do diário em si antes de investir mais tempo nisso
+- ⬜ Fase 3, item 12: diário de notícias mais vivo — parcialmente já atendido pelo Consultor (sessão 34), vale revisar se ainda falta algo específico do diário em si antes de investir mais tempo nisso
 - ⬜ Fase 4 do roadmap — não iniciada (som, transições, identidade visual)
 - ⬜ A4/A5/A7/A8 da Fase A original — seguem soltas, sem bloqueio
 
