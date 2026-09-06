@@ -14,11 +14,11 @@ setTimeout(() => {
   console.log('=== ERROS DE CARREGAMENTO ===');
   console.log(errs.length ? errs.join('\n') : '(nenhum)');
 
-  console.log('\n=== ESTRUTURA: 9 eventos, categorias corretas ===');
-  ok('9 eventos no total', w.eval('EVENTOS_CONTRATO.length') === 9);
-  ok('4 positivos', w.eval("EVENTOS_CONTRATO.filter(e=>e.tipo==='positivo').length") === 4);
-  ok('3 neutros', w.eval("EVENTOS_CONTRATO.filter(e=>e.tipo==='neutro').length") === 3);
-  ok('2 negativos', w.eval("EVENTOS_CONTRATO.filter(e=>e.tipo==='neutro').length") === 3);
+  console.log('\n=== ESTRUTURA: 13 eventos (9 originais + 4 com foto), categorias corretas ===');
+  ok('13 eventos no total', w.eval('EVENTOS_CONTRATO.length') === 13);
+  ok('5 positivos', w.eval("EVENTOS_CONTRATO.filter(e=>e.tipo==='positivo').length") === 5);
+  ok('4 neutros', w.eval("EVENTOS_CONTRATO.filter(e=>e.tipo==='neutro').length") === 4);
+  ok('4 negativos', w.eval("EVENTOS_CONTRATO.filter(e=>e.tipo==='negativo').length") === 4);
 
   console.log('\n=== ELEGIBILIDADE depende do estado real (nao eh roleta) ===');
   ok('Frota critica (health=20) NAO e elegivel pra "Desempenho excepcional"',

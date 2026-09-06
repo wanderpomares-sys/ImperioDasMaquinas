@@ -8,7 +8,7 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 06/09/2026 (sessão 34)
+**Data da última atualização:** 06/09/2026 (sessão 37)
 
 **Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
@@ -55,6 +55,94 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### Sessão 37 — 06/09/2026 — As 17 imagens integradas em 6 sistemas + Consultor bem mais ativo
+**Contexto:** o usuário perguntou "em que momento aparecem as imagens que te mandei" — investigação revelou que ele se referia a 17 imagens geradas por IA (Meta AI) enviadas numa **conversa diferente** deste mesmo projeto, nunca integradas ao jogo de verdade (só entregues como pacote solto — classe JS, JSON, demo HTML — numa sessão paralela). O usuário adicionou aquela conversa a este projeto e reenviou as imagens (20 arquivos, 3 duplicados, 17 únicas de verdade — bateu exato com o número relatado).
+
+**Mapeamento das 17 imagens, confirmado com o usuário em várias rodadas de pergunta e resposta** (2 imagens do lote original não tinham correspondência clara e ficaram de fora por decisão consciente, reaproveitando fotos já mapeadas em vez de inventar uso):
+
+**Processamento:** 15 imagens comprimidas pra 640px de largura (mesmo padrão das fotos de sede), ~50-80KB cada, ~756KB no total, embutidas em base64 no objeto `EVENTO_IMG`. Arquivo cresceu de ~1,3MB pra ~2,4MB.
+
+**Integração em 6 sistemas diferentes, cada um testado isoladamente antes de seguir pro próximo:**
+1. **Eventos de sabor durante a obra** — 4 eventos novos com foto real (time feliz, ferramenta quebrada, inspeção, chuva forte), somando aos 9 que já existiam desde a sessão 15. `showResultModal()` ganhou um 7º parâmetro opcional de imagem, sem quebrar nenhuma das dezenas de chamadas existentes que não passam foto.
+2. **Decisão de risco** — imagem escolhida pelo tipo de consequência do contrato (`custo`→acidente grave, `atraso`→máquina roubada, `ambos`→acidente gravíssimo), dando rosto a um sistema que era só texto desde sempre.
+3. **Contrato cancelado** — foto do chefe gritando com papéis rasgados, no modal que já existia de escalada de risco.
+4. **Prejuízo financeiro (sistema novo)** — função `imagemPrejuizoSeGrave()` decide se uma perda de dinheiro é grave o bastante pra merecer imagem (mais de 15% do caixa atual, ou caixa restante abaixo de R$10.000) — não é toda multa pequena que vira drama. Aplicado na multa de atraso, sorteando entre 3 fotos (dinheiro voando pela janela + 2 variantes de escritório falido).
+5. **Manutenção crítica** — foto do trator enferrujado aparece no detalhe de manutenção quando a saúde está abaixo de 25%, antes mesmo da máquina quebrar de vez — reforça o aviso de quebra iminente (sessão 29) com prova visual.
+6. **Celebrações existentes, ganhando fotos reais** — decidi **não** substituir a foto da máquina específica na celebração de compra (já mostra a máquina certa que foi comprada; trocar por foto genérica de estoque seria piora, não melhora). Em vez disso: as 2 fotos de "máquina nova" viraram ambientação na tela de detalhe da Loja (antes da compra), alternando por posição no catálogo; a foto de inauguração entrou como complemento humano na celebração de sede, ao lado das fotos de prédio que já existiam desde a sessão 8.
+
+**Consultor mais ativo, pedido explícito do usuário ("mais ativado... ensinado ou dando sugestões"):**
+- Intervalo mínimo entre falas caiu de ~100s pra ~45s
+- Chance de falar por visita ao Hub subiu de 45% pra 70%
+- **Maior mudança:** antes, sem nada urgente pra dizer, o consultor ficava calado. Agora ele nunca mais fica em silêncio — criei um pool de 7 dicas de ensino reais (seguro reduz risco, opção cara de engenharia quase elimina perda de contrato, contrato "Tentador" paga mais mas arrisca mais, etc.), usadas como último recurso só quando não há nada urgente acontecendo. Situação urgente (máquina quebrada, sem contrato ativo, etc.) continua tendo prioridade sobre a dica genérica.
+
+**Validado — 109 verificações no total desta sessão, todas passando:**
+- 7 (eventos de sabor com foto) + 3 (decisão de risco com foto) + 2 (contrato cancelado com foto) + 3 (prejuízo grave) + 4 (máquina enferrujada) + 2 (celebrações com foto) + 3 (consultor mais ativo) = 24 verificações novas
+- Regressão: 44 (campanhas) + 13 (fumaça completa) + 10 (consultor original) + 7 (máquina comprada) + 11 (personalidade de contrato) = 85 verificações confirmando que nada quebrou
+
+**Achado no meio do caminho, não é bug do jogo:** dois testes travaram por eu ter fixado `Math.random()` num valor constante — isso trava o sorteio interno de `regenerarContrato()` (loop que sorteia até achar arquétipo diferente do atual). Mesmo padrão de problema já visto nas sessões 28, 29 e 30. Corrigido usando sorteio real com retry, técnica já estabelecida neste projeto.
+
+**sw.js atualizado pra v4** (subiu de v3, seguindo a própria regra documentada — toda publicação nova precisa disso).
+
+**Arquivos gerados:** `teste-eventos-com-foto.js`, `teste-risco-com-foto.js`, `teste-prejuizo-grave.js`, `teste-contrato-perdido-foto2.js`, `teste-maquina-enferrujada.js`, `teste-celebracoes-foto.js`, `teste-consultor-ativo.js`.
+
+**Próximo passo real:** o usuário se ofereceu pra gerar mais imagens no Meta AI se precisar — nenhuma pendência de imagem em aberto agora, mas fica registrado o canal aberto pra quando surgir necessidade real (ex: os 2 conceitos que ficaram sem imagem dedicada nesta leva).
+
+---
+
+### Sessão 36 — 06/09/2026 — Regressão real da própria correção da sessão 34: save antigo virava "undefined"
+**Pedido:** usuário mandou print mostrando a tela de Manutenção inteira com "undefined" no nome e sem foto em todas as máquinas — só a porcentagem de saúde aparecia certa.
+
+**Causa: a correção da sessão 34 (não a do jogador, a minha) tinha um efeito colateral que eu não tinha testado.** Ela corrigiu "máquina comprada não restaura" fazendo `Object.assign(MACHINES, saved.maquinas)` — substituindo a máquina inteira pelo que estava salvo. Isso funciona bem pra um save NOVO (já no formato completo, com nome/foto/preço). Mas pra um save ANTIGO (de antes dessa correção, só com saúde/status/apelido/etc — o formato usado desde a sessão 32), a substituição apagava nome, foto e preço de manutenção, porque esses campos nunca tinham sido salvos nesse formato mais antigo — e não existiam no que estava sendo copiado por cima.
+
+**Confirmado por reprodução exata** antes de mexer: simulei um save no formato antigo e vi o mesmo resultado do print do usuário (`undefined` no nome, sem foto, saúde correta).
+
+**Corrigido:** a restauração agora guarda uma cópia do modelo original das 5 máquinas de fábrica ANTES de mexer em qualquer coisa, e usa esse modelo como base — o que o save realmente tinha (saúde, status, apelido, etc.) entra por cima, o que faltava (nome, foto, preço) continua vindo do modelo original. Isso resolve o save antigo sem quebrar o save novo. Para máquina comprada vinda de um save no formato antigo (sem nome salvo — não tem como reconstruir com segurança), a entrada quebrada não é restaurada, em vez de aparecer como "undefined" na tela — é perda pontual de uma máquina antiga específica, não um bug novo se repetindo.
+
+**Validado:** 11 verificações cobrindo os dois formatos de save lado a lado — antigo (nome/foto/preço voltam do modelo, saúde/apelido salvos aplicados por cima) e novo (máquina comprada continua restaurando completa, sem regressão). Regressão geral: 7 (máquina comprada) + 44 (campanhas) + 13 (fumaça completa) = 75/75.
+
+**Lição registrada:** ao mudar o formato de dado salvo, sempre testar com um save do formato ANTERIOR também, não só com um save gerado pelo próprio código novo. A sessão 34 testou só o caminho "salvar com o código novo, restaurar com o código novo" — nunca testou "restaurar um save salvo pelo código velho", que é exatamente o que um jogador de verdade vive numa atualização.
+
+**Importante pro usuário:** essa correção impede o problema de se repetir daqui pra frente, mas **não desfaz automaticamente** o que já aconteceu no jogo salvo atual — se o jogo já salvou de novo depois de mostrar "undefined" (o que é provável, já que salva sozinho a cada 30s e ao trocar de tela), esse estado quebrado pode já estar gravado. Melhor caminho: instalar esta versão corrigida e, se as máquinas ainda aparecerem erradas, começar uma conta nova — a partir de agora, esse tipo de perda não deve mais acontecer em atualizações futuras.
+
+**sw.js atualizado pra v3** (subiu de v2, seguindo a própria regra documentada na sessão 35 — toda publicação nova precisa subir esse número).
+
+**Arquivo gerado:** `teste-migracao-save.js`.
+
+**Próximo passo real:** subir esta versão pro GitHub. Nenhuma pendência de código nova em aberto além das já registradas (extraDias da opção de engenharia, balanceamento da Loja).
+
+---
+
+### Sessão 35 — 06/09/2026 — Problema real de produção: atualização não pode depender de limpar cache manualmente
+**Pedido:** o usuário levantou uma preocupação de arquitetura, não um bug pontual — com o jogo rodando pra várias pessoas, ninguém pode ter que limpar cache toda vez que sair uma atualização nova. Isso conecta direto com o diagnóstico da sessão 34 (o "jogo sem interação" provavelmente era cache de navegador não limpo).
+
+**Causa raiz real, achada no próprio service worker construído na sessão 31:**
+1. A estratégia "rede primeiro" chamava `fetch(event.request)` sem nenhuma opção — isso ainda deixa o navegador aplicar o cache HTTP comum (via `Cache-Control` que o GitHub Pages manda), mesmo dentro do service worker. "Rede primeiro" só funciona de verdade se a busca ignorar esse cache também, não só o cache próprio do service worker.
+2. Mesmo com o service worker pegando a versão nova, a aba já aberta continuaria rodando o JavaScript antigo em memória até alguém fechar e reabrir manualmente — nada recarregava sozinho.
+3. O navegador só verifica se existe um `sw.js` novo de vez em quando por padrão (não a cada visita) — sem pedir a verificação de propósito, a atualização podia demorar a aparecer mesmo tecnicamente disponível.
+
+**Corrigido:**
+- `fetch(event.request, { cache: 'no-store' })` no service worker — ignora cache HTTP de verdade, sempre busca fresco quando online
+- `CACHE_NAME` subiu de v1 pra v2 (documentado: precisa subir a cada publicação futura — é isso que faz o service worker antigo perceber a troca)
+- No registro do service worker: chama `reg.update()` assim que registra, e de novo toda vez que o app volta a ficar visível (`visibilitychange`) — não espera a checagem automática e esporádica do navegador
+- Quando um service worker novo assume o controle da página (`controllerchange`), a página recarrega sozinha — com trava contra loop de recarregamento infinito
+
+**Validado com navegador real, não só leitura de código — usei Playwright com um Chromium já disponível no ambiente (a tentativa de baixar via rede falhou por restrição de acesso, mas havia uma instalação pronta em `/opt/pw-browsers`):**
+- Servidor HTTP de teste construído do zero, mandando `Cache-Control: max-age=600` de propósito (simulando o tipo de cache que o GitHub Pages manda) — pra provar que a correção ignora isso mesmo, não só em teoria
+- Carreguei uma "versão 1" marcada, confirmei o service worker registrado e controlando a página
+- Troquei o servidor pra "versão 2" (a versão real atual) **sem reiniciar o navegador, sem limpar nada manualmente**
+- Simulei o app voltando ao primeiro plano — a página detectou a atualização sozinha e **recarregou por conta própria antes mesmo do próximo passo do teste rodar** (bom sinal, não erro — teve que ajustar o script de teste pra lidar com a rapidez disso)
+- Título final confirmou a versão nova carregada — 3/3, prova real de que o mecanismo funciona de ponta a ponta, não é só teoria de como service worker "deveria" funcionar
+
+**Regressão da lógica do jogo (jsdom, não afetada por essa mudança que é só de infraestrutura de atualização):** 44 (campanhas) + 13 (fumaça completa) + 7 (máquina comprada, sessão 34) = 64/64, nada quebrou.
+
+**Nota de processo importante:** esta foi a primeira vez neste projeto que uma correção de service worker foi validada com navegador real em vez de só leitura de código ou teste jsdom (que não suporta service worker). Vale manter esse padrão pra qualquer mudança futura nessa área — o ciclo de vida de service worker tem armadilhas (como a do cache HTTP dentro do próprio SW) que só aparecem testando de verdade.
+
+**Arquivos gerados:** `servidor-cache-teste.js`, `teste-atualizacao-sw.js` — ambos reutilizáveis pra validar qualquer mudança futura no service worker.
+
+**Próximo passo real:** subir a versão corrigida pro GitHub. Lembrete pra próxima publicação: subir `CACHE_NAME` no `sw.js` de novo (v2 → v3, etc.) a cada atualização futura.
+
+---
 
 ### Sessão 34 — 06/09/2026 — Bug real: máquina comprada não sobrevivia à restauração + diagnóstico de cache de navegador
 **Pedido:** o usuário reportou que, depois de instalar o jogo corrigido (sessão 32), o dinheiro e a sede restauravam certo, mas as 4 máquinas que ele tinha comprado sumiam — voltava sempre pras 5 iniciais. Relatou também "interação zero no Hub... cadê as imagens, os eventos" — o que descreveria um jogo sem praticamente nada construído desde a sessão 8.
