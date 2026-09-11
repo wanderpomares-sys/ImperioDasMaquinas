@@ -8,7 +8,7 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 06/09/2026 (sessão 37)
+**Data da última atualização:** 11/09/2026 (sessão 46)
 
 **Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
@@ -55,6 +55,239 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### Sessão 46 — 11/09/2026 — As 40 fotos de contrato, verificadas uma por uma e embutidas
+**Pedido:** usuário pediu um levantamento de que imagens faltavam no jogo (contratos, máquinas, eventos, catálogo da loja) antes de preparar fotos novas em JPG.
+
+**Levantamento entregue primeiro** (`LEVANTAMENTO-IMAGENS.md`, salvo em `03-PLANO/`): achado principal — os 40 arquétipos de contrato usavam só **7 fotos distintas** (vindas de link externo Unsplash/Pexels, não embutidas), com 33 contratos dividindo foto com pelo menos outro. Máquinas iniciais e catálogo da Loja já tinham foto própria cada uma, sem repetição — sem ação necessária ali.
+
+**Usuário mandou 40 imagens em dois lotes de 20**, cada uma com uma placa de obra visível batendo com um nome de contrato específico da lista do levantamento.
+
+**Erro real cometido e corrigido no meio do caminho:** minha primeira leitura do mapeamento, baseada na ordem de exibição das imagens na mensagem do chat, veio errada — descobri isso ao reabrir `1000347041.webp` individualmente pra conferir e ver que era "Aterro Industrial", não o que eu tinha anotado antes com base na sequência de exibição. Diante disso, **parei e abri as 40 imagens uma por uma, individualmente, sem exceção**, antes de processar qualquer coisa — mesma lição da sessão 38 (mapeamento de imagem por adivinhação de ordem é a categoria de erro que mais already aconteceu neste projeto), aplicada preventivamente desta vez em vez de descoberta depois pelo usuário.
+
+**Mapeamento final, 100% verificado por abertura individual de cada arquivo — 39 imagens únicas cobrindo 39 dos 40 contratos** (uma imagem veio duplicada — pavimentação de estacionamento apareceu 2x — e "Aterro Industrial — Fase 2" reaproveita a foto de "Aterro Industrial", decisão consciente já combinada com o usuário antes de qualquer imagem chegar).
+
+**Implementação:**
+- 39 imagens processadas (800px de largura, JPEG qualidade 72) e embutidas em base64 num novo objeto `CONTRATO_IMG`, mesmo padrão já usado pra `EVENTO_IMG` (eventos) e fotos de sede
+- Os 40 arquétipos do `CONTRACT_POOL` atualizados — campos `photo` e `hero` trocados do link externo pra referência embutida (`CONTRATO_IMG.chave`), com um script que localiza cada arquétipo pelo `nome:` exato e substitui só os dois campos, sem tocar no resto da definição
+- `app.html` cresceu de ~2,4MB pra ~8,1MB — grande, mas ainda razoável pra um PWA, e resolve a dependência de rede externa que os contratos tinham (agora funcionam offline como o resto do jogo)
+
+**Validado com rigor extra:**
+- Teste que confere programaticamente, um por um, que os 40 arquétipos têm `photo` E `hero` válidos (começando com `data:image/jpeg;base64,`, não `undefined`, não string vazia) — não só visual, checagem de dado real
+- Regressão: 44 (campanhas) + 13 (fumaça completa) = 57/57, nada quebrado
+
+**sw.js atualizado pra v14.**
+
+**Fora do escopo desta sessão, por decisão consciente:** as 5 máquinas da frota inicial e os 5 itens do catálogo da Loja continuam usando link externo — o usuário mandou fotos especificamente de contrato desta vez, não dessas duas categorias. Fica registrado pra quando ele quiser tratar.
+
+**Arquivos gerados:** `LEVANTAMENTO-IMAGENS.md`, `teste-fotos-contratos.js`.
+
+---
+
+### Sessão 45 — 09/09/2026 — Telas de detalhe verificadas + última sombra rígida encontrada (7px, a maior de todas)
+**Pedido:** continuar o redesign pelas telas de detalhe individuais (máquina, contrato, sede).
+
+**Verificado — detalhe de máquina, contrato e sede:** todos já refletem a paleta nova corretamente, herdando 100% via variáveis CSS já propagadas nas sessões anteriores. Conferido puxando o HTML renderizado direto (não só print, já que esses painéis têm rolagem interna que corta o `fullPage` do screenshot) — nenhuma cor antiga, nenhum `light-card`, nenhuma fonte antiga em nenhuma das três telas de detalhe.
+
+**Achado na varredura final ampla do arquivo inteiro:** mais uma sombra rígida sobrou — dessa vez **7px de deslocamento**, a maior encontrada até agora (as varreduras das sessões 41 e 43 só cobriam até 6px). Estava na foto de destaque da celebração de compra de máquina. Corrigida pra brilho suave, mantendo o glow âmbar ao redor que já existia.
+
+**Validado:**
+- Busca confirmando zero ocorrências de: cor antiga, sombra rígida (qualquer tamanho), tema claro, fonte antiga — em todo o arquivo
+- Regressão: 44 (campanhas) + 13 (fumaça completa) = 57/57, nada quebrado
+
+**sw.js atualizado pra v13.**
+
+**Estado do redesign:** as 8 telas principais, seus modais mais usados, e agora as telas de detalhe (máquina/contrato/sede) estão confirmadas na paleta "Frota Premium". A varredura de padrões antigos (cor, sombra, tema, fonte) deu zero resultado em todo o arquivo — não há mais nenhum resíduo estrutural conhecido do visual antigo.
+
+**O que ainda não foi feito, pra não soar mais completo do que é:** auditoria de emoji "infantil" nos eventos e missões individuais (só a navegação principal e os usos de 🎯/🎉 foram tratados até agora) — isso é uma questão de conteúdo/tom, não de estrutura visual, e pode ser feita a qualquer momento sem risco de quebrar layout.
+
+**Próximo passo real:** com a estrutura visual praticamente fechada, o próximo trabalho de design que resta é essa auditoria de emoji, se o usuário quiser — ou o redesign pode ser considerado estruturalmente completo por ora.
+
+---
+
+### Sessão 44 — 09/09/2026 — Emoji de serpentina removido + confirmação de que as fotos dos eventos continuam funcionando
+**Pedido:** usuário reagiu ao emoji 🎉 no print anterior ("esse serpentina é horrível"). Depois perguntou por que as fotos que ele mandou não estavam aparecendo nos modais.
+
+**Emoji de serpentina removido, 4 usos no total:**
+- Partículas da celebração pequena (`['✨','⭐','🎉']` → `['✨','⭐','💫']`) — o 🎉 já vem com serpentina própria, e quando sobe junto com partículas limpas (✨⭐) fica visualmente bagunçado
+- "🎉 Entrega realizada!" (celebração de compra de máquina) → 🚚 (caminhão, contextualmente mais direto)
+- Evento "Moral da equipe está alta" → 💪 (braço flexionado, "moral alta" sem festa)
+- "🎉 Sucesso! Contrato concluído!" → 🏆 (troféu, já usado em outros lugares do jogo pra sucesso)
+
+**Sobre as fotos "não aparecerem":** investigado e confirmado que **não é bug** — o print que gerei antes chamava `showResultModal()` direto, passando `null` no parâmetro de imagem de propósito (só queria testar a cor do modal rápido, sem passar pelo evento completo). O evento de verdade (`EVENTOS_CONTRATO`) continua com `img: 'evento_time_feliz'` intacto desde a sessão 37. Provado com teste que passa pelo caminho real do jogo (`tentarEventoContrato` → efeito → exibição) — a foto aparece certinho. Print gerado confirma visualmente: foto do time feliz no topo do modal, seguida do ícone 💪, sem qualquer traço de serpentina, com o fundo escuro/verde da correção da sessão 43.
+
+**Achado no meio do caminho, não é bug real:** ao editar o texto do modal de conclusão de contrato, o `grep` no terminal mostrava `\\n\\n` (barra dupla) na tela, mas o arquivo real tinha `\n\n` (barra simples, quebra de linha válida em template literal JS) — era só exibição do terminal, não o conteúdo verdadeiro. Confirmado com a ferramenta de leitura de arquivo antes de editar, evitando uma correção que teria introduzido barras literais erradas no texto.
+
+**Validado:**
+- Teste forçando o evento real (não chamada direta) confirmando a imagem aparecendo — 1/1
+- Regressão: 44 (campanhas) + 13 (fumaça completa) = 57/57, nada quebrado
+
+**sw.js atualizado pra v12.**
+
+**Próximo passo real:** telas de detalhe individuais (abrir uma máquina/contrato/sede específica) ainda não verificadas nesta rodada de redesign; auditoria completa de emoji em eventos/missões individuais também continua pendente.
+
+---
+
+### Sessão 43 — 09/09/2026 — Achado real: modal de evento positivo ainda trocava pra tema claro/creme inteiro
+**Pedido:** continuar o redesign pelos modais.
+
+**Achado significativo:** `.result-modal-box.success` — a variante usada em **todo evento positivo** (eventos de sabor, conclusão de missão, etc., qualquer chamada de `showResultModal(..., 'success')`) — ainda trocava o modal inteiro pro tema claro/creme antigo (`var(--light-card)`, bordas amarelo-ouro, e mais uma sombra rígida de **6px** que tinha escapado da varredura da sessão 41, que só buscou padrões de 1.5-3px). Isso significa que qualquer jogador que tivesse um evento bom durante o contrato veria um modal branco/creme brilhante no meio de um jogo todo escuro — a inconsistência mais chamativa encontrada até agora no redesign.
+
+**Corrigido:** o modal de sucesso agora usa fundo escuro com degradê sutil de verde (mesma lógica visual do resto do jogo pra indicar "coisa boa aconteceu"), borda verde, ícone com sombra suave verde em vez da laranja antiga. Textos passaram a usar as variáveis normais de texto escuro (`var(--text)`/`var(--text-dim)`) em vez das variantes de texto-pra-fundo-claro que não existem mais em lugar nenhum do jogo.
+
+**Confirmado por busca:** zero usos restantes de `--light-card`/`--light-text` (e variantes) em todo o arquivo — o tema claro que existia só pra esse modal específico foi completamente removido do jogo.
+
+**Outros modais conferidos e já corretos, sem necessidade de mudança:** mensagem do contratante/Consultor (`msg-cliente-card`), quebra de máquina (`quebra-flash`), flash branco de celebração de compra (efeito transitório, não é tema, não precisa mudar).
+
+**Validado:**
+- Print real forçando o modal de sucesso, confirmando visualmente o resultado escuro/verde
+- Regressão: 7 (eventos com foto, usa esse modal) + 44 (campanhas) + 13 (fumaça completa) = 64/64, nada quebrado
+
+**sw.js atualizado pra v11.**
+
+**Estado do redesign:** as 8 telas principais + os modais mais usados (sucesso, risco com foto, quebra de máquina, mensagem de cliente) já refletem a paleta nova. **Ainda não verificados:** telas de detalhe individuais (abrir uma máquina/contrato/sede específica) e uma auditoria completa de emoji "infantil" em eventos e missões individuais.
+
+**Próximo passo real:** verificar as telas de detalhe (openMaintDetail, openContractDetail, etc.) — são acessadas o tempo todo mas ainda não foram confirmadas visualmente nesta rodada de redesign.
+
+---
+
+### Sessão 42 — 09/09/2026 — Redesign "Frota Premium" cobrindo as 8 telas principais
+**Pedido:** continuar pelas últimas 4 telas (Manutenção, Sedes, Missões, Admin/Finanças).
+
+**Achado confirmando a estratégia da sessão 41:** antes de mexer tela por tela, procurei por cores antigas e padrões compartilhados restantes em todo o arquivo. Resultado: **as 4 telas já estavam quase prontas**, porque todas reusam componentes já corrigidos (`m-card` em Manutenção, `screen-hero` em todas, variáveis de cor propagadas em todos os cartões de Sedes/Missões/Admin). Só sobrava:
+- 1 cor de gráfico esquecida (`Parcelas de financiamento`, ainda `#9891B0` antigo) — corrigida
+- 4 usos soltos do emoji 🎯 (alvo de dardo) em textos que não passavam pela barra de navegação — trocados por 🏁 (onde é sobre Missões de verdade) ou 📈 (onde é sobre progresso de sede/resultado), mantendo a mesma lógica de diferenciação usada na sessão 40
+
+**Validado:**
+- Busca confirmando zero cores antigas restantes em todo o arquivo
+- Prints reais de Manutenção, Sedes, Missões e Admin confirmando visualmente a consistência
+- Regressão: 44 (campanhas) + 13 (fumaça completa) = 57/57, nada quebrado
+
+**sw.js atualizado pra v10.**
+
+**Estado do redesign — MARCO ATINGIDO: as 8 telas principais do jogo** (Hub, Máquinas, Contratos, Manutenção, Loja, Sedes, Missões, Admin/Finanças) **agora refletem a direção "Frota Premium"** — paleta escura com acento âmbar, tipografia Plus Jakarta Sans/Inter, cartões com sombra suave (não mais rígida), emojis mais sóbrios na navegação principal.
+
+**O que ainda não foi verificado/tocado, pra ser transparente:**
+- Modais (mensagem do contratante/Consultor, decisão de risco, quebra de máquina, celebrações) — usam estrutura própria, não confirmados contra a paleta nova
+- Telas de detalhe específicas (abrir uma máquina, um contrato, uma sede individualmente) — só as telas de LISTA foram confirmadas visualmente
+- Auditoria completa de emoji "infantil" — só os da navegação principal e os 5 usos soltos de 🎯 foram tratados; dezenas de outros emojis em eventos/missões individuais (🎁💰🎉 etc.) não passaram por triagem ainda
+
+**Próximo passo real:** verificar os modais (maior superfície visual que ainda não foi confirmada) e, se o usuário quiser continuar a limpeza de emoji, fazer um levantamento mais completo dos ícones usados em eventos/missões individuais.
+
+---
+
+### Sessão 41 — 09/09/2026 — Achado de alto impacto: 1 classe compartilhada resolveu 3 telas de uma vez
+**Pedido:** continuar o redesign pela próxima tela (Máquinas).
+
+**Achado principal:** o `.screen-hero` (banner de topo de seção) já usava as cores novas propagadas desde sessões anteriores — nenhuma mudança necessária ali. Mas o `.cat-card`/`.m-card` — a classe base de cartão usada em **Máquinas, Contratos e Loja ao mesmo tempo** — ainda tinha o efeito de sombra rígida "botão de jogo" (deslocamento de 3px sem desfoque, deslocando ao clicar tipo ficha empilhada). Corrigido uma vez só, nessa classe compartilhada, em vez de em cada tela — as 3 telas ficaram consistentes de uma vez.
+
+**Sombras rígidas eliminadas do jogo inteiro:** encontradas 12 ocorrências do padrão (`3px 3px 0`, `2px 2px 0`, variações) espalhadas em cartões de alerta do Hub, badges de contrato ("🔥 Tentador", "⭐ Especial", "🆕 Novo"), cartões de contrato em andamento, e cartões da Loja com recomendação. Convertidas todas pra sombra suave e difusa (`0 Npx Mpx cor`), mantendo a cor/intensidade de cada uma, só trocando o estilo de "adesivo" pra "elevação moderna".
+
+**Validado:**
+- Confirmado por busca no código: 0 ocorrências do padrão rígido restantes
+- Prints reais de Máquinas, Contratos e Loja confirmando visualmente o resultado consistente nas 3 telas
+- Regressão: 44 (campanhas) + 13 (fumaça completa) + 11 (personalidade de contrato, usa os badges que mudaram) + 24 (eventos de contrato) = 92/92 (mais 1 falha conhecida de artefato de teste, documentada desde a sessão 15, não é regressão)
+
+**Lição prática confirmada:** procurar padrões CSS *compartilhados* antes de atualizar tela por tela economiza retrabalho de verdade — essa sessão resolveu 3 telas com uma única correção, em vez de 3 correções separadas.
+
+**sw.js atualizado pra v9.**
+
+**Estado do redesign após esta sessão:** Hub, login/cadastro/splash, Máquinas, Contratos e Loja já refletem a paleta e o estilo de cartão novos. **Ainda no visual antigo:** Manutenção, Sedes, Missões, Admin/Finanças — e nenhum desses foi verificado ainda em busca de outros padrões compartilhados parecidos com o de hoje.
+
+**Próximo passo real:** verificar se Manutenção/Sedes/Missões/Admin têm mais classes compartilhadas com sombra rígida ou cor antiga antes de mexer tela por tela — o padrão de hoje sugere que vale a pena procurar isso primeiro.
+
+---
+
+### Sessão 40 — 09/09/2026 — Hub finalizado (cores dos tiers, emojis modernizados)
+**Pedido:** continuar o redesign pelo resto do Hub, depois trocar emojis "infantis" por opções mais modernas.
+
+**Hub — últimas peças do redesign:**
+- As 4 cores dos tiers de reputação (`Iniciante/Confiável/Referência regional/Referência no mercado`) atualizadas pra combinar com a paleta nova — isso alimenta automaticamente o card "Objetivo Principal", que usa a cor do tier atual pro degradê de fundo, borda e barra de progresso
+- Confirmado que o topo (pílula de caixa, sino, engrenagem) já usava as variáveis de cor certas (`--ok`, `--text-dim`) — não precisou de mudança de CSS, só os emojis em si têm cor própria fixa (limitação de emoji colorido, não do CSS)
+
+**Emojis modernizados na barra de navegação** (pedido explícito: "menos infantis"):
+- 🏠→🎛️ (Hub — "painel de controle" bate mais com "central de operações" que uma casa)
+- 🚜→🏗️ (Máquinas — guindaste de construção, menos "trator de desenho animado")
+- 🏛️→📊 (Admin — gráfico bate mais com "administração financeira" que prédio clássico)
+- 🎯→🏁 (Missões — bandeira quadriculada, menos "alvo de dardo")
+- Mantidos sem troca (já neutros/profissionais): 📋 Contratos, 🔧 Manutenção, 🛒 Loja, 🏢 Sedes
+- Ajustado também o ícone de "Próxima conquista" dentro do painel de comando (era 🎯, virou 📈) pra não repetir o símbolo que passou a representar Missões
+
+**Validado:** regressão completa — 12 (Hub vivo) + 44 (campanhas) + 13 (fumaça completa) = 69/69, nada quebrado. Print real confirma o resultado: barra de navegação com tom bem mais "operação séria", tiers de reputação com cor coerente.
+
+**sw.js atualizado pra v8.**
+
+**Estado do redesign após esta sessão:** Hub está com todas as seções principais atualizadas (capa da empresa, painel financeiro, painel de comando, objetivo principal, navegação). Login/cadastro/splash também já migrados (sessão 39). **Ainda 100% no visual antigo:** telas de Máquinas, Contratos, Manutenção, Loja, Sedes, Missões, Admin/Finanças — e os emojis usados dentro delas (e nos eventos de contrato, decisões de risco, etc.) ainda não passaram pela mesma triagem de "mais moderno, menos infantil" que a barra de navegação recebeu agora.
+
+**Próximo passo real:** aplicar o mesmo tratamento (paleta + emojis modernizados) nas 7 telas restantes, uma de cada vez, com teste a cada uma — o padrão que já vem funcionando bem nas últimas duas sessões.
+
+---
+
+### Sessão 39 — 09/09/2026 — Redesign visual iniciado: "Frota Premium" + ícone do app + Hub reconstruído
+**Pedido:** atualização de design pra um modelo mais moderno.
+
+**Processo de exploração (antes de tocar no código real):** consultado o guia de design de frontend, analisado o sistema visual atual (roxo escuro + dourado com efeito de sombra "adesivo 3D", fonte Fredoka), e montados 4 mockups completos de direção visual pro usuário comparar lado a lado, cada um renderizado num navegador real (Playwright) pra autocrítica antes de apresentar:
+- **A — "Central de Operações":** cockpit escuro denso, amarelo de segurança, tipografia condensada industrial
+- **B — "Prancheta de Obra":** papel milimetrado, bordas quadradas grossas, monoespaçado — rejeitada pelo usuário ("ficou estranho")
+- **C — "Frota Premium":** espaçoso, cantos arredondados suaves, cartão de destaque com degradê — **escolhida**
+- **D — "Terminal da Máquina":** monocromático âmbar tipo painel de diagnóstico de equipamento — não escolhida
+
+Depois de escolher C, refinado com pedidos específicos do usuário: ícones fotográficos (fotos reais com tingimento escuro) em vez de emoji na barra de navegação, cinzas secundários clareados pra melhorar legibilidade, e o título "Império das Máquinas" na cor amarelo associada à Caterpillar (`#FFCD11`, usado como referência de tom, não como uso de marca).
+
+**Ícone do app substituído:** usuário enviou uma imagem de letras "IM" 3D amarelo/preto (risco de segurança). Processada com margem de segurança pra ícone "maskable" — as letras ocupavam 81% da largura original (arriscado, cantos cortariam no recorte circular do Android); reduzido pra 61,6%, testado com simulação de recorte circular confirmando que nada é cortado. Gerados os dois tamanhos reais (192px, 512px), substituindo os arquivos que o `manifest.json` já apontava desde a sessão 31 — nenhuma mudança de código necessária.
+
+**Implementação real iniciada no `app.html` (não só mockup):**
+- Fontes trocadas globalmente: Fredoka+Manrope → Plus Jakarta Sans+Inter
+- Paleta de cores inteira migrada via variáveis CSS (219 usos propagados automaticamente trocando só as definições no `:root`) + 12 cores fixas fora do sistema de variável, corrigidas uma a uma
+- As 7 ocorrências da marca "Império das Máquinas" (login, cadastro, splash, topo) — fonte nova, cor amarelo Caterpillar, removido o efeito de sombra "adesivo 3D"
+- **Painel de Comando do Hub reconstruído do zero** — saiu da grade 2x2 antiga e virou cartão de destaque (Caixa, com degradê) + fileira de 3 estatísticas (Frota/Obras/Reputação) + cartão de próxima conquista, exatamente como o mockup aprovado. Mantidos os mesmos IDs (`painelCaixaValor`, `painelRepValor`) pra não quebrar a animação já testada nas sessões 25-26.
+- **Cartão de capa da empresa** ("Central de Operações") — removida uma foto de estoque do Unsplash sem relação com o jogo e a cor de fundo roxa (`#241C3B`) que sobrava; virou um cartão compacto escuro combinando com a paleta nova.
+
+**Achado no meio do caminho, não é bug — é escopo real do trabalho restante:** ao tirar print da tela real (não mockup), descobri que o Hub tem mais seções com estilo antigo que eu não tinha mapeado inicialmente (o cartão de capa da empresa, e um painel financeiro que por sorte já estava correto — cheguei a suspeitar de duplicação de Caixa que na verdade não existia, confirmado lendo o código antes de "corrigir" algo que já estava certo). Ficam pendentes: card "Objetivo Principal" (ainda azul/antigo), pílula de caixa e ícones do topo, modal do Consultor/mensagens de cliente, e **todas as outras telas** (Máquinas, Contratos, Manutenção, Loja, Sedes, Missões, Admin) — nenhuma tocada ainda.
+
+**Validado a cada etapa, nunca em lote:**
+- Sintaxe checada depois de cada bloco de mudança
+- Regressão: 44 (campanhas) + 13 (fumaça completa) + 12 (Hub vivo) + 8 (animação, sessão 26) = 77/77, nada quebrado
+- Prints reais tirados via Playwright em 3 momentos diferentes pra confirmar visualmente o resultado, não só confiar que o CSS "devia" funcionar
+
+**sw.js atualizado pra v7.**
+
+**Arquivos gerados:** 4 mockups completos (`mockup-hub.html`, `-b`, `-c`, `-c2-local`, `-d`) com prints de cada, salvos em `_MOCKUP-DESIGN/`.
+
+**Próximo passo real:** continuar o redesign pelo resto do Hub (Objetivo Principal, topo, modais), depois seguir tela por tela pro resto do jogo — é um trabalho que vai se estender por várias sessões, dado o tamanho real descoberto.
+
+---
+
+### Sessão 38 — 06/09/2026 — Erro meu: 12 das 15 imagens da sessão 37 estavam trocadas
+**Pedido:** usuário mandou print mostrando o evento "Inspeção de rotina" com a foto de paramédicos atendendo um trabalhador — claramente errada.
+
+**Investigação, imagem por imagem, sem confiar na memória do mapeamento anterior:** abri cada um dos 15 arquivos originais e comparei com o que realmente estava escrito no código. Resultado: **12 das 15 estavam com o conceito errado** — não era uma troca simples entre 2, era um erro sistemático de transcrição ao escrever a tabela de mapeamento na sessão 37 (visualmente eu tinha as imagens corretas na tela, mas errei ao anotar qual nome de arquivo (`10003425XX`) correspondia a qual conteúdo).
+
+**Descoberta adicional, ainda mais grave:** 4 conceitos que eu achava estarem faltando (inspeção, chuva forte, projeto completo, prejuízo financeiro) **na verdade estavam entre os 5 arquivos que eu tinha descartado como "duplicados"** na sessão 37. Eu nunca cheguei a abrir esses 5 individualmente pra confirmar — assumi que eram repetições sem checar, e por coincidência 3 realmente eram duplicatas verdadeiras, mas os outros 2 continham conceitos que eu estava mapeando errado em outros arquivos.
+
+**Mapeamento correto, verificado visualmente arquivo por arquivo antes de reprocessar** (as 15 imagens corretas, com as 4 que precisaram ser resgatadas dos "descartados"):
+- `evento_time_feliz`, `evento_acidente_gravissimo`, `evento_maquina_nova_2` — já estavam certas desde a sessão 37, confirmadas de novo
+- `evento_acidente_grave`, `evento_contrato_cancelado`, `evento_ferramenta_quebrada`, `evento_falencia_1`, `evento_maquina_nova_1`, `evento_maquina_roubada`, `evento_maquina_enferrujada` — corrigidas (estavam todas deslocadas)
+- `evento_falencia_2`, `evento_prejuizo_financeiro`, `evento_chuva_forte`, `evento_inspecao`, `evento_projeto_completo` — resgatadas dos arquivos que eu tinha descartado por engano
+
+**Corrigido:** as 15 imagens reprocessadas do zero com o mapeamento verificado, e o bloco `EVENTO_IMG` inteiro substituído no `app.html` (não só remendado).
+
+**Validado com rigor extra, dado o tamanho do erro anterior:**
+- Script que extrai as imagens de volta do `EVENTO_IMG` já carregado no jogo (não da pasta de origem) e salva em arquivo — pra conferir visualmente que a imagem que está DE VERDADE dentro do código bate com o nome da chave, fechando o ciclo de verificação
+- Conferidas visualmente: `evento_inspecao` (o caso exato do print do usuário) e `evento_acidente_grave` — confirmado batendo certo agora
+- Regressão completa dos 6 sistemas de integração da sessão 37: 7+3+3+4+2+2 = 21/21
+- Regressão geral do jogo: 13 (fumaça) + 44 (campanhas) = 57/57
+- Total: 78/78, nada quebrado
+
+**Lição registrada, com peso — isso não pode se repetir:** "eu vi a imagem na tela" não é a mesma coisa que "eu anotei o nome do arquivo certo". Da próxima vez que existir uma tabela de mapeamento arquivo→conceito com mais de 2-3 itens, a verificação de "extrair a imagem de volta do código e olhar" (feita agora) precisa acontecer **antes** de declarar a integração pronta, não só depois que o usuário reporta o erro.
+
+**sw.js atualizado pra v5** (subiu de v4).
+
+**Arquivo gerado:** `verifica-imagens-corretas.js`.
+
+**Próximo passo real:** nenhuma pendência de imagem conhecida agora — mas vale o usuário conferir mais alguns eventos em jogo real, já que o histórico recente mostra que erros de mapeamento visual só aparecem com uso de verdade.
+
+---
 
 ### Sessão 37 — 06/09/2026 — As 17 imagens integradas em 6 sistemas + Consultor bem mais ativo
 **Contexto:** o usuário perguntou "em que momento aparecem as imagens que te mandei" — investigação revelou que ele se referia a 17 imagens geradas por IA (Meta AI) enviadas numa **conversa diferente** deste mesmo projeto, nunca integradas ao jogo de verdade (só entregues como pacote solto — classe JS, JSON, demo HTML — numa sessão paralela). O usuário adicionou aquela conversa a este projeto e reenviou as imagens (20 arquivos, 3 duplicados, 17 únicas de verdade — bateu exato com o número relatado).
