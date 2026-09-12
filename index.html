@@ -766,6 +766,10 @@
             </div>
             <div style="padding:0 16px;" id="financiamentosLista"></div>
 
+            <div class="section-label">🆘 Empréstimos ativos</div>
+            <div style="padding:0 16px;" id="emprestimosLista"></div>
+            <div style="padding:0 16px 4px;"><button onclick="abrirSolicitacaoEmprestimo()" style="width:100%;background:rgba(232,135,30,.1);border:1.5px solid rgba(232,135,30,.3);color:var(--amber-1);font-weight:700;font-size:13.5px;border-radius:10px;padding:10px 0;">🏦 Solicitar empréstimo de emergência</button></div>
+
             <div class="section-label">🧾 Impostos</div>
             <div class="finance-panel" style="grid-template-columns:1fr 1fr;">
               <div class="fin-col"><div class="fin-label">Provisionados</div><div class="fin-value" style="color:#B03A2E;" id="finImpostosProvisionados">R$ 0</div></div>
@@ -1027,6 +1031,18 @@
         <div id="quebraCusto" style="font-size:15px;font-weight:800;color:#E5484D;margin-top:14px;"></div>
         <div id="quebraImpacto" style="font-size:12.5px;color:rgba(255,255,255,.55);margin-top:6px;"></div>
         <button onclick="fecharQuebraMaquina()" style="margin-top:22px;background:rgba(229,72,77,.18);border:1.5px solid rgba(229,72,77,.55);color:#fff;font-weight:800;font-size:14.5px;border-radius:12px;padding:13px 26px;">🔧 Ver manutenção agora</button>
+      </div>
+    </div>
+
+    <div class="compra-overlay" id="falenciaOverlay" style="display:none;background:linear-gradient(160deg,rgba(10,7,7,.98),rgba(0,0,0,.99));z-index:95;overflow:hidden;">
+      <div style="position:relative;z-index:2;text-align:center;padding:0 26px;">
+        <div style="font-size:60px;">⚫</div>
+        <div style="font-size:23px;font-weight:900;color:#E5484D;margin-top:8px;letter-spacing:.03em;">FALÊNCIA DECLARADA</div>
+        <div style="font-size:14.5px;color:rgba(255,255,255,.75);margin-top:14px;line-height:1.6;max-width:300px;margin-left:auto;margin-right:auto;">
+          O caixa ficou negativo, não sobrou máquina pra vender e nenhum banco aprovou crédito. Não há mais alternativa dentro das regras do jogo — essa é a consequência de uma sequência de decisões, não de um único erro.
+        </div>
+        <div id="falenciaResumo" style="margin-top:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;max-width:300px;margin-left:auto;margin-right:auto;text-align:left;"></div>
+        <button onclick="reiniciarAposFalencia()" style="margin-top:24px;background:rgba(232,135,30,.16);border:1.5px solid rgba(232,135,30,.5);color:#F2A93E;font-weight:800;font-size:14.5px;border-radius:12px;padding:13px 26px;">🔄 Recomeçar do zero</button>
       </div>
     </div>
 
@@ -2103,7 +2119,10 @@ const REQ_ICONS = {
 function calcularHasMachine(requisitos){
   if(!requisitos || requisitos.length === 0) return { ok:false, missing:"Máquina fora da sua frota atual" };
   for(const req of requisitos){
-    const possuidas = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo).length;
+    // CORRIGIDO (relato real de jogo, sessão 47): antes contava máquina quebrada como "disponível",
+    // fazendo o jogo mostrar contrato como cumprível mesmo quando a única unidade daquele tipo
+    // estava fora de operação — o jogador via "você tem retro" mas a retro não trabalhava de verdade.
+    const possuidas = Object.values(MACHINES).filter(m => m.tipoKey === req.tipo && !m.quebrada).length;
     if(possuidas < req.qtd){
       const label = REQ_LABELS[req.tipo] || "Máquina não disponível";
       const falta = req.qtd - possuidas;
@@ -2116,10 +2135,12 @@ function calcularHasMachine(requisitos){
 // Checa se as máquinas exigidas estão LIVRES agora (não só na garagem) — usado na hora de aceitar de verdade.
 function maquinasDisponiveisAgora(requisitos){
   for(const req of requisitos){
-    const livres = Object.entries(MACHINES).filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract).length;
+    // CORRIGIDO (mesmo relato da sessão 47): máquina quebrada não pode ser oferecida como "livre",
+    // mesmo que não esteja em outro contrato agora — ela não consegue trabalhar de qualquer jeito.
+    const livres = Object.entries(MACHINES).filter(([k,m]) => m.tipoKey === req.tipo && !m.inContract && !m.quebrada).length;
     if(livres < req.qtd){
       const label = REQ_LABELS[req.tipo] || "máquina";
-      return { ok:false, motivo: `${label}: precisa de ${req.qtd} livre(s), só ${livres} disponível(is) agora (o resto já está em outro contrato).` };
+      return { ok:false, motivo: `${label}: precisa de ${req.qtd} livre(s), só ${livres} disponível(is) agora (o resto já está em outro contrato ou quebrado).` };
     }
   }
   return { ok:true, motivo:"" };
@@ -2275,6 +2296,22 @@ function calcularFinanciamento(vista, parcelasCount){
   return { entrada, parcela, parcelas: parcelasCount, totalFinanciado, jurosValor };
 }
 
+function podeFinanciar(catalogKey, valorAFinanciarOverride){
+  const c = CATALOG[catalogKey];
+  const minRep = c.reputacaoMinFinanciamento || 0;
+  if(reputacao < minRep){
+    return { ok:false, motivo:`Reputação insuficiente para crédito — precisa de ${minRep}, você tem ${reputacao}.` };
+  }
+  const fin = valorAFinanciarOverride!=null ? calcularFinanciamento(valorAFinanciarOverride, c.parcelasCount) : calcularFinanciamento(c.vista, c.parcelasCount);
+  const debitoAtual = calcularDebitoTotalAtivo();
+  const debitoComEste = debitoAtual + fin.parcela*fin.parcelas;
+  const tetoEndividamento = calcularTetoEndividamento();
+  if(debitoComEste > tetoEndividamento){
+    return { ok:false, motivo:`Limite de endividamento atingido — seu patrimônio atual só sustenta até ${fmt(tetoEndividamento)} em parcelas futuras (já deve ${fmt(debitoAtual)}).` };
+  }
+  return { ok:true, motivo:"" };
+}
+
 /* ===================== CRÉDITO REAL — comprar (e principalmente financiar) não é automático =====================
    Três fricções que existem na vida real e não existiam no protótipo até aqui:
    1) Aprovação de crédito: financiar depende da reputação — igual um banco olha seu histórico,
@@ -2289,25 +2326,122 @@ const DIAS_ENTRE_PARCELAS = 30;
 let financiamentosAtivos = []; // { nome, parcela, parcelasRestantes, diasParaProxima }
 let diasGlobaisDecorridos = 0;
 
-function podeFinanciar(catalogKey, valorAFinanciarOverride){
-  const c = CATALOG[catalogKey];
-  const minRep = c.reputacaoMinFinanciamento || 0;
-  if(reputacao < minRep){
-    return { ok:false, motivo:`Reputação insuficiente para crédito — precisa de ${minRep}, você tem ${reputacao}.` };
+// NOVO (sessão 48 — decisão do usuário: "falência deve existir, mas só depois de esgotar as
+// alternativas — empréstimo, financiamento, venda de máquina"). Empréstimo é crédito não-garantido
+// (não compra nada específico, só põe caixa na mão agora), por isso o juro é mais alto que o do
+// financiamento de máquina (que tem o bem como garantia). Reaproveita o MESMO teto de endividamento
+// do financiamento — um jogador não pode contornar o limite trocando de instrumento de crédito.
+const JUROS_EMPRESTIMO_PCT = 0.30; // 30% sobre o valor emprestado — crédito de emergência custa caro de verdade
+const REPUTACAO_MIN_EMPRESTIMO = 40; // piso bem mais baixo que financiamento de máquina — é a rede de segurança, tem que estar acessível
+const PARCELAS_EMPRESTIMO = 6;
+let emprestimosAtivos = []; // mesma forma de financiamentosAtivos: { nome, parcela, parcelasRestantes, diasParaProxima }
+
+function calcularDebitoTotalAtivo(){
+  const deFinanciamento = financiamentosAtivos.reduce((s,f) => s + f.parcela*f.parcelasRestantes, 0);
+  const deEmprestimo = emprestimosAtivos.reduce((s,f) => s + f.parcela*f.parcelasRestantes, 0);
+  return deFinanciamento + deEmprestimo;
+}
+
+function calcularTetoEndividamento(){
+  return Math.max(LIMITE_ENDIVIDAMENTO_PISO, Math.round((playerPatrimonio + faturamentoAcumulado) * LIMITE_ENDIVIDAMENTO_PCT_PATRIMONIO));
+}
+
+function calcularEmprestimo(valor){
+  const valorComJuros = Math.round(valor * (1 + JUROS_EMPRESTIMO_PCT));
+  const parcela = Math.round(valorComJuros / PARCELAS_EMPRESTIMO);
+  return { valor, parcela, parcelas: PARCELAS_EMPRESTIMO, valorComJuros };
+}
+
+function podeContrairEmprestimo(valor){
+  if(reputacao < REPUTACAO_MIN_EMPRESTIMO){
+    return { ok:false, motivo:`Reputação insuficiente para crédito de emergência — precisa de ${REPUTACAO_MIN_EMPRESTIMO}, você tem ${Math.round(reputacao)}.` };
   }
-  const fin = valorAFinanciarOverride!=null ? calcularFinanciamento(valorAFinanciarOverride, c.parcelasCount) : calcularFinanciamento(c.vista, c.parcelasCount);
-  const debitoAtual = financiamentosAtivos.reduce((s,f) => s + f.parcela*f.parcelasRestantes, 0);
-  const debitoComEste = debitoAtual + fin.parcela*fin.parcelas;
-  const tetoEndividamento = Math.max(LIMITE_ENDIVIDAMENTO_PISO, Math.round((playerPatrimonio + faturamentoAcumulado) * LIMITE_ENDIVIDAMENTO_PCT_PATRIMONIO));
-  if(debitoComEste > tetoEndividamento){
-    return { ok:false, motivo:`Limite de endividamento atingido — seu patrimônio atual só sustenta até ${fmt(tetoEndividamento)} em parcelas futuras (já deve ${fmt(debitoAtual)}).` };
+  const emp = calcularEmprestimo(valor);
+  const debitoAtual = calcularDebitoTotalAtivo();
+  const debitoComEste = debitoAtual + emp.parcela*emp.parcelas;
+  const teto = calcularTetoEndividamento();
+  if(debitoComEste > teto){
+    return { ok:false, motivo:`Limite de endividamento atingido — seu patrimônio atual só sustenta até ${fmt(teto)} em parcelas futuras (já deve ${fmt(debitoAtual)}).` };
   }
   return { ok:true, motivo:"" };
 }
 
-function processarParcelasDoTempo(diasNovos){
-  diasGlobaisDecorridos += diasNovos;
-  financiamentosAtivos.forEach(f => {
+function contrairEmprestimo(valor){
+  const check = podeContrairEmprestimo(valor);
+  if(!check.ok){ showToast('🔒 ' + check.motivo); return; }
+  const emp = calcularEmprestimo(valor);
+  playerCash += valor;
+  emprestimosAtivos.push({ nome:`Empréstimo de ${fmt(valor)}`, parcela:emp.parcela, parcelasRestantes:emp.parcelas, diasParaProxima:DIAS_ENTRE_PARCELAS });
+  registrarHistorico('🏦', `Empréstimo contraído: ${fmt(valor)}`, `${fmt(emp.parcela)} × ${emp.parcelas} parcelas (total ${fmt(emp.valorComJuros)}, juro de ${Math.round(JUROS_EMPRESTIMO_PCT*100)}%)`);
+  updateFinanceDisplays();
+  renderFinancas();
+  closeResultModal();
+  showToast(`✅ ${fmt(valor)} depositados no caixa`);
+}
+
+function abrirSolicitacaoEmprestimo(){
+  const valoresSugeridos = [10000, 25000, 50000, 100000];
+  const opcoesHtml = valoresSugeridos.map(v => {
+    const check = podeContrairEmprestimo(v);
+    const emp = calcularEmprestimo(v);
+    return `<div onclick="${check.ok ? `contrairEmprestimo(${v})` : ''}" style="margin-top:8px;background:${check.ok?'rgba(232,135,30,.1)':'rgba(255,255,255,.03)'};border:1.5px solid ${check.ok?'rgba(232,135,30,.35)':'var(--surface-border)'};border-radius:10px;padding:11px 12px;${check.ok?'cursor:pointer;':'opacity:.5;'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-weight:800;font-size:15px;">${fmt(v)}</div>
+        <div style="font-size:12.5px;color:var(--text-faint);">${emp.parcelas}x ${fmt(emp.parcela)}</div>
+      </div>
+      ${!check.ok ? `<div style="font-size:12px;color:var(--danger);margin-top:3px;">${check.motivo}</div>` : ''}
+    </div>`;
+  }).join('');
+  document.getElementById('resultModalIcon').textContent = '🏦';
+  document.getElementById('resultModalTitle').textContent = 'Empréstimo de emergência';
+  document.getElementById('resultModalText').innerHTML = `
+    <span style="color:var(--text-faint);font-size:13.5px;">Crédito rápido, juro de ${Math.round(JUROS_EMPRESTIMO_PCT*100)}% embutido, pago em ${PARCELAS_EMPRESTIMO} parcelas mensais.</span>
+    ${opcoesHtml}
+    <div onclick="closeResultModal()" style="margin-top:10px;background:rgba(255,255,255,.05);border:1.5px solid var(--surface-border);color:var(--text-dim);font-weight:700;text-align:center;border-radius:10px;padding:11px;cursor:pointer;">Cancelar</div>`;
+  document.querySelector('.result-modal-box').classList.remove('success');
+  const imgEl = document.getElementById('resultModalImg');
+  if(imgEl){ imgEl.style.display = 'none'; }
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+
+function podeVenderAlgumaMaquina(){
+  return Object.values(MACHINES).some(m => !m.inContract);
+}
+
+// A falência só é declarada quando as 3 alternativas (empréstimo, financiamento adicional via
+// venda futura, venda de máquina) estão genuinamente esgotadas — não só quando o caixa fica
+// negativo. Caixa negativo sozinho não é falência: é só um dia ruim que o jogador ainda pode
+// resolver vendendo uma máquina ou pegando um empréstimo.
+const CAIXA_LIMIAR_FALENCIA = -5000;
+function verificarFalencia(){
+  if(jogoEmFalencia) return;
+  if(playerCash >= CAIXA_LIMIAR_FALENCIA) return;
+  if(podeVenderAlgumaMaquina()) return;
+  const semEmprestimo = !podeContrairEmprestimo(10000).ok; // testa o menor valor sugerido
+  if(!semEmprestimo) return;
+  declararFalencia();
+}
+
+let jogoEmFalencia = false;
+function declararFalencia(){
+  jogoEmFalencia = true;
+  document.getElementById('falenciaResumo').innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;"><span style="color:rgba(255,255,255,.55);">Dias jogados</span><span style="font-weight:800;color:#fff;">${diasGlobaisDecorridos}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;"><span style="color:rgba(255,255,255,.55);">Reputação final</span><span style="font-weight:800;color:#fff;">${Math.round(reputacao)}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;"><span style="color:rgba(255,255,255,.55);">Contratos concluídos</span><span style="font-weight:800;color:#fff;">${completedContracts.length}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:rgba(255,255,255,.55);">Caixa no fim</span><span style="font-weight:800;color:#E5484D;">${fmt(playerCash)}</span></div>`;
+  document.getElementById('falenciaOverlay').style.display = 'flex';
+  registrarHistorico('⚫', 'Falência declarada', `Caixa: ${fmt(playerCash)} · sem máquina pra vender · sem crédito disponível`);
+}
+
+function reiniciarAposFalencia(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  try{ localStorage.removeItem('IMPERIO_GAME_STATE'); }catch(e){}
+  window.location.reload();
+}
+
+function processarUmaListaDeParcelas(lista, diasNovos){
+  lista.forEach(f => {
     if(f.parcelasRestantes <= 0) return;
     f.diasParaProxima -= diasNovos;
     while(f.diasParaProxima <= 0 && f.parcelasRestantes > 0){
@@ -2323,9 +2457,17 @@ function processarParcelasDoTempo(diasNovos){
       f.diasParaProxima += DIAS_ENTRE_PARCELAS;
     }
   });
+}
+
+function processarParcelasDoTempo(diasNovos){
+  diasGlobaisDecorridos += diasNovos;
+  processarUmaListaDeParcelas(financiamentosAtivos, diasNovos);
+  processarUmaListaDeParcelas(emprestimosAtivos, diasNovos);
   financiamentosAtivos = financiamentosAtivos.filter(f => f.parcelasRestantes > 0);
+  emprestimosAtivos = emprestimosAtivos.filter(f => f.parcelasRestantes > 0);
   updateFinanceDisplays();
   renderFinancas();
+  verificarFalencia();
 }
 
 /* ===================== PREÇO-BASE DE MERCADO POR TIPO DE MÁQUINA =====================
@@ -2409,6 +2551,49 @@ function liberarMaquinas(machineKeys){
   });
 }
 
+// NOVO (sessão 47 — relato real de jogo: jogador ficou travado com a única máquina quebrada, sem
+// dinheiro pro reparo, e nenhuma forma de sair do contrato parado. Sem essa saída, a única coisa
+// que acontece é multa de atraso se acumulando pra sempre, sem jeito de resolver). Cancelar por
+// vontade própria custa menos que perder por escalada de risco (8% em vez de 10%, -5 de reputação
+// em vez de -8) porque é uma decisão consciente do jogador, não uma falha.
+function abrirConfirmacaoCancelamento(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac) return;
+  const multa = Math.round(ac.value * 0.08);
+  document.getElementById('resultModalIcon').textContent = '🚪';
+  document.getElementById('resultModalTitle').textContent = 'Cancelar este contrato?';
+  document.getElementById('resultModalText').innerHTML = `
+    Cancelar "${ac.name}" agora mesmo, liberando as máquinas envolvidas.<br><br>
+    <b style="color:var(--danger);">Multa de cancelamento: ${fmt(multa)}</b><br>
+    <span style="color:var(--text-faint);font-size:13px;">Reputação: -5</span>
+    <div onclick="confirmarCancelamentoContrato(${idx})" style="margin-top:14px;background:rgba(229,72,77,.14);border:1.5px solid rgba(229,72,77,.4);color:var(--danger);font-weight:800;text-align:center;border-radius:10px;padding:12px;cursor:pointer;">Confirmar cancelamento</div>
+    <div onclick="closeResultModal()" style="margin-top:8px;background:rgba(255,255,255,.05);border:1.5px solid var(--surface-border);color:var(--text-dim);font-weight:700;text-align:center;border-radius:10px;padding:11px;cursor:pointer;">Voltar, não cancelar</div>`;
+  document.querySelector('.result-modal-box').classList.remove('success');
+  const imgEl = document.getElementById('resultModalImg');
+  if(imgEl){ imgEl.style.display = 'none'; }
+  document.getElementById('resultModalOverlay').classList.add('show');
+}
+
+function confirmarCancelamentoContrato(idx){
+  const ac = acceptedContracts[idx];
+  if(!ac){ closeResultModal(); return; }
+  const multa = Math.round(ac.value * 0.08);
+  playerCash -= multa;
+  ajustarReputacao(-5);
+  registrarHistorico('🚪', `Contrato cancelado por decisão própria: ${ac.name}`, `Multa de cancelamento: ${fmt(multa)}`);
+  liberarMaquinas(ac.machineKeys);
+  acceptedContracts.splice(idx, 1);
+  lostContracts.push({ name: ac.name, value: ac.value, machineKeys: ac.machineKeys, multa });
+  historicoCaixa.push({ label: ac.name.split(' ')[0], valor: playerCash });
+  regenerarContrato(ac.key);
+  updateFinanceDisplays();
+  renderContratosAndamento(); renderContratosConcluidos(); renderFinancas(); renderContratosList();
+  renderMaquinasList(); renderManutList();
+  closeResultModal();
+  showToast(`Contrato cancelado — ${fmt(multa)} de multa`);
+  verificarFalencia();
+}
+
 // Rede de segurança: nenhuma máquina deveria ficar marcada como "ocupada" sem um contrato ativo de
 // verdade por trás. Se isso acontecer (por qualquer motivo), corrige sozinho antes de travar o jogador.
 function corrigirMaquinasOrfas(){
@@ -2433,7 +2618,12 @@ function calcularFatorProdutividade(ac, catalog){
   // Máquina quebrada não conta mais como disponível — a "capacidade de operar" cai de verdade,
   // não é só a saúde caindo no papel (Fase 2, item 8 do Roadmap de Game Feel).
   const maquinasAtivas = ac.machineKeys.map(k => MACHINES[k]).filter(m => m && !m.quebrada);
-  const avgHealth = maquinasAtivas.length ? maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length : 0;
+  // CORRIGIDO (relato real de jogo, sessão 47): se NENHUMA máquina ativa sobrou, a obra tem que
+  // travar de verdade (0%) — antes, o piso de 15% na quantidade e 60% na saúde combinados ainda
+  // deixavam a obra "rastejando" a 9% da velocidade normal mesmo com a única máquina quebrada e
+  // sem substituta, o que não bate com o texto do comentário acima nem com a expectativa do jogador.
+  if(maquinasAtivas.length === 0) return 0;
+  const avgHealth = maquinasAtivas.reduce((s,m)=>s+m.health,0)/maquinasAtivas.length;
   const fatorSaude = 0.6 + 0.4 * (avgHealth/100);
 
   const qtdMinima = (catalog.requiredMachineKeys||[]).reduce((s,r)=>s+r.qtd, 0) || 1;
@@ -2759,11 +2949,12 @@ function salvarGameState(){
       diasGlobaisDecorridos,
       stats, missoesResgatadas, noticias, missoesNotificadasConcluidas,
       maquinasComManutencao: Array.from(maquinasComManutencaoRealizada),
-      // CORREÇÃO (jogador reportou "começou do zero" ao reabrir depois de instalar como PWA):
-      // faltava salvar contratos em andamento/concluídos/perdidos, financiamentos ativos,
-      // histórico, o estado atual do catálogo de contratos, e a identidade da máquina
-      // (apelido/histórico da Fase 3) — tudo isso sumia mesmo quando o resto salvava certo.
-      acceptedContracts, completedContracts, lostContracts, financiamentosAtivos,
+      // CORREÇÃO (sessão 48, achado durante teste do sistema de empréstimo/falência): faltavam
+      // emprestimosAtivos, jogoEmFalencia e totalParcelasPagas no save — um empréstimo contraído
+      // sumiria (dívida "grátis") só saindo e voltando do jogo, e o estado de falência declarada
+      // não sobreviveria a um reload.
+      acceptedContracts, completedContracts, lostContracts, financiamentosAtivos, emprestimosAtivos,
+      jogoEmFalencia, totalParcelasPagas,
       historico, historicoCaixa, scheduledMaintenances,
       contractsPool: Object.keys(CONTRACTS).reduce((acc, k) => { acc[k] = CONTRACTS[k]; return acc; }, {}),
       // Estado real da frota: idade, condição, alocação E identidade (apelido/histórico) de cada máquina
@@ -2808,6 +2999,9 @@ function restaurarGameState(){
     completedContracts = saved.completedContracts || [];
     lostContracts = saved.lostContracts || [];
     financiamentosAtivos = saved.financiamentosAtivos || [];
+    emprestimosAtivos = saved.emprestimosAtivos || [];
+    jogoEmFalencia = saved.jogoEmFalencia || false;
+    totalParcelasPagas = saved.totalParcelasPagas || 0;
     historico = saved.historico || [];
     historicoCaixa = saved.historicoCaixa || [];
     scheduledMaintenances = saved.scheduledMaintenances || [];
@@ -2840,6 +3034,10 @@ function restaurarGameState(){
         // mostrar "undefined" na tela. É perda pontual de uma máquina antiga, não um bug novo.
       });
     }
+    // Se o jogador saiu (sem clicar em "recomeçar") enquanto já estava em falência declarada,
+    // o overlay tem que reaparecer ao recarregar — falência é estado terminal, não algo que
+    // um reload deveria "desfazer" silenciosamente.
+    if(jogoEmFalencia) declararFalencia();
     return true;
   } catch(e){ console.error('Falha ao restaurar:', e); return false; }
 }
@@ -3592,6 +3790,7 @@ function renderContratosAndamento(){
           <div style="font-size:13px;font-weight:800;color:${ritmo.cor};margin-top:5px;">${ritmo.icon} ${ritmo.texto}</div>
           <div style="font-size:11.5px;color:var(--text-faint);margin-top:1px;">Esperado até aqui: ${progressoEsperado}% · Real: ${Math.round(ac.progress)}%</div>
           <div style="font-size:12px;color:${produtividadePct<85?'var(--danger)':'var(--text-faint)'};margin-top:4px;">⚙️ Produtividade da frota: ${produtividadePct}% ${produtividadePct<85?'— máquina desgastada ou insuficiente rendendo menos por dia':''}</div>
+          ${produtividadePct === 0 ? `<div style="font-size:13.5px;font-weight:800;color:var(--danger);margin-top:6px;background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.4);border-radius:8px;padding:7px 9px;">🚫 OBRA PARADA — nenhuma máquina em condição de trabalhar aqui. Progresso não avança até você repor ou reparar uma máquina, ou cancelar o contrato.</div>` : ''}
           ${ac.state === 'EM_RISCO' ? `<div style="font-size:13.5px;color:var(--amber-2);margin-top:5px;background:rgba(255,150,50,.1);border-radius:7px;padding:5px 7px;">⚠️ ${ac.eventoAtivo}</div>` : ''}
         </div>
         <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(232,135,30,.15);color:var(--amber-1);white-space:nowrap;">${ac.progress}%</div>
@@ -3609,6 +3808,7 @@ function renderContratosAndamento(){
       <button onclick="avancarContrato(${idx})" style="width:100%;margin-top:10px;background:rgba(232,135,30,.12);border:1px solid rgba(232,135,30,.35);color:var(--amber-1);font-weight:800;font-size:15px;border-radius:9px;padding:8px 0;">${btnLabel}</button>
       <button onclick="abrirObra(${idx})" style="width:100%;margin-top:7px;background:rgba(63,166,107,.1);border:1px solid rgba(63,166,107,.3);color:var(--ok);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🎥 Ver obra</button>
       ${acceptedContracts.length > 1 && ac.machineKeys.length > 0 ? `<button onclick="abrirRealocacao(${idx})" style="width:100%;margin-top:7px;background:rgba(79,160,217,.1);border:1px solid rgba(79,160,217,.3);color:var(--blue);font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🔀 Realocar uma máquina daqui</button>` : ''}
+      <button onclick="abrirConfirmacaoCancelamento(${idx})" style="width:100%;margin-top:7px;background:${produtividadePct===0?'rgba(229,72,77,.12)':'rgba(255,255,255,.04)'};border:1px solid ${produtividadePct===0?'rgba(229,72,77,.35)':'var(--surface-border)'};color:${produtividadePct===0?'var(--danger)':'var(--text-faint)'};font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🚪 Cancelar contrato</button>
     </div>`;
   }).join('');
 }
@@ -3755,6 +3955,7 @@ function resolverComOpcaoEngenharia(idx, opcaoId){
     renderMaquinasList(); renderManutList();
     switchContratoTab('concluidos');
     showResultModal('💥', 'Contrato perdido', `A solução escolhida (${opcao.label}) não foi suficiente, e o risco escalou em "${ac.name}". Multa de cancelamento: ${fmt(multa)}.`, null, null, false, EVENTO_IMG.evento_contrato_cancelado);
+    verificarFalencia();
     return;
   }
 
@@ -4317,6 +4518,19 @@ function renderFinancas(){
           <div style="font-size:12.5px;color:var(--text-faint);margin-top:4px;">Faltam ${f.parcelasRestantes} parcela(s) · próxima em ${Math.max(0,f.diasParaProxima)} dia(s) · total restante: ${fmt(f.parcela*f.parcelasRestantes)}</div>
         </div>`).join('')
       : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum financiamento ativo — tudo pago ou comprado à vista.</div>';
+  }
+  const empEl = document.getElementById('emprestimosLista');
+  if(empEl){
+    empEl.innerHTML = emprestimosAtivos.length
+      ? emprestimosAtivos.map(f => `
+        <div style="background:var(--surface);border:1.5px solid rgba(229,72,77,.3);border-radius:14px;padding:11px 12px;margin-bottom:9px;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-size:14.5px;font-weight:800;">🆘 ${f.nome}</span>
+            <span style="font-size:14.5px;font-weight:800;color:var(--danger);">${fmt(f.parcela)}/parcela</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--text-faint);margin-top:4px;">Faltam ${f.parcelasRestantes} parcela(s) · próxima em ${Math.max(0,f.diasParaProxima)} dia(s) · total restante: ${fmt(f.parcela*f.parcelasRestantes)}</div>
+        </div>`).join('')
+      : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum empréstimo ativo.</div>';
   }
   const custosAdminEl = document.getElementById('financasCustosAdminList');
   if(custosAdminEl){

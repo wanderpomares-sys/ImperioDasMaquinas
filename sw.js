@@ -12,7 +12,7 @@
 // CACHE_NAME precisa subir a cada atualização publicada (v1, v2, v3...) — é isso que faz o
 // service worker antigo perceber que existe uma versão nova e trocar de vez o cache guardado.
 
-const CACHE_NAME = 'imperio-das-maquinas-v14';
+const CACHE_NAME = 'imperio-das-maquinas-v16';
 const ARQUIVOS_ESSENCIAIS = [
   './index.html',
   './manifest.json',
