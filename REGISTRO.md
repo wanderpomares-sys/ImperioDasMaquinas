@@ -8,7 +8,7 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 02/10/2026 (sessão 50)
+**Data da última atualização:** 03/10/2026 (sessão 53 — as 3 fases concluídas: lembrete 3D + máquinas Premium, ambos funcionando de verdade)
 
 **Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
@@ -55,6 +55,142 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### Sessão 53 — 03/10/2026 (EM ANDAMENTO) — Fase 1 de 3: Three.js embutido e funcionando, prova de conceito 3D real
+**Pedido novo (feature grande, não bug):** usuário pediu 3 coisas relacionadas: (1) máquinas Premium na Loja, com cores diferentes e equipadas; (2) essas máquinas Premium podem fazer parte de objetivos/missões — tanto compráveis quanto como recompensa exclusiva; (3) lembrete de missão mostrado ao iniciar o jogo e periodicamente, com apresentação **3D de verdade** ("modelo giratório, tipo jogo" — confirmado explicitamente pelo usuário como a opção de maior esforço, não um efeito CSS simulando profundidade).
+
+**Decisão de abordagem:** dado o tamanho da feature (3D de verdade é uma mudança arquitetural grande pra um jogo que é 100% 2D/CSS desde a sessão 1), propus fazer em 3 fases em vez de tentar tudo de uma vez: (1) provar que dá pra embutir uma biblioteca 3D no arquivo único sem depender de internet, com um objeto girando de verdade como prova; (2) construir o lembrete de missão de verdade em cima disso; (3) máquinas Premium. Essa sessão cobriu só a fase 1.
+
+**Fase 1 — concluída e validada:**
+- Instalado Three.js versão 0.149.0 (a mais recente ainda tem o build clássico `three.min.js` pra `<script>` comum — versões mais novas abandonaram esse formato a favor de módulos ES, que exigiriam reestruturar como o jogo carrega scripts)
+- Build minificado (596KB) embutido inline no `app.html`, como um segundo bloco `<script>` antes do script principal do jogo — preserva o princípio de "funciona 100% offline" que o projeto mantém desde as primeiras sessões (nada carregado de CDN externo)
+- Criada `testarCena3D(containerId)` — função de prova de conceito que monta uma cena 3D completa (câmera, luz direcional + ambiente + de preenchimento, material metálico, geometria de nó toroidal dourado) com animação de rotação contínua via `requestAnimationFrame`
+- **Validado com print real, WebGL renderizando de verdade** (não é teste simulado) — Playwright com `--use-gl=swiftshader` pra renderização por software, já que o ambiente não tem GPU de hardware disponível. Dois prints em momentos diferentes confirmam a rotação de verdade acontecendo (orientação do objeto visivelmente diferente entre os dois)
+- Regressão geral rodada após embutir a biblioteca (quase 600KB a mais no arquivo): mesmas 2 falhas pré-existentes já documentadas (sessões 50-52), nada novo quebrado — confirma que adicionar o Three.js não interferiu em nada do jogo existente
+
+**Arquivo cresceu de ~8,14MB pra ~8,34MB** (adição do Three.js). sw.js subiu pra v20.
+
+**IMPORTANTE — isso ainda não é a feature final.** `testarCena3D()` é só a prova de que o pipeline funciona; não está conectada a nenhum gatilho de jogo, não aparece em nenhuma tela normal, e o objeto (nó toroidal dourado genérico) é só placeholder de teste, não a peça visual final pensada pro lembrete de missão.
+
+**Próximo passo real — fase 2:** construir o sistema de fato — decidir o que a cena 3D mostra de verdade (ícone da próxima missão? troféu? a máquina Premium a ser desbloqueada?), o gatilho (uma vez ao iniciar + periodicamente — precisa decidir a cadência exata), e a tela/modal que envolve a cena 3D com o texto da missão. Depois, fase 3: máquinas Premium (compráveis + recompensa).
+
+---
+
+#### Fase 2 (mesma sessão 53, continuação) — Sistema completo de lembrete funcionando no jogo de verdade
+**Cadência confirmada pelo usuário:** a cada 2 missões concluídas na campanha atual, OU especificamente quando sobra só 1 (acabou de terminar a penúltima) — qualquer uma das duas dispara. Mais o gatilho de início de sessão (uma vez, na primeira vez que chega no Hub).
+
+**Implementado:**
+- Overlay novo (`#lembreteMissaoOverlay`) reaproveitando a cena 3D dourada já validada na fase 1 (sem trocar de visual — ficou bom, sem necessidade de redesenhar)
+- Texto contextual conforme o motivo (`inicio` / `periodico` / `penultima`) — eyebrow, título, corpo com quantas missões faltam e pra qual sede, barra de progresso visual
+- Gatilho conectado dentro de `sincronizarMissoes()` — o mesmo lugar que já detecta quando uma missão vira concluída, usando um rastreamento (`lembreteMissaoState.ultimaContagemNotificada`) pra nunca disparar duas vezes pra mesma contagem
+- Limpeza correta do contexto WebGL ao fechar (`renderer.dispose()`) — importante porque navegadores têm um limite baixo de contextos WebGL simultâneos; sem isso, abrir o lembrete repetidas vezes na mesma sessão vazaria memória até travar
+
+**Achado proativo, mesma categoria da sessão 49 (lição já aprendida, aplicada de novo sem esperar o usuário achar primeiro):** o rastreamento de "última contagem notificada" não estava entrando no save/load. Verifiquei isso de propósito ANTES de considerar a fase pronta, porque já é o padrão desse projeto: todo estado novo tem que ser checado contra save/load, não só contra o teste funcional imediato. Corrigido — `jaMostrouNoInicio` fica de fora do save de propósito (reiniciar o jogo devia mesmo mostrar de novo, é "por sessão"), mas `ultimaContagemNotificada` agora persiste, pra não repetir o lembrete de progresso à toa só por causa de um reload.
+
+**Validado:**
+- 5 testes de lógica (início dispara uma vez, não repete na 2ª visita ao Hub, dispara ao completar a 2ª missão, não dispara de novo ao terminar a campanha inteira)
+- 3 testes de persistência (contagem sobrevive ao save/load, lembrete não repete à toa depois de recarregar)
+- 3 prints reais com WebGL renderizando (não simulado) confirmando visualmente: lembrete de início, lembrete de "penúltima" com texto consistente entre título e corpo
+- Regressão: 11 de 13 (fumaça completa, as 2 falhas já são as mesmas pré-existentes documentadas desde a sessão 50) + 5 (persistência de falência) + 5 (lembrete, lógica) + 3 (lembrete, persistência) = 24 de 26, 0 relacionadas a esta sessão
+
+**sw.js atualizado pra v22. Arquivo em ~8,35MB.**
+
+**Próximo passo real — fase 3:** máquinas Premium — cores diferentes, equipadas, parte compráveis na Loja e parte exclusivas como recompensa de missão. Ainda não iniciado.
+
+---
+
+#### Fase 3 (mesma sessão 53, continuação) — Máquinas Premium: compráveis + recompensa, funcionando de verdade
+**Decisão do usuário sobre o formato:** "podem ser variações" — confirmou que Premium são variações dos 5 tipos já existentes (escavadeira, trator, caminhão, retro, pá), não categorias novas. Pros outros dois pontos em aberto (se cor muda desempenho, o que significa "equipada"), segui minha própria interpretação razoável por não ter resposta: cor muda desempenho de verdade (não só estética), e "equipada" virou bônus embutido na máquina em vez de abrir um sistema de implementos à parte — mencionei isso explicitamente antes de implementar.
+
+**Implementado como primeiro par concreto** (expansível pros outros 4 tipos depois, se o usuário quiser):
+- **Escavadeira Hidráulica Black Elite** — comprável na Loja, 70% mais cara que a escavadeira comum (R$408.000 vs R$240.000), com selo "👑 PREMIUM" visual (borda dourada, foto com tratamento preto/dourado, badge na foto)
+- **Retroescavadeira Ouro — Edição Fundador** — só concedida automaticamente ao alcançar sede nível 2 (completar a primeira campanha inteira), nunca aparece pra comprar
+
+**Bônus real aplicado nos dois** (não é só rótulo): +12% de produtividade (entra direto em `calcularFatorProdutividade`, ponderado pela proporção de máquinas Premium no contrato) e -40% de chance de quebrar (aplicado na rolagem real de quebra em `avancarContrato`).
+
+**Reaproveitamento de arquitetura:** estendido `CATALOG`/`MACHINE_TEMPLATES` (mesmos objetos que já existiam) em vez de criar um sistema paralelo — `buyMachine()` funciona sem alteração estrutural, só precisou copiar os campos `premium`/`bonusProdutividade`/`reducaoChanceQuebra` pro objeto da máquina criada.
+
+**Mesma disciplina de persistência da fase 2 — verificada ANTES de considerar pronto, não depois:** `premiumRecompensaConcedida` (rastreia quais recompensas já foram dadas, pra nunca duplicar) entra no save/load desde a implementação inicial.
+
+**Validado:**
+- 9 testes funcionais: compra cria a máquina com os campos certos, bônus de produtividade calculado corretamente (1.0 → 1.12 com a Premium sozinha), recompensa não concede antes da condição, concede ao atingir sede 2, não duplica se chamado de novo
+- 2 testes de persistência: rastreamento de recompensa sobrevive a um reload, não duplica depois
+- Print real confirmando o cartão Premium na Loja — selo, borda dourada, categoria "ESCAVAÇÃO · PREMIUM", texto do bônus
+- Regressão: 11 de 13 (fumaça completa, mesmas 2 falhas pré-existentes) + 10 (falência) + 5 (lembrete) + 9+2 (premium) = 37 de 39, 0 relacionadas a esta sessão
+
+**sw.js atualizado pra v23.**
+
+**Fica em aberto, se o usuário quiser continuar depois:** só 1 máquina Premium compravel e 1 de recompensa existem hoje — cobre os outros 4 tipos (trator, caminhão, pá, e uma segunda retro/escavadeira de recompensa) ainda não foi feito. A estrutura está pronta pra isso ser só mais entradas nos mesmos objetos, sem mudança de arquitetura.
+
+---
+
+#### Continuação (mesma sessão 53) — Cobertura completa dos 5 tipos
+**Pedido:** "Continuar" — expandir a cobertura de Premium pros tipos que faltavam.
+
+**Adicionado, mesmo padrão já validado, sem mudança de arquitetura:**
+- **Trator de Esteira D6T Black Elite** — comprável, R$578.000 (340k × 1,7)
+- **Caminhão Basculante Ford Cargo Black Elite** — comprável, R$323.000 (190k × 1,7)
+- **Pá Carregadeira WA200 Ouro — Edição Fundador** — recompensa, condição `playerSedeNivel >= 3` (completar a 2ª campanha inteira)
+
+**Decisão de design:** em vez de só completar os 5 tipos de qualquer jeito, criei uma **progressão de recompensas** — retro ouro na sede nível 2, pá ouro na sede nível 3 — em vez de só 1 marco único. Dá pro jogador mais de um momento de "conquistei uma Premium" ao longo da campanha, não só uma vez.
+
+**Estado final: os 5 tipos de máquina do jogo agora têm variante Premium** — 3 compráveis (escavadeira, trator, caminhão) e 2 de recompensa escalonada (retro no nível 2, pá no nível 3), todos com o mesmo bônus real (+12% produtividade, -40% chance de quebrar) e o mesmo tratamento visual (selo dourado, borda, categoria "· Premium").
+
+**Validado:**
+- 7 testes novos: compra dos 2 tipos novos com preço e flags corretos, recompensa escalonada (nível 2 dá só retro, nível 3 dá também a pá, sem duplicar)
+- Regressão completa rodada de novo: 11 de 13 (fumaça, 2 falhas pré-existentes já conhecidas) + 10 (falência) + 9+2 (premium original) + 7 (premium novo) = 39 de 41, 0 relacionadas a esta sessão
+
+**sw.js atualizado pra v24. Feature das 3 fases + expansão completa, encerrada por ora.**
+
+---
+
+### Sessão 52 — 03/10/2026 — "Capital" da Loja desatualizado (bug real: conta de compra batia com o caixa de verdade, não com o que a tela mostrava)
+**Pedido:** usuário mandou print mostrando "Caixa após a compra: R$ -40.647" pra uma máquina de R$240.000, com o saldo que ele via sendo R$386 mil — contas que não batem (386.000 - 240.000 = 146.000, não -40.647). Relatou que reiniciar o jogo corrigia.
+
+**Investigação:** a fórmula de cálculo (`remaining = playerCash - c.vista`) estava certa — usa a variável `playerCash` ao vivo, não uma cópia. O número que não batia (-40.647) implicava que o `playerCash` real no momento do cálculo era ~R$199.353, não R$386 mil. Ou seja: o cálculo da compra usava o caixa VERDADEIRO; quem estava errado era o "Capital" mostrado na tela da Loja.
+
+**Causa raiz encontrada:** o "Capital" da Loja (e o "Caixa" da tela de Finanças) são **HTML estático** na página — não são recalculados a cada vez que a tela é desenhada. Eles só atualizam quando `updateFinanceDisplays()` roda, que localiza todo elemento com a classe `.js-cash` e atualiza o texto. O problema: `goTo('loja')` **nunca chamava essa função** — só chamava `renderLojaList()` (que desenha o catálogo, não os números financeiros do topo). Então o "Capital" só ficava correto se, por acaso, alguma OUTRA ação recente (concluir contrato, pagar parcela) tivesse chamado `updateFinanceDisplays()` pouco antes do jogador entrar na Loja — não por navegar pra lá.
+
+**Corrigido:** `updateFinanceDisplays()` agora é chamada sempre, pra qualquer tela, direto no início de `goTo()` — mesma filosofia de "rede de segurança" que a função já tinha pra telas específicas (`corrigirMaquinasOrfas()` já fazia isso), só que essa lacuna financeira especificamente nunca tinha esse mesmo tratamento.
+
+**Validado:**
+- Teste reproduzindo o cenário exato: muda o caixa sem passar por `updateFinanceDisplays()`, navega pra outra tela e volta pra Loja — confirma que o "Capital" mostrado agora bate com o caixa real (antes, ficaria preso no valor antigo)
+- Regressão: 10 (falência) + 5 (persistência) + 11 de 13 (fumaça completa, as 2 falhas já confirmadas pré-existentes nas sessões 50-51) + 11 de 12 (Hub vivo, 1 falha nova encontrada mas confirmada pré-existente por isolamento — revertida minha correção, mesma falha apareceu, restaurada)
+
+**Nota sobre as falhas pré-existentes:** já são 3 falhas conhecidas e confirmadas sem relação com nenhuma correção recente (`Hub reflete o contrato aceito`, `Nível de sede realmente mudou`, `Mostra contagem de frota`) — todas testadas por isolamento em pelo menos uma sessão. Continuam sem investigação de causa raiz porque cada sessão até agora tem tido um bug relatado pelo usuário como prioridade mais alta. Está acumulando — recomendo que uma sessão futura seja dedicada especificamente a isso.
+
+**sw.js atualizado pra v19.**
+
+**Próximo passo real:** continua em aberto desde a sessão 50: confirmar se o bug "máquina quebrou, travou" (relatado ao testar a versão publicada) era cache antigo ou algo novo — usuário não retornou sobre isso ainda.
+
+---
+
+### Sessão 51 — 02/10/2026 — Modal de decisão de risco sem rolagem (print real) + mesma falha em 8 overlays compartilhados
+**Pedido:** usuário mandou print do modal de "decisão de engenharia" (3 opções de risco) cortado — sem conseguir rolar pra ver a 3ª opção nem o botão de confirmar.
+
+**Causa raiz:** `.result-modal-overlay` usava `align-items:center` (flexbox) sem nenhum `overflow-y`, pra centralizar o modal na tela. Quando o conteúdo é mais alto que a tela (como esse modal de 3 opções com descrição e custo cada), o flexbox centraliza igual mesmo assim — cortando a mesma quantidade em cima E embaixo da área visível, sem nenhuma forma de rolar até lá. Confirmado com print real e reproduzido em teste automatizado antes de corrigir.
+
+**Corrigido:** `overflow-y:auto` no overlay + `margin:auto 0` no modal (em vez de `align-items:center` no container) — técnica que centraliza quando o conteúdo cabe E permite rolar a partir do topo quando não cabe, sem precisar decidir de antemão qual vai ser o caso.
+
+**Achado ao investigar mais a fundo: o mesmo padrão de bug existia em outro lugar, pior ainda.** A classe `.compra-overlay` — reaproveitada por **8 overlays diferentes** do jogo (celebração de compra, evolução de sede, parceiros de oficina, zoom de foto de sede, mensagem de cliente, quebra de máquina, **falência**, diário de notícias) — usava `overflow:hidden` (esconde o conteúdo que não cabe, nem dá pra rolar, pior que simplesmente cortar). Dado que o resumo de falência e a mensagem do cliente têm tamanho de conteúdo variável, esses dois tinham risco real do mesmo problema.
+
+**Corrigido com cautela, por causa da estrutura interna variar entre os 8 usos** (alguns têm um efeito visual como primeiro filho, não o conteúdo real — um reaproveitamento genérico de regra quebraria esses): `overflow:hidden` → `overflow-y:auto` na classe base (seguro pros 8, sem exceção), e a técnica de centralização segura (`margin:auto`) aplicada especificamente só nos 2 overlays de conteúdo variável (`#falenciaOverlay`, `#mensagemClienteOverlay`), sem mexer na estrutura dos outros 6.
+
+**Validado:**
+- Print real do modal de risco confirmando as 3 opções e o botão de confirmar agora acessíveis por rolagem
+- Print confirmando que um modal curto (evento de sucesso) continua centralizado normalmente, sem espaço estranho
+- Print do overlay de falência confirmando título completo, sem corte
+- Regressão: 10 (falência) + 5 (persistência) + 2 de 2 execuções limpas (cenário relatado, 1 rodada mostrou falha mas confirmado por isolamento ser instabilidade de `Math.random` já documentada na sessão 47, não regressão de hoje) + 13 de 14 (mensagem de cliente, a 1 falha confirmada pré-existente por isolamento — reverti minha mudança, mesma falha apareceu, restaurei)
+
+**Achado técnico à parte, sobre o ambiente:** logo no início desta sessão, o download do navegador do Playwright falhou de novo (mesma causa da sessão 50 — rede do ambiente bloqueia o domínio), mas o atalho criado na sessão 50 (symlink pra versão 1194 já em cache) ainda funcionava, sem precisar refazer nada.
+
+**sw.js atualizado pra v18.**
+
+**Próximo passo real, carregado da sessão 50, ainda sem solução:**
+1. Confirmar se o bug "máquina quebrou, travou" que o usuário relatou ao testar a versão publicada era cache antigo ou bug novo (investigação não finalizada — usuário foi orientado a limpar cache e testar de novo, sem retorno ainda)
+2. As 12 falhas de `teste-campanhas.js` + 2 de `teste-fumaca-final.js` (pré-existentes, confirmadas de novo nesta sessão por isolamento) continuam sem investigação — já é a segunda sessão seguida que esbarra nelas sem resolver
+
+---
 
 ### Sessão 50 — 02/10/2026 — Marco: jogo publicado no GitHub de verdade, pela primeira vez + correção da tela de cadastro
 **Contexto:** retomada do projeto depois de um tempo parado. Sessão começou com uma saga longa de upload — usuário teve muita dificuldade pra subir os arquivos pro GitHub pelo celular (erro genérico "Something went really wrong, and we can't process that file" do próprio GitHub). Depois de várias tentativas (trocar de rede, aba anônima, verificar se não era problema do nosso arquivo — confirmado por checksum que os arquivos chegavam intactos no celular), o upload passou a funcionar sozinho, sem causa definitiva identificada (instabilidade temporária do lado do GitHub, pelos relatos que encontrei de outros usuários com o mesmo erro).
