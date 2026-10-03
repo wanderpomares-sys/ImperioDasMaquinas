@@ -8,7 +8,7 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 11/09/2026 (sessão 49)
+**Data da última atualização:** 02/10/2026 (sessão 50)
 
 **Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
@@ -55,6 +55,35 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### Sessão 50 — 02/10/2026 — Marco: jogo publicado no GitHub de verdade, pela primeira vez + correção da tela de cadastro
+**Contexto:** retomada do projeto depois de um tempo parado. Sessão começou com uma saga longa de upload — usuário teve muita dificuldade pra subir os arquivos pro GitHub pelo celular (erro genérico "Something went really wrong, and we can't process that file" do próprio GitHub). Depois de várias tentativas (trocar de rede, aba anônima, verificar se não era problema do nosso arquivo — confirmado por checksum que os arquivos chegavam intactos no celular), o upload passou a funcionar sozinho, sem causa definitiva identificada (instabilidade temporária do lado do GitHub, pelos relatos que encontrei de outros usuários com o mesmo erro).
+
+**Marco real: pela primeira vez, o jogo está publicado e acessível fora do ambiente de desenvolvimento**, em `wanderpomares-sys/ImperioDasMaquinas` no GitHub.
+
+**Bug relatado ao testar a versão publicada:** usuário bateu no mesmo padrão da sessão 47 (máquina quebrou, sem dinheiro, travado). Investigação em andamento sobre se isso era uma versão em cache antiga no celular (antes das correções da sessão 47-49) ou um bug novo — ainda não resolvido quando a sessão seguiu para outro assunto.
+
+**Correção visual real, relatada com prints:** na tela de cadastro (primeira tela que qualquer jogador vê), dois problemas de layout em tela estreita:
+1. A barra de status falsa do jogo (relógio + wifi/bateria) tinha o nome do app "Império das Máquinas" no meio, espremendo o indicador de bateria pra fora da tela em celulares mais estreitos — removido (barra de status de verdade nunca mostra nome de app, então isso também não fazia sentido do ponto de vista de autenticidade visual)
+2. O título grande "Império das Máquinas" da tela de cadastro usava fonte grande demais (37,5px) com `white-space:nowrap`, cortando o "s" final em telas estreitas — reduzido pra 28px e removido o `nowrap`, deixando quebrar em 2 linhas como rede de segurança
+
+**Validado:**
+- Prints em 360px (tela estreita) e 412px (largura comum de Android) confirmando visualmente: título cabe numa linha em tela larga, quebra graciosamente em 2 linhas em tela estreita, barra de status limpa nos dois casos
+- Nada mais no código referenciava a classe/elemento removidos
+
+**Achado técnico à parte, sobre o ambiente de trabalho:** o container reiniciou (tempo parado desde a sessão 49) — todos os arquivos de teste em `/home/claude/` e os pacotes npm (jsdom, playwright) tinham sumido. Restaurado copiando os 73 testes de volta de `03-PLANO/` e reinstalando os pacotes. O download do navegador do Playwright falhou (rede do ambiente bloqueia o domínio de download), mas uma versão mais antiga do Chromium (1194) já estava em cache no sistema — resolvido criando um link simbólico apontando a versão nova esperada pra esse binário já existente, sem precisar baixar nada.
+
+**Achado real durante a regressão: 2 testes antigos (`teste-campanhas.js`, 12 falhas; `teste-fumaca-final.js`, 2 falhas) estão falhando, mas confirmado por isolamento (rodei a mesma suíte COM e SEM as correções de hoje, resultado idêntico nas duas) que não tem nenhuma relação com o trabalho desta sessão** — é uma regressão de alguma sessão anterior (suspeita: sessões 48-49, sistema de empréstimo/falência, que nunca foram testadas contra a suíte de campanha completa) que passou despercebida porque a suíte completa não rodou de ponta a ponta desde então. Fica como próximo passo real investigar.
+
+**Validado com os testes que são confiáveis e recentes:** 10 (falência) + 3 (fotos de contrato) + 2 (cenário da sessão 47) = 15/15.
+
+**sw.js atualizado pra v17.**
+
+**Próximo passo real, em ordem de prioridade:**
+1. Confirmar com o usuário se o bug "máquina quebrou, travou" que ele relatou ao testar a versão publicada era cache antigo (resolvido só recarregando) ou um bug novo que precisa de investigação
+2. Investigar as 12+2 falhas de regressão encontradas em `teste-campanhas.js` e `teste-fumaca-final.js` — não são urgentes (não vieram de hoje), mas merecem atenção antes que se acumulem mais sessões em cima de uma base de teste que não reflete mais o jogo real
+
+---
 
 ### Sessão 49 — 11/09/2026 — Lacuna real no save/load do sistema de falência (empréstimo "sumia" ao recarregar)
 **Contexto:** continuação direta da sessão 48 (empréstimo + falência). Antes de fechar o trabalho, revisei com rigor extra se tudo que o sistema novo depende estava mesmo funcionando ponta a ponta — inclusive save/load, que não tinha sido verificado explicitamente na sessão anterior.
