@@ -8,7 +8,7 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 
 ## 1. ESTADO ATUAL (sempre reflete o presente — reescreva esta seção a cada sessão)
 
-**Data da última atualização:** 03/10/2026 (sessão 53 — as 3 fases concluídas: lembrete 3D + máquinas Premium, ambos funcionando de verdade)
+**Data da última atualização:** 04/10/2026 (sessão 53 — Fotos Premium conectadas e testadas (16/16). Pronto.
 
 **Arquivo do jogo:** `01-JOGO/app.html` (~1,31 MB) — **arquivo único e autocontido**. As 5 fotos de sede e os 3 vídeos de obra estão embutidos como base64 diretamente no HTML. O jogo não depende de nenhum arquivo externo além de `manifest.json` e os ícones do PWA.
 
@@ -55,6 +55,20 @@ No fim de cada sessão, adicione uma entrada na seção 2 (histórico) — nunca
 ---
 
 ## 2. HISTÓRICO DE SESSÕES (cronológico — não editar entradas passadas, só adicionar no topo)
+
+### ⚠️ PAUSA NO MEIO DE UMA TAREFA (ler antes de continuar a sessão 53)
+Usuário mandou fotos reais das máquinas Premium (preto+dourado, marca "porta"/"TURBO-X7") cobrindo os 7 tipos: retro, pá, trator, escavadeira, caminhão (Scania), mini-escavadeira (bônus, não usado ainda em lugar nenhum) e motoniveladora (bônus, idem). Processadas e **já embutidas** em `app.html` num objeto novo `PREMIUM_IMG` (chaves: `retro_premium`, `pa_premium`, `trator_premium`, `escavadeira_premium`, `caminhao_premium`, `mini_escavadeira_premium`, `motoniveladora_premium`) — sintaxe confirmada OK.
+
+**O que falta, exatamente:** essas fotos **ainda não estão conectadas a nada** — `CATALOG`, `MACHINE_TEMPLATES` e `PREMIUM_RECOMPENSA` continuam apontando pras fotos antigas (as mesmas fotos normais, só com filtro CSS de desaturação simulando "Premium"). Próximo passo real, assim que a sessão continuar:
+1. Trocar o `photo`/`thumb` de `escavadeiraPremium`, `tratorPremium`, `caminhaoPremium` (em `MACHINE_TEMPLATES` e `CATALOG`) pra `PREMIUM_IMG.escavadeira_premium`, `PREMIUM_IMG.trator_premium`, `PREMIUM_IMG.caminhao_premium`
+2. Mesma troca em `retroOuro` e `paOuro` (dentro de `PREMIUM_RECOMPENSA`) pra `PREMIUM_IMG.retro_premium` e `PREMIUM_IMG.pa_premium`
+3. Remover o filtro CSS `saturate(.3) brightness(.75) contrast(1.15)` dos cartões Premium na Loja e na lista de Máquinas — não faz mais sentido com foto já genuinamente preto+dourado
+4. Rodar a regressão completa (`teste-fumaca-final.js`, `teste-falencia.js`, `teste-premium.js`, `teste-premium2.js`) só depois dessa troca, já que ela sim mexe em dado usado de verdade
+5. `mini_escavadeira_premium` e `motoniveladora_premium` ficam disponíveis em `PREMIUM_IMG` mas sem nenhum tipo correspondente no catálogo ainda — decidir com o usuário se vale criar esses dois também, ou deixar só como banco de imagem pra uso futuro
+
+**sw.js já está na v25** (subi a versão só pra marcar o ponto de save, mesmo com a tarefa incompleta).
+
+---
 
 ### Sessão 53 — 03/10/2026 (EM ANDAMENTO) — Fase 1 de 3: Three.js embutido e funcionando, prova de conceito 3D real
 **Pedido novo (feature grande, não bug):** usuário pediu 3 coisas relacionadas: (1) máquinas Premium na Loja, com cores diferentes e equipadas; (2) essas máquinas Premium podem fazer parte de objetivos/missões — tanto compráveis quanto como recompensa exclusiva; (3) lembrete de missão mostrado ao iniciar o jogo e periodicamente, com apresentação **3D de verdade** ("modelo giratório, tipo jogo" — confirmado explicitamente pelo usuário como a opção de maior esforço, não um efeito CSS simulando profundidade).
@@ -1413,3 +1427,4 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 3. Antes de editar `app.html` com scripts automatizados, **rodar teste depois, nunca confiar na edição sem executar o arquivo de verdade** — foi exatamente a falta disso que causou o incidente da Sessão 4.
 4. Toda sessão que altera o jogo termina com: teste automatizado rodando, arquivo `app.html` atualizado em `01-JOGO/`, e uma entrada nova aqui.
 5. Se um arquivo de teste (`teste-*.js`) for descartado, ele vai para `_arquivo/`, nunca é deletado — serve de prova do que foi validado.
+### Sessão 54 — manutenção regular não limpava 'quebrada' (bug real relatado) + teto de endividamento baixo demais com empréstimo ativo, travava jogador com caixa positivo. Corrigidos os dois, testados 3/3.
