@@ -2992,7 +2992,7 @@ const PREMIUM_RECOMPENSA = {
 // ===== DESBLOQUEIO PAGO — SEDE 3 EM DIANTE (sessão 55) =====
 // IMPORTANTE: troque essa URL pela sua, depois de publicar a função no Vercel
 // (instruções em vercel-pagamento/README.md).
-const VERCEL_API_URL = 'https://SUA-URL-AQUI.vercel.app';
+const VERCEL_API_URL = 'https://imperio-pagamento.vercel.app';
 
 // Fica numa chave do localStorage SEPARADA do save normal do jogo, de propósito — se o
 // jogador clicar em "Recomeçar do zero" depois de falência, ele já pagou, não deveria
@@ -3028,10 +3028,17 @@ async function iniciarPagamentoDesbloqueio(){
     const dados = await resp.json();
     if(!resp.ok || !dados.linkPagamento) throw new Error(dados.erro || 'Falha ao gerar link');
     referenciaPagamentoAtual = dados.referencia;
-    localStorage.setItem('imperio_referencia_pagamento', dados.referencia);
-    window.open(dados.linkPagamento, '_blank');
+    try{ localStorage.setItem('imperio_referencia_pagamento', dados.referencia); }catch(e){ console.warn('localStorage indisponivel ao guardar referencia:', e); }
     document.getElementById('btnVerificarDesbloqueio').style.display = 'block';
-    status.textContent = 'Pague na aba que abriu e volte aqui pra verificar.';
+    const aba = window.open(dados.linkPagamento, '_blank');
+    if(aba){
+      status.textContent = 'Pague na aba que abriu e volte aqui pra verificar.';
+    }else{
+      // Navegador bloqueou a nova aba: segue na mesma aba. A referência já está guardada,
+      // então ao voltar ao jogo basta abrir a Sede 3 de novo e tocar em "Já paguei, verificar".
+      status.textContent = 'Abrindo o Mercado Pago...';
+      window.location.href = dados.linkPagamento;
+    }
   }catch(e){
     status.textContent = '⚠️ Não consegui gerar o link agora. Tenta de novo em instantes.';
     console.error(e);
