@@ -1428,3 +1428,4 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 4. Toda sessão que altera o jogo termina com: teste automatizado rodando, arquivo `app.html` atualizado em `01-JOGO/`, e uma entrada nova aqui.
 5. Se um arquivo de teste (`teste-*.js`) for descartado, ele vai para `_arquivo/`, nunca é deletado — serve de prova do que foi validado.
 ### Sessão 54 — manutenção regular não limpava 'quebrada' (bug real relatado) + teto de endividamento baixo demais com empréstimo ativo, travava jogador com caixa positivo. Corrigidos os dois, testados 3/3.
+### Sessão 55 — fechadas as últimas lacunas: pá carregadeira (2ª unidade), 2 contratos de frete puro pra quem começa com caminhão, e escavadeira30. Zero tipo de máquina sem opção de compra agora.

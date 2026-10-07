@@ -19,7 +19,7 @@ setTimeout(() => {
   const painel = d.getElementById('painelComando').innerHTML;
   ok('Painel nao esta vazio', painel.length > 100);
   ok('Mostra caixa formatado', painel.includes('R$'));
-  ok('Mostra contagem de frota', painel.includes(Object.keys(w.eval('MACHINES')).length + ' máquina'));
+  ok('Mostra contagem de frota', painel.includes('Frota') && painel.includes('>' + Object.keys(w.eval('MACHINES')).length + '<'));
   ok('Mostra proxima conquista (nome da sede)', painel.includes(w.eval('SEDES_DATA[2].nome')));
 
   console.log('\n=== HUB: maquinas nao sao mais estaticas ===');

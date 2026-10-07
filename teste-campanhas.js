@@ -46,11 +46,11 @@ setTimeout(() => {
   ok('Botao explica o que falta', sed.textContent.includes('faltam'), sed.textContent.match(/faltam[^<]*/) ? sed.textContent.match(/faltam[^<]*/)[0].slice(0, 60) : '?');
 
   console.log('\n=== 4. PROGREDIR MISSOES ===');
-  w.eval('stats.contratosNoPrazo = 3; sincronizarMissoes();');
+  w.eval('stats.contratosNoPrazo = 6; sincronizarMissoes();');
   ok('Missao de entregas concluida', w.eval("campanhaAtual().find(m=>m.id==='s2a').concluida") === true);
   ok('Agora faltam 2', JSON.parse(w.eval('JSON.stringify(statusCompraSede())')).missoesFaltam === 2);
 
-  w.eval("maquinasComManutencaoRealizada.add('a'); maquinasComManutencaoRealizada.add('b'); faturamentoAcumulado = 150000; sincronizarMissoes();");
+  w.eval("maquinasComManutencaoRealizada.add('a'); maquinasComManutencaoRealizada.add('b'); maquinasComManutencaoRealizada.add('c'); faturamentoAcumulado = 280000; sincronizarMissoes();");
   const s1 = JSON.parse(w.eval('JSON.stringify(statusCompraSede())'));
   ok('Todas as 3 missoes concluidas', s1.missoesOk === true, s1.missoesFeitas + '/' + s1.totalMissoes);
   ok('Ainda NAO pode comprar (falta rep e caixa)', s1.pode === false);
@@ -83,7 +83,7 @@ setTimeout(() => {
   ok('Missoes antigas sumiram', !mis2.includes('Primeiras entregas'));
 
   console.log('\n=== 8. RESGATE DE RECOMPENSA ===');
-  w.eval('contratosTier3Completos = 1; sincronizarMissoes();');
+  w.eval('contratosTier3Completos = 2; sincronizarMissoes();');
   const cash2 = w.eval('playerCash');
   w.eval("resgatarMissao('s3a')");
   ok('Recompensa creditada', w.eval('playerCash') === cash2 + 15000);

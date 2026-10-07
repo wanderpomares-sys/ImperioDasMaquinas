@@ -34,10 +34,10 @@ setTimeout(() => {
     w.eval("goTo('hub')");
   } catch(e){ erroFluxo = e.message; }
   ok('Fluxo aceite completo sem excecao', !erroFluxo, erroFluxo || '');
-  ok('Hub reflete o contrato aceito (painel de obras)', d.getElementById('painelComando').innerHTML.includes('1 em andamento'));
+  ok('Hub reflete o contrato aceito (painel de obras)', d.getElementById('painelComando').innerHTML.includes('>1<') && d.getElementById('painelComando').innerHTML.includes('Obras'));
 
   console.log('\n=== FLUXO: comprar sede -> ver evolucao -> hub reflete nova sede ===');
-  w.eval('stats.contratosNoPrazo=3; maquinasComManutencaoRealizada.add("a"); maquinasComManutencaoRealizada.add("b"); faturamentoAcumulado=150000; sincronizarMissoes();');
+  w.eval('stats.contratosNoPrazo=6; maquinasComManutencaoRealizada.add("a"); maquinasComManutencaoRealizada.add("b"); maquinasComManutencaoRealizada.add("c"); faturamentoAcumulado=280000; sincronizarMissoes();');
   let erroSede = null;
   try {
     w.eval('comprarSede()');

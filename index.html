@@ -1058,6 +1058,21 @@
       </div>
     </div>
 
+    <!-- ============ DESBLOQUEIO PAGO — SEDE 3 EM DIANTE (NOVO, sessão 55) ============ -->
+    <div class="compra-overlay" id="desbloqueioOverlay" style="display:none;background:radial-gradient(circle at 50% 35%,#1A2638,#0A0712);z-index:92;">
+      <div style="position:relative;z-index:2;text-align:center;padding:0 24px;width:100%;margin-top:auto;margin-bottom:auto;">
+        <div style="font-size:52px;">🔓</div>
+        <div style="font-size:21px;font-weight:900;color:#fff;margin-top:10px;">Desbloqueie a Sede 3 em diante</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.72);margin-top:10px;line-height:1.55;max-width:300px;margin-left:auto;margin-right:auto;">
+          Você jogou grátis até aqui. Pra continuar a partir da 3ª sede, é um pagamento único de <b style="color:var(--amber-1);">R$ 9,90</b> — sem mensalidade, sem anúncio.
+        </div>
+        <button onclick="iniciarPagamentoDesbloqueio()" id="btnPagarDesbloqueio" style="margin-top:22px;width:100%;max-width:300px;background:linear-gradient(160deg,#4FA0D9,#2E7BB8);border:none;color:#fff;font-weight:800;font-size:15px;border-radius:12px;padding:14px;">💳 Pagar com Mercado Pago</button>
+        <button onclick="verificarPagamentoDesbloqueio()" id="btnVerificarDesbloqueio" style="margin-top:10px;width:100%;max-width:300px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:14px;border-radius:12px;padding:12px;display:none;">✅ Já paguei, verificar</button>
+        <div id="desbloqueioStatus" style="margin-top:12px;font-size:13px;color:rgba(255,255,255,.6);min-height:18px;"></div>
+        <button onclick="fecharTelaDesbloqueio()" style="margin-top:18px;background:none;border:none;color:rgba(255,255,255,.45);font-size:13px;">Voltar</button>
+      </div>
+    </div>
+
     <!-- ============ LEMBRETE DE MISSÃO 3D (NOVO — Fase 2, sessão 53) ============ -->
     <div class="compra-overlay" id="lembreteMissaoOverlay" style="display:none;background:radial-gradient(circle at 50% 35%, #2A1C08, #0A0712);z-index:90;">
       <div style="position:relative;z-index:2;text-align:center;padding:0 22px;width:100%;">
@@ -1431,6 +1446,13 @@ function comprarSede(){
     if(!st.repOk)     faltas.push('reputacao ' + reputacao + '/' + st.req.reputacao);
     if(!st.cashOk)    faltas.push('caixa ' + fmt(playerCash) + ' de ' + fmt(st.req.custo));
     showToast('Ainda nao: ' + faltas.join(' \u00b7 '));
+    return;
+  }
+
+  // NOVO (decisão do usuário): sede 3 em diante exige desbloqueio pago (R$9,90, único, via
+  // Mercado Pago). Grátis até a 2ª sede. Verifica ANTES de debitar qualquer coisa do jogo.
+  if(st.alvo >= 3 && !jogoDesbloqueadoPago){
+    abrirTelaDesbloqueio();
     return;
   }
 
@@ -2966,6 +2988,78 @@ const PREMIUM_RECOMPENSA = {
     condicao: () => playerSedeNivel >= 3, // completou a 2a campanha inteira (comprou a 3a sede)
   }
 };
+
+// ===== DESBLOQUEIO PAGO — SEDE 3 EM DIANTE (sessão 55) =====
+// IMPORTANTE: troque essa URL pela sua, depois de publicar a função no Vercel
+// (instruções em vercel-pagamento/README.md).
+const VERCEL_API_URL = 'https://SUA-URL-AQUI.vercel.app';
+
+// Fica numa chave do localStorage SEPARADA do save normal do jogo, de propósito — se o
+// jogador clicar em "Recomeçar do zero" depois de falência, ele já pagou, não deveria
+// precisar pagar de novo.
+const CHAVE_DESBLOQUEIO = 'imperio_desbloqueio_pago';
+// CORRIGIDO (achado em revisão, antes de causar dano real): chamar localStorage direto no
+// nível raiz do script, sem try/catch, é frágil — se falhar por qualquer motivo (modo privado
+// de alguns navegadores, contexto de origem restrito), a exceção não tratada trava a execução
+// do resto do arquivo inteiro, quebrando TODAS as telas do jogo, não só o desbloqueio pago.
+let jogoDesbloqueadoPago = false;
+let referenciaPagamentoAtual = null;
+try{
+  jogoDesbloqueadoPago = localStorage.getItem(CHAVE_DESBLOQUEIO) === 'sim';
+  referenciaPagamentoAtual = localStorage.getItem('imperio_referencia_pagamento') || null;
+}catch(e){ console.warn('localStorage indisponivel ao carregar estado de desbloqueio:', e); }
+
+function abrirTelaDesbloqueio(){
+  document.getElementById('desbloqueioOverlay').style.display = 'flex';
+  document.getElementById('desbloqueioStatus').textContent = '';
+  // Se já tinha uma tentativa de pagamento em aberto, mostra direto o botão de verificar
+  document.getElementById('btnVerificarDesbloqueio').style.display = referenciaPagamentoAtual ? 'block' : 'none';
+}
+function fecharTelaDesbloqueio(){
+  document.getElementById('desbloqueioOverlay').style.display = 'none';
+}
+
+async function iniciarPagamentoDesbloqueio(){
+  const status = document.getElementById('desbloqueioStatus');
+  const btn = document.getElementById('btnPagarDesbloqueio');
+  btn.disabled = true; status.textContent = 'Gerando link de pagamento...';
+  try{
+    const resp = await fetch(`${VERCEL_API_URL}/api/criar-pagamento`, { method:'POST' });
+    const dados = await resp.json();
+    if(!resp.ok || !dados.linkPagamento) throw new Error(dados.erro || 'Falha ao gerar link');
+    referenciaPagamentoAtual = dados.referencia;
+    localStorage.setItem('imperio_referencia_pagamento', dados.referencia);
+    window.open(dados.linkPagamento, '_blank');
+    document.getElementById('btnVerificarDesbloqueio').style.display = 'block';
+    status.textContent = 'Pague na aba que abriu e volte aqui pra verificar.';
+  }catch(e){
+    status.textContent = '⚠️ Não consegui gerar o link agora. Tenta de novo em instantes.';
+    console.error(e);
+  }
+  btn.disabled = false;
+}
+
+async function verificarPagamentoDesbloqueio(){
+  const status = document.getElementById('desbloqueioStatus');
+  if(!referenciaPagamentoAtual){ status.textContent = 'Nenhum pagamento em andamento — clique em "Pagar" primeiro.'; return; }
+  status.textContent = 'Verificando com o Mercado Pago...';
+  try{
+    const resp = await fetch(`${VERCEL_API_URL}/api/verificar-pagamento?referencia=${encodeURIComponent(referenciaPagamentoAtual)}`);
+    const dados = await resp.json();
+    if(dados.aprovado){
+      jogoDesbloqueadoPago = true;
+      localStorage.setItem(CHAVE_DESBLOQUEIO, 'sim');
+      localStorage.removeItem('imperio_referencia_pagamento');
+      status.textContent = '✅ Pagamento confirmado!';
+      setTimeout(() => { fecharTelaDesbloqueio(); comprarSede(); }, 900);
+    } else {
+      status.textContent = 'Ainda não identifiquei o pagamento (status: ' + (dados.status||'pendente') + '). Se acabou de pagar, aguarda alguns segundos e tenta de novo.';
+    }
+  }catch(e){
+    status.textContent = '⚠️ Não consegui verificar agora. Tenta de novo em instantes.';
+    console.error(e);
+  }
+}
 
 // Rastreia quais recompensas Premium já foram concedidas, pra nunca duplicar — entra no
 // save/load desde já (mesma lição da sessão 49: checar isso ANTES de considerar a feature pronta).
@@ -5138,6 +5232,7 @@ function renderLojaList(){
         <div class="cat-cat">${c.cat}</div>
         <div class="cat-name">${c.name}</div>
         <div class="cat-meta">À vista: <b style="color:var(--ok);">${fmt(c.vista)}</b></div>
+        ${c.premium && playerSedeNivel < 3 ? `<div class="cat-meta" style="color:#E5484D;margin-top:4px;">🔒 Disponível a partir da 3ª sede</div>` : ''}
         ${c.recommended ? `<div class="cat-meta" style="color:${c.premium?'#F2C14E':'var(--amber-1)'};margin-top:4px;">${c.premium?'👑':'⭐'} ${c.recommended}</div>` : ''}
       </div>
     </div>`;
@@ -5305,6 +5400,13 @@ function confirmarTroca(modo){
 
 function buyMachine(){
   const c = CATALOG[currentLojaKey];
+
+  // NOVO (decisão do usuário, sessão 55): máquina Premium exige ter a 3ª sede — reforça o
+  // valor de quem já pagou o desbloqueio, já que chegar lá exige o pagamento único.
+  if(c.premium && playerSedeNivel < 3){
+    showResultModal('🔒', 'Ainda não disponível', `Máquinas Premium só ficam disponíveis a partir da ${SEDES_DATA[3].nome} (3ª sede).\n\nSua sede atual: ${SEDES_DATA[playerSedeNivel].nome}.`);
+    return;
+  }
 
   // Dívida técnica corrigida: capacidade da sede agora bloqueia a compra de verdade
   const capacidade = SEDES_DATA[playerSedeNivel].maxMaquinas;
