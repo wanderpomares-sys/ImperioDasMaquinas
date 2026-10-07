@@ -2076,6 +2076,11 @@ const CONTRACT_POOL = [
   { nome:"Contenção de Encosta", req:[{tipo:"retro",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:14, valorBase:300000, riscoDesc:"Risco real de deslizamento de terra durante a intervenção, especialmente em dia de chuva.", tipoConsequencia:"ambos", photo:CONTRATO_IMG.contencao_encosta, hero:CONTRATO_IMG.contencao_encosta },
   { nome:"Estabilização de Margem de Rio", req:[{tipo:"escavadeira",qtd:1},{tipo:"caminhao",qtd:1}], risk:"high", riskLabel:"Alto", prazoDias:15, valorBase:315000, riscoDesc:"Erosão da margem pode ceder sob o peso da máquina, com risco de tombamento em direção à água.", tipoConsequencia:"ambos", photo:CONTRATO_IMG.estabilizacao_margem_rio, hero:CONTRATO_IMG.estabilizacao_margem_rio },
   { nome:"Remoção de Entulho de Obra", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"low", riskLabel:"Baixo", prazoDias:7, valorBase:105000, riscoDesc:"Entulho pontiagudo pode perfurar pneu da máquina durante o carregamento.", tipoConsequencia:"custo", photo:CONTRATO_IMG.remocao_entulho_obra, hero:CONTRATO_IMG.remocao_entulho_obra },
+  // NOVO (relato real: jogador escolheu caminhão como primeira máquina e não tinha NENHUM
+  // contrato possível — nenhum dos 40 arquétipos exigia só caminhão, todos combinavam com
+  // outro tipo. Esses 2 cobrem frete puro, material já carregado na origem, sem precisar escavar.
+  { nome:"Transporte de Material entre Obras", req:[{tipo:"caminhao",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:5, valorBase:48000, riscoDesc:"Trânsito urbano no trajeto pode atrasar as viagens entre os dois canteiros.", tipoConsequencia:"atraso", photo:CONTRATO_IMG.remocao_entulho_obra, hero:CONTRATO_IMG.remocao_entulho_obra },
+  { nome:"Frete de Brita pra Concreteira", req:[{tipo:"caminhao",qtd:1}], risk:"low", riskLabel:"Baixo", prazoDias:6, valorBase:54000, riscoDesc:"Fila de espera na concreteira pode atrasar o descarregamento em dias de pico.", tipoConsequencia:"atraso", photo:CONTRATO_IMG.extracao_cascalho, hero:CONTRATO_IMG.extracao_cascalho },
   { nome:"Preparo de Base p/ Galpão Logístico", req:[{tipo:"trator",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:13, valorBase:245000, riscoDesc:"Especificação rígida de compactação aumenta o risco de retrabalho caso a base não passe no teste.", tipoConsequencia:"atraso", photo:CONTRATO_IMG.preparo_base_galpao_logistico, hero:CONTRATO_IMG.preparo_base_galpao_logistico },
   { nome:"Extração de Cascalho", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:2}], risk:"mid", riskLabel:"Médio", prazoDias:12, valorBase:250000, riscoDesc:"Pilha instável de material pode desmoronar sobre a máquina durante o carregamento.", tipoConsequencia:"custo", photo:CONTRATO_IMG.extracao_cascalho, hero:CONTRATO_IMG.extracao_cascalho },
   { nome:"Extração de Areia", req:[{tipo:"pa",qtd:1},{tipo:"caminhao",qtd:1}], risk:"mid", riskLabel:"Médio", prazoDias:11, valorBase:200000, riscoDesc:"Areia encharcada pode fazer a máquina atolar durante a extração.", tipoConsequencia:"atraso", photo:CONTRATO_IMG.extracao_areia, hero:CONTRATO_IMG.extracao_areia },
@@ -2839,6 +2844,24 @@ const CATALOG = {
     vista:MARKET_BASE_PRICES.trator, parcelasCount:18, reputacaoMinFinanciamento:125,
     recommended:null, payback:"6 a 8 meses"
   },
+  // NOVO (última lacuna conhecida, desde sessão 22: "Extração de Pedra" e outros pediam
+  // escavadeira30 — tipo de 30 toneladas, maior que a comum — sem NENHUMA opção de compra
+  // em lugar nenhum do jogo).
+  escavadeira30: {
+    name:"Escavadeira Hidráulica CAT 336 (30t)", cat:"Escavação pesada",
+    photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=600&auto=format&fit=crop",
+    vista:Math.round(MARKET_BASE_PRICES.escavadeira * 1.45), parcelasCount:16, reputacaoMinFinanciamento:115,
+    recommended:null, payback:"7 a 9 meses — categoria pesada"
+  },
+  // NOVO (relato real: jogador vendeu/perdeu a única pá carregadeira e não tinha NENHUMA forma
+  // de comprar outra — só existia a recompensa Premium do nível 3, longe demais pra resolver
+  // na hora). Fecha o gap seguindo o mesmo padrão das outras "2ª unidade".
+  pa2: {
+    name:"Pá Carregadeira (2ª unidade)", cat:"Carregamento",
+    photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=600&auto=format&fit=crop",
+    vista:MARKET_BASE_PRICES.pa, parcelasCount:12, reputacaoMinFinanciamento:0,
+    recommended:null, payback:"5 a 7 meses"
+  },
   motoniveladora: {
     name:"Motoniveladora", cat:"Nivelamento",
     photo:"https://images.pexels.com/photos/33068417/pexels-photo-33068417.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop",
@@ -2897,6 +2920,12 @@ const MACHINE_TEMPLATES = {
   motoniveladora: { tipoKey:'motoniveladora', name:"Motoniveladora", cat:"Nivelamento", specs:"14 toneladas · lâmina 3,7 m",
     photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
     thumb:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop" },
+  escavadeira30: { tipoKey:'escavadeira30', name:"Escavadeira Hidráulica CAT 336 (30t)", cat:"Escavação pesada", specs:"30 toneladas · caçamba 1,8 m³",
+    photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop" },
+  pa2: { tipoKey:'pa', name:"Pá Carregadeira WA200", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
+    photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=800&auto=format&fit=crop",
+    thumb:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=70&w=200&auto=format&fit=crop" },
   caminhao2: { tipoKey:'caminhao', name:"Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
     photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop" },
