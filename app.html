@@ -377,6 +377,14 @@
   }
 
   /* ===== BOTTOM NAV ===== */
+  /* Espaço de anúncio: UM banner pequeno (50px), no fluxo normal acima da barra inferior,
+     nunca por cima do conteúdo. Enquanto não houver rede, mostra só a palavra "Anúncio". */
+  .ad-slot{flex-shrink:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+    margin:26px 16px 34px;padding:0;}
+  .ad-slot.on{display:flex;}
+  .ad-slot-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:3px;}
+  .ad-slot-box{width:100%;max-width:320px;height:50px;overflow:hidden;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);}
+  .ad-slot-box.teste{border:1px dashed rgba(255,255,255,.14);}
   .bottomnav{
     flex-shrink:0;display:flex;justify-content:space-around;align-items:center;
     padding:9px 2px 16px;background:linear-gradient(180deg,#161029,#0F0B1D);
@@ -522,6 +530,7 @@
     <div class="app-body">
 
       <!-- ============ LOGIN (retorno) ============ -->
+      <div class="ad-slot" id="adSlot" aria-label="Publicidade"><div class="ad-slot-label">Publicidade</div><div class="ad-slot-box" id="adSlotBox"></div></div>
       <div class="screen" id="screen-login">
         <div class="screen-scroll">
           <div class="login-hero">
@@ -575,7 +584,7 @@
         </div>
         <div class="signup-zone">
           <button class="action-btn" onclick="confirmSignup()">🏗️ Criar empresa e continuar</button>
-          <div class="signup-note">Seus dados ficam salvos localmente nesta demonstração — nenhuma informação é enviada a servidores.</div>
+          <div class="signup-note">Seu progresso fica salvo neste aparelho. O pagamento é processado pelo Mercado Pago e o jogo pode exibir anúncios.</div>
         </div>
       </div>
 
@@ -627,6 +636,8 @@
             <div class="fin-col"><div class="fin-label">Saúde do caixa</div><div class="fin-value ok js-saude">—</div></div>
           </div>
 
+          <div style="padding:0 16px;" class="js-cartao-desbloqueio"></div>
+
           <div class="section-label">🏢 Painel de comando</div>
           <div class="comando-grid" id="painelComando"></div>
 
@@ -676,6 +687,7 @@
                 <div class="sh-sub">Todo contrato paga um preço em risco — avalie antes de aceitar.</div>
               </div>
             </div>
+            <div style="padding:0 16px 10px;" class="js-cartao-desbloqueio"></div>
             <div class="tabs" style="display:flex;gap:8px;padding:0 16px 12px;">
               <div class="tab" data-tab="disponiveis" onclick="switchContratoTab('disponiveis')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:var(--amber-1);color:var(--bg-1);cursor:pointer;">Disponíveis</div>
               <div class="tab" data-tab="andamento" onclick="switchContratoTab('andamento')" style="flex:1;text-align:center;padding:9px 4px;border-radius:11px;font-size:15.5px;font-weight:800;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-faint);cursor:pointer;">Em andamento</div>
@@ -741,6 +753,7 @@
             <div class="fin-col"><div class="fin-label">Patrimônio</div><div class="fin-value amber js-patrimonio">R$ 0</div></div>
             <div class="fin-col"><div class="fin-label">Saúde do caixa</div><div class="fin-value ok js-saude">—</div></div>
           </div>
+          <div style="padding:0 16px;" class="js-cartao-desbloqueio"></div>
           <div class="finance-panel" style="grid-template-columns:1fr 1fr;margin-top:8px;">
             <div class="fin-col"><div class="fin-label">⭐ Reputação da empresa</div><div class="fin-value" id="hubReputacao" style="color:var(--amber-1);">100 / 150</div></div>
             <div class="fin-col"><div class="fin-label">🧾 Impostos provisionados</div><div class="fin-value" id="hubImpostos" style="color:var(--danger);">R$ 0</div></div>
@@ -911,6 +924,8 @@
             </div>
           </div>
 
+          <div style="padding:0 16px;" class="js-cartao-desbloqueio"></div>
+
           <div style="padding:0 16px;">
             <div class="section-label" style="margin-top:12px;">Todos os níveis</div>
             <div id="sedesLista" style="margin-top:8px;"></div>
@@ -1064,7 +1079,7 @@
         <div style="font-size:52px;">🔓</div>
         <div style="font-size:21px;font-weight:900;color:#fff;margin-top:10px;">Desbloqueie a Sede 3 em diante</div>
         <div style="font-size:14px;color:rgba(255,255,255,.72);margin-top:10px;line-height:1.55;max-width:300px;margin-left:auto;margin-right:auto;">
-          Você jogou grátis até aqui. Pra continuar a partir da 3ª sede, é um pagamento único de <b style="color:var(--amber-1);">R$ 9,90</b> — sem mensalidade, sem anúncio.
+          Você jogou grátis até aqui. Pra continuar a partir da 3ª sede, é um pagamento único de <b style="color:var(--amber-1);">R$ 9,90</b> — sem mensalidade. O jogo continua exibindo anúncios.
         </div>
         <button onclick="iniciarPagamentoDesbloqueio()" id="btnPagarDesbloqueio" style="margin-top:22px;width:100%;max-width:300px;background:linear-gradient(160deg,#4FA0D9,#2E7BB8);border:none;color:#fff;font-weight:800;font-size:15px;border-radius:12px;padding:14px;">💳 Pagar com Mercado Pago</button>
         <button onclick="verificarPagamentoDesbloqueio()" id="btnVerificarDesbloqueio" style="margin-top:10px;width:100%;max-width:300px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:14px;border-radius:12px;padding:12px;display:none;">✅ Já paguei, verificar</button>
@@ -1933,7 +1948,7 @@ function sortearApelido(){ return sortear(APELIDOS_MAQUINA); }
 const MACHINES = {
   retro: {
     tipoKey:"retro", idadeDias:640, diasDesdeUltimaManutencao:80,
-    name: "Retroescavadeira NH B110B", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
+    name: "Retroescavadeira 14t", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
     photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=500&fit=crop&w=800",
     thumb:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200",
     health:22, status:"red", statusLabel:"🔴 Crítico", hours:"340h desde a última revisão", utilizacao:0,
@@ -1944,7 +1959,7 @@ const MACHINES = {
   },
   trator: {
     tipoKey:"trator", idadeDias:310, diasDesdeUltimaManutencao:20,
-    name: "Trator de Esteira D6T", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
+    name: "Trator de Esteira 18t", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
     photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
     thumb:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
     health:61, status:"amber", statusLabel:"🟡 Atenção", hours:"180h desde a última revisão", utilizacao:78,
@@ -1955,7 +1970,7 @@ const MACHINES = {
   },
   escavadeira: {
     tipoKey:"escavadeira", idadeDias:45, diasDesdeUltimaManutencao:10,
-    name: "Escavadeira Hidráulica CAT 320D", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
+    name: "Escavadeira Hidráulica 22t", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
     photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop",
     health:92, status:"green", statusLabel:"🟢 OK", hours:"40h desde a última revisão", utilizacao:35,
@@ -1966,7 +1981,7 @@ const MACHINES = {
   },
   caminhao: {
     tipoKey:"caminhao", idadeDias:95, diasDesdeUltimaManutencao:15,
-    name: "Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
+    name: "Caminhão Basculante 12 m³", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
     photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop",
     health:88, status:"green", statusLabel:"🟢 OK", hours:"95h desde a última revisão", utilizacao:20,
@@ -1977,7 +1992,7 @@ const MACHINES = {
   },
   pa: {
     tipoKey:"pa", idadeDias:380, diasDesdeUltimaManutencao:50,
-    name: "Pá Carregadeira WA200", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
+    name: "Pá Carregadeira 20t", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
     photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=70&w=200&auto=format&fit=crop",
     health:58, status:"amber", statusLabel:"🟡 Atenção", hours:"210h desde a última revisão", utilizacao:8,
@@ -2149,7 +2164,7 @@ const CONTRACTS = {
     photo:CONTRATO_IMG.terraplenagem_loteamento,
     hero:CONTRATO_IMG.terraplenagem_loteamento,
     payment:"Parcelado (2x)", risk:"mid", riskLabel:"Risco médio",
-    req:["🚜 Trator de Esteira (você tem: D6T, 18t)","👷 Operador habilitado"],
+    req:["🚜 Trator de Esteira (você tem: 18t)","👷 Operador habilitado"],
     prazo:"12 dias", prazoDias:12, km:"35 km",
     riskDesc:"Terreno recém-loteado com drenagem ainda não testada em chuva forte.",
     penalty:"Atraso: 0,5%/dia · Cancelamento: 10% do valor total.", penaltyPctDia:0.005,
@@ -2160,7 +2175,7 @@ const CONTRACTS = {
     photo:CONTRATO_IMG.desmatamento_fazenda_boa_vista,
     hero:CONTRATO_IMG.desmatamento_fazenda_boa_vista,
     payment:"À vista", risk:"low", riskLabel:"Risco baixo",
-    req:["🚜 Retroescavadeira (você tem: NH B110B, 14t)","👷 Operador habilitado"],
+    req:["🚜 Retroescavadeira (você tem: 14t)","👷 Operador habilitado"],
     prazo:"15 dias", prazoDias:15, km:"18 km",
     riskDesc:"Área rural de baixa complexidade, sem histórico de intercorrências.",
     penalty:"Atraso: 0,3%/dia · Cancelamento: 8% do valor total.", penaltyPctDia:0.003,
@@ -2861,7 +2876,7 @@ const CATALOG = {
     recommended:"3 contratos disponíveis esperam esse tipo de máquina agora.", payback:"4 a 5 meses"
   },
   trator2: {
-    name:"Trator de Esteira D8", cat:"Terraplenagem",
+    name:"Trator de Esteira Pesado", cat:"Terraplenagem",
     photo:"https://images.pexels.com/photos/34100275/pexels-photo-34100275.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&fit=crop",
     vista:MARKET_BASE_PRICES.trator, parcelasCount:18, reputacaoMinFinanciamento:125,
     recommended:null, payback:"6 a 8 meses"
@@ -2870,7 +2885,7 @@ const CATALOG = {
   // escavadeira30 — tipo de 30 toneladas, maior que a comum — sem NENHUMA opção de compra
   // em lugar nenhum do jogo).
   escavadeira30: {
-    name:"Escavadeira Hidráulica CAT 336 (30t)", cat:"Escavação pesada",
+    name:"Escavadeira Hidráulica 30t", cat:"Escavação pesada",
     photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=600&auto=format&fit=crop",
     vista:Math.round(MARKET_BASE_PRICES.escavadeira * 1.45), parcelasCount:16, reputacaoMinFinanciamento:115,
     recommended:null, payback:"7 a 9 meses — categoria pesada"
@@ -2912,14 +2927,14 @@ const CATALOG = {
     premium:true
   },
   tratorPremium: {
-    name:"Trator de Esteira D6T Black Elite", cat:"Terraplenagem · Premium",
+    name:"Trator de Esteira Black Elite", cat:"Terraplenagem · Premium",
     photo:PREMIUM_IMG.trator_premium,
     vista:Math.round(MARKET_BASE_PRICES.trator * 1.7), parcelasCount:16, reputacaoMinFinanciamento:130,
     recommended:"+12% de produtividade e 40% menos chance de quebrar — paga o preço mais alto em obras longas.", payback:"6 a 8 meses",
     premium:true
   },
   caminhaoPremium: {
-    name:"Caminhão Basculante Scania 500XT Black Elite", cat:"Transporte · Premium",
+    name:"Caminhão Basculante Black Elite", cat:"Transporte · Premium",
     photo:PREMIUM_IMG.caminhao_premium,
     vista:Math.round(MARKET_BASE_PRICES.caminhao * 1.7), parcelasCount:12, reputacaoMinFinanciamento:130,
     recommended:"+12% de produtividade e 40% menos chance de quebrar — paga o preço mais alto em obras longas.", payback:"4 a 6 meses",
@@ -2933,25 +2948,25 @@ const CATALOG = {
    ficar disponível) — se já existir uma desse tipo, a nova ganha uma chave com sufixo (2ª, 3ª...). */
 // Fotos reais das maquinas Premium, embutidas em base64 (mandadas pelo usuario, sessao 53)
 const MACHINE_TEMPLATES = {
-  escavadeira2: { tipoKey:'escavadeira', name:"Escavadeira Hidráulica CAT 320D", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
+  escavadeira2: { tipoKey:'escavadeira', name:"Escavadeira Hidráulica 22t", cat:"Escavação", specs:"22 toneladas · caçamba 1,2 m³",
     photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop" },
-  trator2: { tipoKey:'trator', name:"Trator de Esteira D6T", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
+  trator2: { tipoKey:'trator', name:"Trator de Esteira 18t", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³",
     photo:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
     thumb:"https://images.pexels.com/photos/13923406/pexels-photo-13923406.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop" },
   motoniveladora: { tipoKey:'motoniveladora', name:"Motoniveladora", cat:"Nivelamento", specs:"14 toneladas · lâmina 3,7 m",
     photo:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=800&h=550&fit=crop",
     thumb:"https://images.pexels.com/photos/18812422/pexels-photo-18812422.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop" },
-  escavadeira30: { tipoKey:'escavadeira30', name:"Escavadeira Hidráulica CAT 336 (30t)", cat:"Escavação pesada", specs:"30 toneladas · caçamba 1,8 m³",
+  escavadeira30: { tipoKey:'escavadeira30', name:"Escavadeira Hidráulica 30t", cat:"Escavação pesada", specs:"30 toneladas · caçamba 1,8 m³",
     photo:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1752342625685-bc342beb248e?fm=jpg&q=70&w=200&auto=format&fit=crop" },
-  pa2: { tipoKey:'pa', name:"Pá Carregadeira WA200", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
+  pa2: { tipoKey:'pa', name:"Pá Carregadeira 20t", cat:"Carregamento", specs:"20 toneladas · caçamba 3,1 m³",
     photo:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1757496156065-669f39ae77eb?fm=jpg&q=70&w=200&auto=format&fit=crop" },
-  caminhao2: { tipoKey:'caminhao', name:"Caminhão Basculante Ford Cargo", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
+  caminhao2: { tipoKey:'caminhao', name:"Caminhão Basculante 12 m³", cat:"Transporte", specs:"12 m³ de caçamba · 8 ton. de carga útil",
     photo:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=75&w=800&auto=format&fit=crop",
     thumb:"https://images.unsplash.com/photo-1746349086423-06ea6b4d73f7?fm=jpg&q=70&w=200&auto=format&fit=crop" },
-  retro2: { tipoKey:'retro', name:"Retroescavadeira NH B110B", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
+  retro2: { tipoKey:'retro', name:"Retroescavadeira 14t", cat:"Escavação", specs:"14 toneladas · caçamba 0,3 m³",
     photo:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=500&fit=crop&w=800",
     thumb:"https://images.pexels.com/photos/5125782/pexels-photo-5125782.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" },
   // NOVO (sessão 53, fase 3 — decisão do usuário: "podem ser variações" dos 5 tipos existentes,
@@ -2962,10 +2977,10 @@ const MACHINE_TEMPLATES = {
     photo:PREMIUM_IMG.escavadeira_premium, thumb:PREMIUM_IMG.escavadeira_premium,
     premium:true, bonusProdutividade:0.12, reducaoChanceQuebra:0.4 },
   // NOVO (sessão 53, continuação — cobertura dos tipos restantes, mesmo padrão já validado)
-  tratorPremium: { tipoKey:'trator', name:"Trator de Esteira D6T Black Elite", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³ · linha Premium",
+  tratorPremium: { tipoKey:'trator', name:"Trator de Esteira Black Elite", cat:"Terraplenagem", specs:"18 toneladas · lâmina 3,4 m³ · linha Premium",
     photo:PREMIUM_IMG.trator_premium, thumb:PREMIUM_IMG.trator_premium,
     premium:true, bonusProdutividade:0.12, reducaoChanceQuebra:0.4 },
-  caminhaoPremium: { tipoKey:'caminhao', name:"Caminhão Basculante Scania 500XT Black Elite", cat:"Transporte", specs:"18 m³ de caçamba · linha Premium",
+  caminhaoPremium: { tipoKey:'caminhao', name:"Caminhão Basculante Black Elite", cat:"Transporte", specs:"18 m³ de caçamba · linha Premium",
     photo:PREMIUM_IMG.caminhao_premium, thumb:PREMIUM_IMG.caminhao_premium,
     premium:true, bonusProdutividade:0.12, reducaoChanceQuebra:0.4 }
 };
@@ -2981,7 +2996,7 @@ const PREMIUM_RECOMPENSA = {
   },
   // NOVO (sessão 53, continuação) — 2a recompensa, sede nível 3, cria uma progressão de prêmios
   // em vez de só um marco único.
-  paOuro: { tipoKey:'pa', name:"Pá Carregadeira WA200 Ouro — Edição Fundador", cat:"Carregamento",
+  paOuro: { tipoKey:'pa', name:"Pá Carregadeira 20t Ouro — Edição Fundador", cat:"Carregamento",
     specs:"20 toneladas · caçamba 3,1 m³ · linha Premium",
     photo:PREMIUM_IMG.pa_premium, thumb:PREMIUM_IMG.pa_premium,
     premium:true, bonusProdutividade:0.12, reducaoChanceQuebra:0.4,
@@ -3009,11 +3024,28 @@ try{
   referenciaPagamentoAtual = localStorage.getItem('imperio_referencia_pagamento') || null;
 }catch(e){ console.warn('localStorage indisponivel ao carregar estado de desbloqueio:', e); }
 
-function abrirTelaDesbloqueio(){
+let desbloqueioAntecipado = false;
+function abrirTelaDesbloqueio(antecipado){
+  desbloqueioAntecipado = (antecipado === true);
   document.getElementById('desbloqueioOverlay').style.display = 'flex';
   document.getElementById('desbloqueioStatus').textContent = '';
   // Se já tinha uma tentativa de pagamento em aberto, mostra direto o botão de verificar
   document.getElementById('btnVerificarDesbloqueio').style.display = referenciaPagamentoAtual ? 'block' : 'none';
+}
+function renderCartaoDesbloqueioSedes(){
+  const alvos = document.querySelectorAll('.js-cartao-desbloqueio');
+  if(!alvos.length) return;
+  let html;
+  if(jogoDesbloqueadoPago){
+    html = '<div style="margin-top:12px;border-radius:14px;padding:12px 14px;background:rgba(80,200,120,.10);border:1px solid rgba(80,200,120,.35);font-size:13.5px;font-weight:700;color:var(--ok);">✅ Sede 3 em diante desbloqueada</div>';
+  } else {
+    html = '<div style="margin-top:12px;border-radius:14px;padding:14px;background:rgba(79,160,217,.10);border:1px solid rgba(79,160,217,.35);">'
+      + '<div style="font-size:14.5px;font-weight:800;color:#fff;">🔓 Garanta a Sede 3 em diante</div>'
+      + '<div style="font-size:12.5px;color:var(--text-faint);margin-top:5px;line-height:1.5;">Pagamento único de R$ 9,90. Você pode pagar agora, sem esperar chegar na 3ª sede.</div>'
+      + '<button onclick="abrirTelaDesbloqueio(true)" style="margin-top:10px;width:100%;background:linear-gradient(160deg,#4FA0D9,#2E7BB8);border:none;color:#fff;font-weight:800;font-size:14px;border-radius:12px;padding:11px;cursor:pointer;">Desbloquear agora</button>'
+      + '</div>';
+  }
+  alvos.forEach(el => { el.innerHTML = html; });
 }
 function fecharTelaDesbloqueio(){
   document.getElementById('desbloqueioOverlay').style.display = 'none';
@@ -3055,10 +3087,15 @@ async function verificarPagamentoDesbloqueio(){
     const dados = await resp.json();
     if(dados.aprovado){
       jogoDesbloqueadoPago = true;
-      localStorage.setItem(CHAVE_DESBLOQUEIO, 'sim');
-      localStorage.removeItem('imperio_referencia_pagamento');
+      try{ localStorage.setItem(CHAVE_DESBLOQUEIO, 'sim'); localStorage.removeItem('imperio_referencia_pagamento'); }catch(e){ console.warn('localStorage:', e); }
+      referenciaPagamentoAtual = null;
       status.textContent = '✅ Pagamento confirmado!';
-      setTimeout(() => { fecharTelaDesbloqueio(); comprarSede(); }, 900);
+      setTimeout(() => {
+        fecharTelaDesbloqueio();
+        if(!desbloqueioAntecipado) comprarSede();
+        else { try{ showToast('Sede 3 em diante desbloqueada!'); }catch(e){} }
+        try{ renderCartaoDesbloqueioSedes(); }catch(e){}
+      }, 900);
     } else {
       status.textContent = 'Ainda não identifiquei o pagamento (status: ' + (dados.status||'pendente') + '). Se acabou de pagar, aguarda alguns segundos e tenta de novo.';
     }
@@ -3198,6 +3235,41 @@ function fecharLembreteMissao(){
   pararCena3DLembrete();
 }
 
+// ===== ANÚNCIOS =====
+// Regras pra não atrapalhar o jogo: UM banner só, pequeno, no FIM do conteúdo de cada tela (longe da barra inferior, sem clique acidental), só em
+// telas de consulta calmas. NUNCA em contratos, manutenção, início, cadastro, nem durante
+// eventos/decisões/desbloqueio (esses abrem por cima e cobrem tudo).
+// Sem rede configurada ('rede' null), o espaço mostra só a palavra "Anúncio" (marcador).
+// Pra desligar o espaço por completo: ativos = false.
+var ANUNCIOS = {
+  ativos: true,
+  rede: null, // quando houver rede (ex.: 'adsense'), a montagem real entra em montarAnuncio()
+  telas: ['hub','maquinas','financas','loja','sedes','missoes']
+};
+function montarAnuncio(){
+  const box = document.getElementById('adSlotBox');
+  if(!box) return;
+  if(!ANUNCIOS.rede){
+    box.className = 'ad-slot-box teste';
+    box.textContent = 'Anúncio';
+  }
+  // Com rede: aqui entra o código oficial da rede, sempre dentro de #adSlotBox (320x50).
+}
+function atualizarAnuncio(screen){
+  try{
+    const el = document.getElementById('adSlot');
+    if(!el) return;
+    const mostrar = !!ANUNCIOS.ativos && ANUNCIOS.telas.indexOf(screen) !== -1;
+    if(mostrar){
+      const alvo = document.querySelector('#screen-' + screen + ' .screen-scroll');
+      if(alvo && el.parentNode !== alvo) alvo.appendChild(el);
+      else if(alvo) alvo.appendChild(el); // garante que continue no fim mesmo se algo foi acrescentado depois
+    }
+    el.classList.toggle('on', mostrar);
+    if(mostrar && !el.dataset.pronto){ el.dataset.pronto = '1'; montarAnuncio(); }
+  }catch(e){ console.warn('anuncio:', e); }
+}
+
 function goTo(screen){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const screenEl = document.getElementById('screen-' + screen);
@@ -3208,6 +3280,7 @@ function goTo(screen){
   screenEl.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.screen === screen));
   document.getElementById('bottomNav').style.display = (screen === 'start') ? 'none' : 'flex';
+  atualizarAnuncio(screen);
   closeEvento();
   closeRegimeTributario();
   // Rede de segurança: sempre recarrega a tela de destino com o estado mais atual, em vez de
@@ -3220,11 +3293,12 @@ function goTo(screen){
   // pra essas telas, só "por acaso" se alguma outra ação tivesse chamado a função pouco antes.
   // Chamando aqui, sempre, garante que QUALQUER tela mostre os valores financeiros atuais ao entrar.
   updateFinanceDisplays();
+  try{ renderCartaoDesbloqueioSedes(); }catch(e){}
   if(screen === 'maquinas')  renderMaquinasList();
   if(screen === 'manutencao') renderManutList();
   if(screen === 'contratos') renderContratosList();
   if(screen === 'loja')      renderLojaList();
-  if(screen === 'financas')  renderFinancas();
+  if(screen === 'financas')  { renderFinancas(); try{ renderCartaoDesbloqueioSedes(); }catch(e){} }
   if(screen === 'sedes')     renderSedesScreen();
   if(screen === 'missoes')   renderMissoesScreen();
   if(screen === 'hub'){
@@ -3419,6 +3493,27 @@ function restaurarGameState(){
         // mostrar "undefined" na tela. É perda pontual de uma máquina antiga, não um bug novo.
       });
     }
+
+    // Migração (sessão 59): nomes de máquinas com marca real foram trocados por genéricos.
+    // Saves antigos guardam o nome antigo dentro da máquina — converte pra não reaparecer a marca.
+    try{
+      const NOMES_ANTIGOS = {
+        'Escavadeira Hidráulica CAT 320D':'Escavadeira Hidráulica 22t',
+        'Escavadeira Hidráulica CAT 336 (30t)':'Escavadeira Hidráulica 30t',
+        'Caminhão Basculante Scania 500XT Black Elite':'Caminhão Basculante Black Elite',
+        'Caminhão Basculante Ford Cargo':'Caminhão Basculante 12 m³',
+        'Pá Carregadeira WA200 Ouro — Edição Fundador':'Pá Carregadeira 20t Ouro — Edição Fundador',
+        'Pá Carregadeira WA200':'Pá Carregadeira 20t',
+        'Retroescavadeira NH B110B':'Retroescavadeira 14t',
+        'Trator de Esteira D6T Black Elite':'Trator de Esteira Black Elite',
+        'Trator de Esteira D6T':'Trator de Esteira 18t',
+        'Trator de Esteira D8':'Trator de Esteira Pesado'
+      };
+      Object.keys(MACHINES).forEach(k => {
+        const m = MACHINES[k];
+        if(m && m.name && NOMES_ANTIGOS[m.name]) m.name = NOMES_ANTIGOS[m.name];
+      });
+    }catch(e){ console.warn('migração de nomes:', e); }
     // Se o jogador saiu (sem clicar em "recomeçar") enquanto já estava em falência declarada,
     // o overlay tem que reaparecer ao recarregar — falência é estado terminal, não algo que
     // um reload deveria "desfazer" silenciosamente.
@@ -5746,6 +5841,7 @@ function linhaRequisito(ok, rotulo, valorTexto, pct){
 }
 
 function renderSedesScreen(){
+  try{ renderCartaoDesbloqueioSedes(); }catch(e){ console.warn(e); }
   const sedeAtual = SEDES_DATA[playerSedeNivel];
   if(!sedeAtual) return;
   sincronizarMissoes();
