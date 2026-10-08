@@ -3062,15 +3062,12 @@ async function iniciarPagamentoDesbloqueio(){
     referenciaPagamentoAtual = dados.referencia;
     try{ localStorage.setItem('imperio_referencia_pagamento', dados.referencia); }catch(e){ console.warn('localStorage indisponivel ao guardar referencia:', e); }
     document.getElementById('btnVerificarDesbloqueio').style.display = 'block';
-    const aba = window.open(dados.linkPagamento, '_blank');
-    if(aba){
-      status.textContent = 'Pague na aba que abriu e volte aqui pra verificar.';
-    }else{
-      // Navegador bloqueou a nova aba: segue na mesma aba. A referência já está guardada,
-      // então ao voltar ao jogo basta abrir a Sede 3 de novo e tocar em "Já paguei, verificar".
-      status.textContent = 'Abrindo o Mercado Pago...';
-      window.location.href = dados.linkPagamento;
-    }
+    // Segue na MESMA aba (padrão do Checkout Pro no celular): salva o jogo antes de sair e,
+    // ao voltar, tratarRetornoPagamento() devolve o jogador direto ao jogo dele — sem abrir
+    // uma segunda cópia do jogo em outra aba.
+    status.textContent = 'Abrindo o Mercado Pago...';
+    try{ salvarGameState(); }catch(e){}
+    window.location.href = dados.linkPagamento;
   }catch(e){
     status.textContent = '⚠️ Não consegui gerar o link agora. Tenta de novo em instantes.';
     console.error(e);
@@ -6145,6 +6142,67 @@ window.addEventListener('load', () => {
 // isso porque os testes sempre manipulavam o estado direto via código, sem simular o carregamento
 // real de um jogador que já tinha conta e save salvos.
 checkExistingAccount();
+
+// Retorno do Mercado Pago (?pagamento=sucesso|falha|pendente&ref=...). O jogador volta SEMPRE
+// para o jogo dele: pula a tela de login, confere o pagamento sozinho e avisa o que aconteceu.
+function tratarRetornoPagamento(){
+  let params;
+  try{ params = new URLSearchParams(window.location.search); }catch(e){ return; }
+  const resultado = params.get('pagamento');
+  if(!resultado) return;
+  const ref = params.get('ref');
+  try{ history.replaceState(null, '', window.location.pathname); }catch(e){}
+  if(ref){
+    referenciaPagamentoAtual = ref;
+    try{ localStorage.setItem('imperio_referencia_pagamento', ref); }catch(e){}
+  }
+  const temConta = document.getElementById('screen-login').classList.contains('active');
+  const conferir = async (tentativas) => {
+    if(!referenciaPagamentoAtual) return false;
+    for(let i=0; i<tentativas; i++){
+      try{
+        const r = await fetch(`${VERCEL_API_URL}/api/verificar-pagamento?referencia=${encodeURIComponent(referenciaPagamentoAtual)}`);
+        const d = await r.json();
+        if(d.aprovado){
+          jogoDesbloqueadoPago = true;
+          try{ localStorage.setItem(CHAVE_DESBLOQUEIO, 'sim'); localStorage.removeItem('imperio_referencia_pagamento'); }catch(e){}
+          referenciaPagamentoAtual = null;
+          return true;
+        }
+      }catch(e){}
+      await new Promise(ok => setTimeout(ok, 3000));
+    }
+    return false;
+  };
+  if(temConta){
+    confirmLogin();
+    if(resultado === 'falha'){
+      try{ showToast('Pagamento não concluído. Você pode tentar de novo quando quiser.'); }catch(e){}
+      return;
+    }
+    try{ showToast('Conferindo seu pagamento...'); }catch(e){}
+    conferir(4).then(ok => {
+      try{ renderCartaoDesbloqueioSedes(); }catch(e){}
+      if(ok){ try{ showToast('✅ Pagamento confirmado! Sede 3 em diante desbloqueada.'); }catch(e){} }
+      else {
+        try{ showToast('Pagamento ainda em análise. Toque em "Já paguei, verificar" mais tarde.'); }catch(e){}
+        try{ abrirTelaDesbloqueio(true); }catch(e){}
+      }
+    });
+  } else if(resultado !== 'falha'){
+    // Sem conta neste navegador (outro aparelho/aba anônima): o pagamento não se perde.
+    conferir(4).then(ok => {
+      if(!ok) return;
+      const tela = document.getElementById('screen-signup');
+      if(!tela) return;
+      const aviso = document.createElement('div');
+      aviso.textContent = '✅ Pagamento confirmado! Crie sua empresa para continuar: a Sede 3 em diante já está liberada.';
+      aviso.style.cssText = 'margin:12px 16px;padding:12px 14px;border-radius:12px;background:rgba(80,200,120,.12);border:1px solid rgba(80,200,120,.4);color:#7be0a0;font-size:13.5px;font-weight:700;line-height:1.45;';
+      tela.insertBefore(aviso, tela.firstChild);
+    });
+  }
+}
+tratarRetornoPagamento();
 
 // CORREÇÃO (mesmo problema): `beforeunload` não é confiável em PWA instalado no celular — o
 // sistema pode matar o app sem disparar esse evento, perdendo até 30s de progresso (o intervalo
