@@ -520,8 +520,19 @@
     text-decoration:underline;cursor:pointer;background:none;border:none;
   }
 </style>
+<script>
+try{ var __c = JSON.parse(localStorage.getItem('imperioDasMaquinas_conta')); if(__c && __c.companyName){ document.documentElement.className += ' tem-conta'; } }catch(e){}
+</script>
+<style>
+  .tem-conta #screen-signup.active{display:none !important;}
+  #bootSplash{position:fixed;inset:0;z-index:99999;background:radial-gradient(circle at 50% 35%,#1A2028,#0A0712);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#FFCD11;font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
+  #bootSplash .bs-t{font-size:26px;font-weight:800;letter-spacing:.01em;}
+  #bootSplash .bs-s{font-size:14px;color:rgba(255,255,255,.55);}
+</style>
 </head>
 <body>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando...</div></div>
+<script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
   <div class="app-content">
@@ -1085,6 +1096,18 @@
         <button onclick="verificarPagamentoDesbloqueio()" id="btnVerificarDesbloqueio" style="margin-top:10px;width:100%;max-width:300px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:14px;border-radius:12px;padding:12px;display:none;">✅ Já paguei, verificar</button>
         <div id="desbloqueioStatus" style="margin-top:12px;font-size:13px;color:rgba(255,255,255,.6);min-height:18px;"></div>
         <button onclick="fecharTelaDesbloqueio()" style="margin-top:18px;background:none;border:none;color:rgba(255,255,255,.45);font-size:13px;">Voltar</button>
+      </div>
+    </div>
+
+    <!-- ============ JOGO LIBERADO (após pagamento aprovado) ============ -->
+    <div class="compra-overlay" id="liberadoOverlay" style="display:none;background:radial-gradient(circle at 50% 35%,#16301F,#0A0712);z-index:96;">
+      <div style="position:relative;z-index:2;text-align:center;padding:0 24px;width:100%;margin-top:auto;margin-bottom:auto;">
+        <div style="font-size:60px;">🎉</div>
+        <div style="font-size:24px;font-weight:900;color:#fff;margin-top:10px;">Jogo liberado!</div>
+        <div style="font-size:15px;color:rgba(255,255,255,.8);margin-top:12px;line-height:1.6;max-width:310px;margin-left:auto;margin-right:auto;">
+          Pagamento confirmado. A <b style="color:#7be0a0;">Sede 3 em diante</b> está liberada para sempre, sem mensalidade.<br><br>Obrigado por apoiar o Império das Máquinas!
+        </div>
+        <button onclick="fecharJogoLiberado()" style="margin-top:24px;width:100%;max-width:300px;background:linear-gradient(160deg,#4FBF7A,#2E9B5A);border:none;color:#fff;font-weight:800;font-size:15.5px;border-radius:12px;padding:14px;">Continuar jogando</button>
       </div>
     </div>
 
@@ -3047,6 +3070,13 @@ function renderCartaoDesbloqueioSedes(){
   }
   alvos.forEach(el => { el.innerHTML = html; });
 }
+function mostrarJogoLiberado(){
+  try{ document.getElementById('desbloqueioOverlay').style.display = 'none'; }catch(e){}
+  document.getElementById('liberadoOverlay').style.display = 'flex';
+}
+function fecharJogoLiberado(){
+  document.getElementById('liberadoOverlay').style.display = 'none';
+}
 function fecharTelaDesbloqueio(){
   document.getElementById('desbloqueioOverlay').style.display = 'none';
 }
@@ -3090,8 +3120,8 @@ async function verificarPagamentoDesbloqueio(){
       setTimeout(() => {
         fecharTelaDesbloqueio();
         if(!desbloqueioAntecipado) comprarSede();
-        else { try{ showToast('Sede 3 em diante desbloqueada!'); }catch(e){} }
         try{ renderCartaoDesbloqueioSedes(); }catch(e){}
+        mostrarJogoLiberado();
       }, 900);
     } else {
       status.textContent = 'Ainda não identifiquei o pagamento (status: ' + (dados.status||'pendente') + '). Se acabou de pagar, aguarda alguns segundos e tenta de novo.';
@@ -3378,6 +3408,7 @@ function confirmLogin(){
 }
 
 function showSignupFromLogin(){
+  document.documentElement.classList.remove('tem-conta');
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-signup').classList.add('active');
 }
@@ -3534,14 +3565,18 @@ function checkExistingAccount(){
     document.getElementById('loginOwnerName').textContent = ownerName ? ownerName : 'Bem-vindo de volta';
     document.getElementById('loginIcon').textContent = selectedLogo;
 
-    // Restaura game state se existir
-    if(restaurarGameState()){
-      document.getElementById('loginCompanyName').textContent = companyName + ' (Jogo restaurado)';
-      renderNoticiasBadge();
-    }
+    // Restaura o jogo e entra DIRETO (sem tela de cadastro nem de login — conta já existe)
+    const restaurou = restaurarGameState();
+    if(restaurou) renderNoticiasBadge();
 
     document.getElementById('screen-signup').classList.remove('active');
-    document.getElementById('screen-login').classList.add('active');
+    if(restaurou){
+      confirmLogin();
+    } else {
+      // Conta criada mas ainda sem jogo salvo: volta à escolha da primeira máquina
+      applyAccountToUI();
+      document.getElementById('screen-start').classList.add('active');
+    }
   }
 }
 
@@ -6156,7 +6191,8 @@ function tratarRetornoPagamento(){
     referenciaPagamentoAtual = ref;
     try{ localStorage.setItem('imperio_referencia_pagamento', ref); }catch(e){}
   }
-  const temConta = document.getElementById('screen-login').classList.contains('active');
+  const ativa = document.querySelector('.screen.active');
+  const temConta = !!ativa && !['screen-signup','screen-start','screen-login'].includes(ativa.id);
   const conferir = async (tentativas) => {
     if(!referenciaPagamentoAtual) return false;
     for(let i=0; i<tentativas; i++){
@@ -6175,7 +6211,6 @@ function tratarRetornoPagamento(){
     return false;
   };
   if(temConta){
-    confirmLogin();
     if(resultado === 'falha'){
       try{ showToast('Pagamento não concluído. Você pode tentar de novo quando quiser.'); }catch(e){}
       return;
@@ -6183,7 +6218,7 @@ function tratarRetornoPagamento(){
     try{ showToast('Conferindo seu pagamento...'); }catch(e){}
     conferir(4).then(ok => {
       try{ renderCartaoDesbloqueioSedes(); }catch(e){}
-      if(ok){ try{ showToast('✅ Pagamento confirmado! Sede 3 em diante desbloqueada.'); }catch(e){} }
+      if(ok){ mostrarJogoLiberado(); }
       else {
         try{ showToast('Pagamento ainda em análise. Toque em "Já paguei, verificar" mais tarde.'); }catch(e){}
         try{ abrirTelaDesbloqueio(true); }catch(e){}
@@ -6193,7 +6228,7 @@ function tratarRetornoPagamento(){
     // Sem conta neste navegador (outro aparelho/aba anônima): o pagamento não se perde.
     conferir(4).then(ok => {
       if(!ok) return;
-      const tela = document.getElementById('screen-signup');
+      const tela = document.querySelector('.screen.active') || document.getElementById('screen-signup');
       if(!tela) return;
       const aviso = document.createElement('div');
       aviso.textContent = '✅ Pagamento confirmado! Crie sua empresa para continuar: a Sede 3 em diante já está liberada.';
@@ -6203,6 +6238,7 @@ function tratarRetornoPagamento(){
   }
 }
 tratarRetornoPagamento();
+{ const __sp = document.getElementById('bootSplash'); if(__sp) __sp.remove(); }
 
 // CORREÇÃO (mesmo problema): `beforeunload` não é confiável em PWA instalado no celular — o
 // sistema pode matar o app sem disparar esse evento, perdendo até 30s de progresso (o intervalo

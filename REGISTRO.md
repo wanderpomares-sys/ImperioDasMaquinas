@@ -1434,3 +1434,20 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ### Sessão 58 — espaço de anúncio recolocado e **visível** com a palavra "Anúncio" (marcador) até haver rede real. Um banner de 50px acima da barra inferior; só em hub, máquinas, finanças (ADMIN.), loja, sedes e missões; nunca em contratos, manutenção, início, cadastro nem por cima de eventos/desbloqueio. Pra desligar por completo: `ANUNCIOS.ativos = false`. Textos ajustados à decisão "anúncios pra todos": tela de desbloqueio agora diz "sem mensalidade. O jogo continua exibindo anúncios." e o aviso de cadastro não afirma mais que nada é enviado a servidores. Testado no Chromium (390x844), zero erros. **Nenhuma rede real integrada.** Cache v36.
 ### Sessão 59 — banner movido pro FIM do conteúdo de cada tela (longe da barra inferior, ~35px de folga, pra evitar clique acidental); continua só com a palavra "Anúncio" e só em hub, máquinas, ADMIN., loja, sedes, missões. Auditoria de marcas/fotos no app.html: marcas reais só nos nomes de máquinas (CAT 320D, CAT 336, Scania 500XT); oficinas parceiras (Pirelli, Leroy Merlin, John Deere, Lubrax) NÃO estão no jogo; fotos externas por link: 6 Unsplash + 15 Pexels; 66 imagens embutidas (origem/licença a conferir). Checklist de monetização guardada no Projeto (claude/checklist-monetizacao.md). Testado no Chromium, zero erros. Cache v37.
 ### Sessão 60 — nomes de máquinas com marca real trocados por genéricos (pra não barrar a aprovação de anúncios): CAT 320D→"Escavadeira Hidráulica 22t", CAT 336→"…30t", Scania 500XT Black Elite→"Caminhão Basculante Black Elite", Ford Cargo→"Caminhão Basculante 12 m³", WA200→"Pá Carregadeira 20t" (e versão Ouro), NH B110B→"Retroescavadeira 14t", D6T→"Trator de Esteira 18t" (Black Elite→"Trator de Esteira Black Elite"), D8→"Trator de Esteira Pesado"; textos de contrato ("você tem: 14t" / "18t") ajustados. Migração no restaurarGameState converte nomes antigos de saves. Testado no Chromium (save com nome antigo volta com nome genérico, zero erros). Pendente: fotos (Unsplash/Pexels/embutidas) ainda sem conferência de licença. Cache v38.
+
+## Sessão 61 — Retorno do pagamento (v39)
+- Problema: o Mercado Pago abria em outra aba e o retorno caía numa segunda cópia do jogo (tela de cadastro/login, sem tratar o resultado).
+- `iniciarPagamentoDesbloqueio`: agora salva o jogo e segue na MESMA aba (sem `window.open`).
+- Novo `tratarRetornoPagamento()`: lê `?pagamento=sucesso|falha|pendente&ref=...`, limpa a URL, pula o login, confere o pagamento sozinho (até 4 tentativas) e mostra aviso. Sem conta no navegador: confirma o pagamento e mostra aviso na tela de cadastro.
+- `criar-pagamento.js`: back_urls agora levam `&ref=<referencia>`.
+- Service worker: `imperio-das-maquinas-v39`.
+- Testado em Chromium: conta+sucesso, conta+falha, sem conta+sucesso, sem conta+falha, abertura normal.
+
+## Sessão 62 — Entrada direta e tela "Jogo liberado" (v40)
+- Problema reportado: ao abrir o app, aparecia a tela de cadastro por 3–4 s, depois "Jogo restaurado" (tela de login) e só então o Hub; após pagar, nenhuma tela dizia que o jogo foi liberado.
+- Causa: o `screen-signup` vinha ativo no HTML e o JS só rodava no fim do arquivo de ~9 MB; `checkExistingAccount` ainda exigia um toque em "Entrar".
+- Correção: script no `<head>` marca `tem-conta` e o CSS esconde o cadastro antes da primeira pintura; tela de carregamento (`#bootSplash`, com remoção de segurança em 9 s); com conta e jogo salvo o app entra DIRETO no Hub (`confirmLogin()` automático); com conta sem jogo salvo vai à escolha da primeira máquina.
+- Nova tela `#liberadoOverlay` ("Jogo liberado!") exibida quando o pagamento é confirmado (verificação manual ou retorno do Mercado Pago).
+- `tratarRetornoPagamento` ajustado (não depende mais da tela de login).
+- Service worker: `imperio-das-maquinas-v40`.
+- Testado em Chromium: abrir com conta (nunca mostra cadastro), sem conta, retorno sucesso/falha com conta, retorno sucesso sem conta.
