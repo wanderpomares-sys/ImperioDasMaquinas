@@ -1451,3 +1451,12 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - `tratarRetornoPagamento` ajustado (não depende mais da tela de login).
 - Service worker: `imperio-das-maquinas-v40`.
 - Testado em Chromium: abrir com conta (nunca mostra cadastro), sem conta, retorno sucesso/falha com conta, retorno sucesso sem conta.
+
+## Sessão 63 — Save só após escolher a máquina, uma janela por vez, save enxuto (v41)
+- Causa do "caixa volta a 60 mil": o autosave gravava o jogo mesmo antes da escolha da primeira máquina (caixa inicial 60.000 + as 5 máquinas de fábrica); ao reabrir, o app restaurava esse jogo "vazio" direto no Hub.
+- Novo `jogoIniciado`: `salvarGameState()` não grava até `confirmStartMachine()` (que agora também salva na hora). `restaurarGameState()` ignora saves de jogo sem escolha (flag `iniciado:false`, ou save antigo com 5 máquinas e caixa 60.000) e o app volta à escolha da primeira máquina.
+- Save enxuto: `contractsPool` não grava mais textos longos/imagens base64 (o save passava de 1,5 MB; agora ~5 KB), para não estourar o limite do navegador.
+- Janelas em sequência: ao entrar no Hub, se o lembrete 3D de missão vai abrir, o consultor espera ele fechar (antes: mensagem → 3D por cima → mensagem). O lembrete também espera uma mensagem de cliente aberta fechar.
+- Tela de carregamento agora diz "Carregando jogo...".
+- Service worker: `imperio-das-maquinas-v41`.
+- Testado em Chromium (toque real): save "vazio" → escolha da máquina; toque nos cards/botão amarelo → Hub; reabrir restaura o caixa; sequência de janelas; save antigo válido continua restaurando.

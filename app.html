@@ -531,7 +531,7 @@ try{ var __c = JSON.parse(localStorage.getItem('imperioDasMaquinas_conta')); if(
 </style>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando...</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -1801,6 +1801,8 @@ function gerarConselhoConsultor(){
 }
 
 function tentarFalarComConsultor(){
+  const lemb = document.getElementById('lembreteMissaoOverlay');
+  if(lemb && lemb.style.display === 'flex') return; // não fala por cima do lembrete 3D
   const hubVisivel = document.getElementById('screen-hub') && document.getElementById('screen-hub').classList.contains('active');
   if(!hubVisivel) return;
   if(Date.now() - ultimoConselhoTimestamp < INTERVALO_MIN_CONSELHO_MS) return;
@@ -3229,6 +3231,9 @@ function pararCena3DLembrete(){
 let lembreteMissaoState = { ultimaContagemNotificada: 0, jaMostrouNoInicio: false };
 
 function abrirLembreteMissao(motivo){
+  // Nunca por cima de outra janela: espera a mensagem de cliente fechar
+  const msgAberta = document.getElementById('mensagemClienteOverlay');
+  if(msgAberta && msgAberta.style.display === 'flex'){ setTimeout(() => abrirLembreteMissao(motivo), 900); return; }
   sincronizarMissoes();
   const campanha = campanhaAtual();
   if(campanha.length === 0) return; // sem campanha ativa (sede no nível máximo) -- nada pra lembrar
@@ -3260,6 +3265,10 @@ function abrirLembreteMissao(motivo){
 function fecharLembreteMissao(){
   document.getElementById('lembreteMissaoOverlay').style.display = 'none';
   pararCena3DLembrete();
+  if(lembreteMissaoState.consultorAposFechar){
+    lembreteMissaoState.consultorAposFechar = false;
+    setTimeout(tentarFalarComConsultor, 700);
+  }
 }
 
 // ===== ANÚNCIOS =====
@@ -3332,12 +3341,15 @@ function goTo(screen){
     renderHubExtras(); renderMissoes(); renderTierBanner();
     // Pequeno atraso pra nunca competir com uma mensagem de cliente que acabou de fechar
     // (ex: aceitar contrato -> fecha msg -> vai pro hub) — o consultor espera a poeira baixar.
-    setTimeout(tentarFalarComConsultor, 600);
-    // NOVO (sessão 53): lembrete 3D de missão uma vez por sessão, na primeira vez que chega
-    // no Hub — "quando inicia", conforme pedido. Atraso maior que o consultor pra não competir.
+    // Uma janela por vez: se o lembrete 3D de missão vai abrir (1ª vez no Hub da sessão), ele vem
+    // SOZINHO e o consultor só fala depois que o lembrete fechar. Antes os dois abriam quase juntos
+    // (mensagem → 3D por cima → mensagem de novo), o que parecia bug.
     if(typeof lembreteMissaoState !== 'undefined' && !lembreteMissaoState.jaMostrouNoInicio){
       lembreteMissaoState.jaMostrouNoInicio = true;
-      setTimeout(() => abrirLembreteMissao('inicio'), 1200);
+      lembreteMissaoState.consultorAposFechar = true;
+      setTimeout(() => abrirLembreteMissao('inicio'), 700);
+    } else {
+      setTimeout(tentarFalarComConsultor, 600);
     }
   }
 }
@@ -3419,9 +3431,11 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 function salvarGameState(){
+  if(!jogoIniciado) return false; // nada a salvar antes de escolher a primeira máquina
   try{
     const gameState = {
       versao: 3,
+      iniciado: true,
       playerCash, playerPatrimonio, playerSedeNivel,
       fidelidadeMarcas,
       contratosTier3Completos, objetivosCumpridos,
@@ -3441,7 +3455,17 @@ function salvarGameState(){
       lembreteMissaoUltimaContagem: lembreteMissaoState.ultimaContagemNotificada,
       premiumRecompensaConcedida,
       historico, historicoCaixa, scheduledMaintenances,
-      contractsPool: Object.keys(CONTRACTS).reduce((acc, k) => { acc[k] = CONTRACTS[k]; return acc; }, {}),
+      // Salva só os campos que mudam no jogo; textos longos / imagens embutidas (base64) ficam de fora
+      // — vêm do código ao restaurar. Antes o save passava de 1,5 MB e arriscava estourar o limite do navegador.
+      contractsPool: Object.keys(CONTRACTS).reduce((acc, k) => {
+        const enxuto = {};
+        Object.keys(CONTRACTS[k]).forEach(f => {
+          const v = CONTRACTS[k][f];
+          if(typeof v === 'string' && v.length > 500) return;
+          enxuto[f] = v;
+        });
+        acc[k] = enxuto; return acc;
+      }, {}),
       // Estado real da frota: idade, condição, alocação E identidade (apelido/histórico) de cada máquina
       // CORREÇÃO (jogador reportou: dinheiro e sede voltaram, máquinas compradas não — só as 5
       // iniciais permaneciam): o save anterior guardava só um subconjunto de campos (nem foto,
@@ -3460,6 +3484,10 @@ function restaurarGameState(){
   try{
     const saved = JSON.parse(localStorage.getItem('IMPERIO_GAME_STATE'));
     if(!saved) return false;
+    // Save antigo de um jogo que nunca passou da escolha da primeira máquina (5 máquinas de fábrica + caixa inicial)
+    const semEscolha = saved.iniciado === false || (saved.iniciado === undefined && saved.maquinas && Object.keys(saved.maquinas).length === 5 && saved.playerCash === 60000);
+    if(semEscolha) return false;
+    jogoIniciado = true;
 
     playerCash = saved.playerCash ?? playerCash;
     playerPatrimonio = saved.playerPatrimonio ?? playerPatrimonio;
@@ -3599,6 +3627,7 @@ const START_MACHINES = {
   }
 };
 let selectedStartMachine = null;
+let jogoIniciado = false; // só vira true depois de escolher a primeira máquina — evita salvar um jogo "vazio"
 let playerCash = 60000;
 let playerPatrimonio = 0;
 let playerSedeNivel = 1;  // Controla nível de Sede
@@ -3849,6 +3878,8 @@ function confirmStartMachine(){
     CONTRACTS[k].missing = check.missing;
   });
   historicoCaixa = [{ label:'Início', valor: playerCash }];
+  jogoIniciado = true;
+  salvarGameState();
   updateFinanceDisplays();
   showToast('✅ Máquina adquirida! Bem-vindo ao seu império.');
   setTimeout(() => goTo('hub'), 600);
