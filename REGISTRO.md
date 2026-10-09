@@ -1460,3 +1460,5 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - Tela de carregamento agora diz "Carregando jogo...".
 - Service worker: `imperio-das-maquinas-v41`.
 - Testado em Chromium (toque real): save "vazio" → escolha da máquina; toque nos cards/botão amarelo → Hub; reabrir restaura o caixa; sequência de janelas; save antigo válido continua restaurando.
+
+- v42: só adiciona o número da versão na tela "Carregando jogo..." (para conferir qual versão o aparelho está rodando).
