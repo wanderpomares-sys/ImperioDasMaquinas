@@ -1494,3 +1494,15 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - 19 contratos agora usam foto própria. Escavadeira 30t na loja usa foto embutida (antes link externo Unsplash).
 - Foto do rolo compactador guardada para a etapa 2 (nova máquina), ainda não usada.
 - app.html agora ~11,2 MB.
+
+## Sessão 69 — v49 (efeitos sonoros)
+- Sons sintetizados via Web Audio (sem arquivos): sirene (risco/acidente), chuva+trovão (evento de chuva), caixa (venda/sucesso), fanfarra (contrato concluído), alerta (atraso), falha (contrato perdido), pancada (quebra de máquina), apito + voz "Parou! Parou! Parou!" (inspeção/fiscalização, voz via speechSynthesis pt-BR quando o aparelho suportar).
+- Gancho central em `showResultModal` (mapa `SOM_POR_ICONE`) + `mostrarQuebraMaquina` + modal de solução de engenharia.
+- Botão "Efeitos sonoros: ligados/desligados" em Configurações; chave localStorage `imperio_som`.
+- Teste: render offline de cada som (picos ≤ 0,66; duração ≤ 3 s).
+
+## Sessão 70 — v50
+- +4 eventos de fiscalização com humor (🚔, som de apito + "Parou! Parou! Parou!"): fiscalização ambiental (multa + atraso), blitz de segurança (multa), fiscal elogia o canteiro (+2 reputação, só com frota saudável), fiscal na hora do café (-1% progresso).
+
+## Sessão 71 — v51
+- Fiscalização: som agora é só a voz "Parou! Parou! Parou! Parou!" (speechSynthesis pt-BR). Apito só como reserva se o aparelho não tiver voz.

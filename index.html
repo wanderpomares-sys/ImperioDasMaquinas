@@ -531,7 +531,7 @@ try{ var __c = JSON.parse(localStorage.getItem('imperioDasMaquinas_conta')); if(
 </style>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v47</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v51</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -1110,6 +1110,9 @@ try{ var __c = JSON.parse(localStorage.getItem('imperioDasMaquinas_conta')); if(
           <textarea id="cfgCodigo" rows="3" placeholder="Para restaurar, cole aqui o código copiado" style="margin-top:10px;width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-size:12px;padding:10px;font-family:monospace;"></textarea>
           <button onclick="importarProgresso()" style="margin-top:8px;width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;font-size:14px;border-radius:12px;padding:11px;">♻️ Restaurar progresso do código</button>
           <div id="cfgStatus" style="margin-top:10px;font-size:12.5px;color:rgba(255,255,255,.7);min-height:16px;line-height:1.45;"></div>
+        </div>
+        <div style="margin-top:12px;border-radius:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);">
+          <button id="cfgSomBtn" onclick="alternarSom()" style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:14px;border-radius:12px;padding:12px;">🔊 Efeitos sonoros</button>
         </div>
         <div style="margin-top:12px;border-radius:14px;padding:14px;background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.25);">
           <div style="font-size:15px;font-weight:800;color:#fff;">🔄 Recomeçar do zero</div>
@@ -3558,7 +3561,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v47';
+const VERSAO_APP = 'v51';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -3615,6 +3618,7 @@ function decodificarProgresso(codigo){
 function abrirConfig(){
   document.getElementById('cfgStatus').textContent = '';
   document.getElementById('cfgVersao').textContent = 'Versão ' + VERSAO_APP;
+  atualizarBotaoSom();
   document.getElementById('configOverlay').style.display = 'flex';
 }
 function fecharConfig(){ document.getElementById('configOverlay').style.display = 'none'; }
@@ -4124,7 +4128,97 @@ function showToast(msg){
 }
 
 let resultModalCallback = null;
+/* ===================== EFEITOS SONOROS (v48) =====================
+   Sons sintetizados com Web Audio — nenhum arquivo de áudio, nada pesado, sem direitos autorais.
+   Todos curtos (≤ 3 s). Liga/desliga em Configurações; a escolha fica salva neste aparelho. */
+let _audioCtx = null;
+function somLigado(){ try{ return localStorage.getItem('imperio_som') !== 'off'; }catch(e){ return true; } }
+function _ctxAudio(){
+  try{
+    if(!_audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return null; _audioCtx = new AC(); }
+    if(_audioCtx.state === 'suspended') _audioCtx.resume();
+    return _audioCtx;
+  }catch(e){ return null; }
+}
+function _ruido(ctx, dur){
+  const n = Math.floor(ctx.sampleRate*dur), buf = ctx.createBuffer(1,n,ctx.sampleRate), d = buf.getChannelData(0);
+  for(let i=0;i<n;i++) d[i] = Math.random()*2-1;
+  const src = ctx.createBufferSource(); src.buffer = buf; return src;
+}
+function _env(g, t0, atk, dur, vol){
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.linearRampToValueAtTime(vol, t0+atk);
+  g.gain.setValueAtTime(vol, t0+Math.max(atk, dur-0.25));
+  g.gain.linearRampToValueAtTime(0.0001, t0+dur);
+}
+function _tom(ctx, tipo, f0, t0, dur, vol, f1){
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = tipo; o.frequency.setValueAtTime(f0, t0);
+  if(f1) o.frequency.exponentialRampToValueAtTime(f1, t0+dur);
+  g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(vol, t0+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+dur+0.05);
+}
+const SONS = {
+  sirene(ctx,t){ // ambulância: dois tons alternando
+    const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+    o.type = 'square'; f.type = 'lowpass'; f.frequency.value = 1800;
+    for(let i=0;i<5;i++){ o.frequency.setValueAtTime(i%2 ? 770 : 960, t+i*0.5); }
+    _env(g, t, 0.05, 2.5, 0.09);
+    o.connect(f); f.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+2.55);
+  },
+  chuva(ctx,t){ // chuva + trovão
+    const r = _ruido(ctx, 3), bp = ctx.createBiquadFilter(), hp = ctx.createBiquadFilter(), g = ctx.createGain();
+    bp.type = 'bandpass'; bp.frequency.value = 3500; bp.Q.value = 0.5; hp.type = 'highpass'; hp.frequency.value = 1200;
+    _env(g, t, 0.35, 3, 0.16); r.connect(bp); bp.connect(hp); hp.connect(g); g.connect(ctx.destination); r.start(t); r.stop(t+3);
+    const tr = _ruido(ctx, 2.2), lp = ctx.createBiquadFilter(), gt = ctx.createGain();
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(400,t+0.9); lp.frequency.exponentialRampToValueAtTime(70,t+3);
+    gt.gain.setValueAtTime(0.0001,t+0.9); gt.gain.linearRampToValueAtTime(0.55,t+1.0); gt.gain.exponentialRampToValueAtTime(0.0001,t+3);
+    tr.connect(lp); lp.connect(gt); gt.connect(ctx.destination); tr.start(t+0.9); tr.stop(t+3.1);
+  },
+  caixa(ctx,t){ _tom(ctx,'sine',1568,t,0.5,0.22); _tom(ctx,'sine',2093,t+0.12,0.9,0.2); },
+  vitoria(ctx,t){ [523,659,784,1047].forEach((f,i)=>_tom(ctx,'triangle',f,t+i*0.14,0.6,0.2)); },
+  alerta(ctx,t){ _tom(ctx,'square',440,t,0.28,0.1); _tom(ctx,'square',440,t+0.38,0.28,0.1); },
+  falha(ctx,t){ _tom(ctx,'sawtooth',330,t,0.5,0.12,160); _tom(ctx,'sawtooth',220,t+0.45,0.9,0.12,90); },
+  fiscalizacao(ctx,t){ // só a voz: "Parou! Parou! Parou! Parou!" (se o aparelho não tiver voz, cai no apito)
+    let falou = false;
+    try{
+      if(window.speechSynthesis && typeof SpeechSynthesisUtterance !== 'undefined'){
+        const u = new SpeechSynthesisUtterance('Parou! Parou! Parou! Parou!'); u.lang = 'pt-BR'; u.rate = 1.2; u.pitch = 0.85; u.volume = 1;
+        window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); falou = true;
+      }
+    }catch(e){}
+    if(falou) return;
+    for(let i=0;i<4;i++){
+      const t0 = t+i*0.5, o = ctx.createOscillator(), l = ctx.createOscillator(), lg = ctx.createGain(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = 2850; l.frequency.value = 38; lg.gain.value = 90;
+      l.connect(lg); lg.connect(o.frequency); _env(g, t0, 0.02, 0.35, 0.2);
+      o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+0.4); l.start(t0); l.stop(t0+0.4);
+    }
+  },
+  quebra(ctx,t){ // pancada metálica
+    const r = _ruido(ctx,0.5), hp = ctx.createBiquadFilter(), g = ctx.createGain();
+    hp.type='highpass'; hp.frequency.value=800; g.gain.setValueAtTime(0.4,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.45);
+    r.connect(hp); hp.connect(g); g.connect(ctx.destination); r.start(t); r.stop(t+0.5);
+    _tom(ctx,'sine',140,t,0.7,0.35,45);
+  }
+};
+function tocarSom(nome){
+  if(!somLigado()) return;
+  const ctx = _ctxAudio(); if(!ctx || !SONS[nome]) return;
+  try{ SONS[nome](ctx, ctx.currentTime+0.02); }catch(e){}
+}
+const SOM_POR_ICONE = { '🌧️':'chuva','⛈️':'chuva','🟠':'sirene','🚑':'sirene','🚨':'sirene','💥':'falha','🔴':'alerta','🏆':'vitoria','💰':'caixa','🛠️':'quebra','📋':'fiscalizacao','🚔':'fiscalizacao' };
+function atualizarBotaoSom(){
+  const b = document.getElementById('cfgSomBtn'); if(b) b.textContent = somLigado() ? '🔊 Efeitos sonoros: ligados' : '🔇 Efeitos sonoros: desligados';
+}
+function alternarSom(){
+  try{ localStorage.setItem('imperio_som', somLigado() ? 'off' : 'on'); }catch(e){}
+  atualizarBotaoSom(); if(somLigado()) tocarSom('caixa');
+}
+
 function showResultModal(icon, title, text, onContinue, tipo, confete, imagemUrl){
+  if(SOM_POR_ICONE[icon]) tocarSom(SOM_POR_ICONE[icon]); else if(tipo === 'success') tocarSom('caixa');
   document.getElementById('resultModalIcon').textContent = icon;
   document.getElementById('resultModalTitle').textContent = title;
   document.getElementById('resultModalText').textContent = text;
@@ -4230,6 +4324,7 @@ function gerarDestrocosQuebra(){
 
 let _maquinaQuebradaAtual = null;
 function mostrarQuebraMaquina(machineKey, descricao, custo, impactoTexto){
+  tocarSom('quebra');
   _maquinaQuebradaAtual = machineKey;
   const m = MACHINES[machineKey];
   document.getElementById('quebraFotoMaquina').style.backgroundImage = `url('${m.thumb}')`;
@@ -4702,6 +4797,7 @@ function abrirDecisaoEngenharia(idx){
   if(imgEl && EVENTO_IMG[imgKey]){ imgEl.src = EVENTO_IMG[imgKey]; imgEl.style.display = 'block'; }
 
   document.getElementById('resultModalIcon').textContent = '🛠️';
+  tocarSom('sirene');
   document.getElementById('resultModalTitle').textContent = 'Escolha a solução de engenharia';
   document.getElementById('resultModalText').innerHTML = `${catalog.riskDesc}<br><br>Como o dono da empresa, você decide como resolver:${listaHtml}`;
   document.querySelector('.result-modal-box').classList.remove('success');
@@ -4822,6 +4918,26 @@ const EVENTOS_CONTRATO = [
     elegivel: () => true,
     img: 'evento_inspecao',
     efeito: () => { const v = 200 + Math.round(Math.random()*300); playerCash -= v; return `-${fmt(v)} em taxas de regularização`; } },
+  { tipo:'negativo', icon:'🚔', titulo:'Parou! Parou! Parou!',
+    texto:'A fiscalização ambiental parou a obra pra conferir a licença. O fiscal olhou cada papel — duas vezes — e ainda tirou foto do barro na bota.',
+    elegivel: () => true,
+    img: 'evento_inspecao',
+    efeito: (ac) => { const v = 800 + Math.round(Math.random()*1200); playerCash -= v; ac.progress = Math.max(0, ac.progress - 2); return `-${fmt(v)} em taxas e -2% de progresso`; } },
+  { tipo:'negativo', icon:'🚔', titulo:'Blitz de segurança do trabalho',
+    texto:'O fiscal pegou o Seu Zé sem capacete, e ele jurava que estava "só dando uma olhadinha". Multa na hora e palestra de 20 minutos.',
+    elegivel: () => true,
+    img: 'evento_inspecao',
+    efeito: () => { const v = 500 + Math.round(Math.random()*700); playerCash -= v; return `-${fmt(v)} em multa`; } },
+  { tipo:'positivo', icon:'🚔', titulo:'Fiscal elogiou o canteiro',
+    texto:'A fiscalização apareceu de surpresa e não achou nada de errado. Até pediu o contato do seu encarregado pra dar o exemplo pros outros.',
+    elegivel: (avgHealth) => avgHealth >= 60,
+    img: 'evento_inspecao',
+    efeito: () => { ajustarReputacao(2); return '+2 de reputação'; } },
+  { tipo:'neutro', icon:'🚔', titulo:'Fiscal chegou na hora do café',
+    texto:'O fiscal só queria conferir a documentação, mas ficou duas horas conversando sobre futebol e a obra parou esperando.',
+    elegivel: () => true,
+    img: 'evento_inspecao',
+    efeito: (ac) => { ac.progress = Math.max(0, ac.progress - 1); return '-1% de progresso'; } },
   { tipo:'negativo', icon:'🌧️', titulo:'Chuva forte atrapalhou o andamento',
     texto:'A obra precisou parar por algumas horas até o tempo firmar de novo.',
     elegivel: () => true,
