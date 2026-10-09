@@ -1506,3 +1506,10 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 71 — v51
 - Fiscalização: som agora é só a voz "Parou! Parou! Parou! Parou!" (speechSynthesis pt-BR). Apito só como reserva se o aparelho não tiver voz.
+
+## Sessão 72 — v52
+- Fiscalização: voz masculina brava gravada (síntese espeak-ng pt-BR, voz grave, comprimida, 2 s, ~10 KB MP3 embutido em `VOZ_PAROU`) em vez da voz do celular (que era feminina). Apito só como reserva se o áudio for bloqueado.
+- Corrigido gatilho errado: o som estava ligado ao ícone 📋, que também é usado no evento "Cliente pediu um ajuste no escopo" (por isso tocava em momento errado). Agora só o ícone 🚔 (fiscalização); "Inspeção de rotina" passou a usar 🚔.
+
+## Sessão 73 — v53
+- Voz "Parou!" removida a pedido do usuário (a voz sintética não agradou). Fiscalização agora toca só 3 apitos de fiscal. Possível futuro: áudio gravado pelo próprio usuário.

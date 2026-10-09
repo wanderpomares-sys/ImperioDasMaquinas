@@ -531,7 +531,7 @@ try{ var __c = JSON.parse(localStorage.getItem('imperioDasMaquinas_conta')); if(
 </style>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v51</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v53</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3561,7 +3561,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v51';
+const VERSAO_APP = 'v53';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4180,16 +4180,8 @@ const SONS = {
   vitoria(ctx,t){ [523,659,784,1047].forEach((f,i)=>_tom(ctx,'triangle',f,t+i*0.14,0.6,0.2)); },
   alerta(ctx,t){ _tom(ctx,'square',440,t,0.28,0.1); _tom(ctx,'square',440,t+0.38,0.28,0.1); },
   falha(ctx,t){ _tom(ctx,'sawtooth',330,t,0.5,0.12,160); _tom(ctx,'sawtooth',220,t+0.45,0.9,0.12,90); },
-  fiscalizacao(ctx,t){ // só a voz: "Parou! Parou! Parou! Parou!" (se o aparelho não tiver voz, cai no apito)
-    let falou = false;
-    try{
-      if(window.speechSynthesis && typeof SpeechSynthesisUtterance !== 'undefined'){
-        const u = new SpeechSynthesisUtterance('Parou! Parou! Parou! Parou!'); u.lang = 'pt-BR'; u.rate = 1.2; u.pitch = 0.85; u.volume = 1;
-        window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); falou = true;
-      }
-    }catch(e){}
-    if(falou) return;
-    for(let i=0;i<4;i++){
+  fiscalizacao(ctx,t){ // apito de fiscal ×3 (sem voz)
+    for(let i=0;i<3;i++){
       const t0 = t+i*0.5, o = ctx.createOscillator(), l = ctx.createOscillator(), lg = ctx.createGain(), g = ctx.createGain();
       o.type = 'sine'; o.frequency.value = 2850; l.frequency.value = 38; lg.gain.value = 90;
       l.connect(lg); lg.connect(o.frequency); _env(g, t0, 0.02, 0.35, 0.2);
@@ -4208,7 +4200,7 @@ function tocarSom(nome){
   const ctx = _ctxAudio(); if(!ctx || !SONS[nome]) return;
   try{ SONS[nome](ctx, ctx.currentTime+0.02); }catch(e){}
 }
-const SOM_POR_ICONE = { '🌧️':'chuva','⛈️':'chuva','🟠':'sirene','🚑':'sirene','🚨':'sirene','💥':'falha','🔴':'alerta','🏆':'vitoria','💰':'caixa','🛠️':'quebra','📋':'fiscalizacao','🚔':'fiscalizacao' };
+const SOM_POR_ICONE = { '🌧️':'chuva','⛈️':'chuva','🟠':'sirene','🚑':'sirene','🚨':'sirene','💥':'falha','🔴':'alerta','🏆':'vitoria','💰':'caixa','🛠️':'quebra','🚔':'fiscalizacao' };
 function atualizarBotaoSom(){
   const b = document.getElementById('cfgSomBtn'); if(b) b.textContent = somLigado() ? '🔊 Efeitos sonoros: ligados' : '🔇 Efeitos sonoros: desligados';
 }
@@ -4913,7 +4905,7 @@ const EVENTOS_CONTRATO = [
     elegivel: () => true,
     img: 'evento_ferramenta_quebrada',
     efeito: () => { const v = 300 + Math.round(Math.random()*500); playerCash -= v; return `-${fmt(v)} em reposição`; } },
-  { tipo:'neutro', icon:'📋', titulo:'Inspeção de rotina',
+  { tipo:'neutro', icon:'🚔', titulo:'Inspeção de rotina',
     texto:'Um inspetor apareceu pra conferir a documentação do canteiro — nada de errado, só demorou um pouco.',
     elegivel: () => true,
     img: 'evento_inspecao',
