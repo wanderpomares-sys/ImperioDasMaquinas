@@ -1462,3 +1462,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - Testado em Chromium (toque real): save "vazio" → escolha da máquina; toque nos cards/botão amarelo → Hub; reabrir restaura o caixa; sequência de janelas; save antigo válido continua restaurando.
 
 - v42: só adiciona o número da versão na tela "Carregando jogo..." (para conferir qual versão o aparelho está rodando).
+
+## Sessão 64 — Anúncio mais colado ao conteúdo (v43)
+- `.ad-slot` margens de 26px/34px para 8px/8px: a distância do último conteúdo ao anúncio, e do anúncio à barra inferior, caiu para ~8px em Hub, Máquinas, ADMIN., Loja, Sedes e Missões (medido no Chromium, tela de 390x800).
+- Número da versão na tela de carregamento: v43.
