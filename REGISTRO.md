@@ -1466,3 +1466,31 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 64 — Anúncio mais colado ao conteúdo (v43)
 - `.ad-slot` margens de 26px/34px para 8px/8px: a distância do último conteúdo ao anúncio, e do anúncio à barra inferior, caiu para ~8px em Hub, Máquinas, ADMIN., Loja, Sedes e Missões (medido no Chromium, tela de 390x800).
 - Número da versão na tela de carregamento: v43.
+
+## Sessão 65 — Proteção do progresso nas atualizações (v44)
+- Pedido: atualizar o jogo nunca pode apagar o progresso; e o jogador precisa poder recomeçar.
+- Por que atualização não apaga: o progresso fica no `localStorage` do domínio e atualizar `index.html` não mexe nele. O que apaga é (a) trocar de endereço (o `github.io` e o domínio próprio têm armazenamentos separados — nunca mais trocar o domínio), (b) limpar dados do navegador, (c) bug de código. Esta versão cobre (b) e (c) o melhor possível.
+- Backup automático: `IMPERIO_GAME_STATE_BAK` (cópia do save válido, no máximo a cada 6 h). Se o save principal estiver corrompido, `lerSaveComBackup()` usa o backup.
+- Pede ao navegador armazenamento persistente (`navigator.storage.persist()`), para o aparelho não apagar os dados quando faltar espaço.
+- Engrenagem ⚙️ (antes sem função) abre "Configurações": copiar código do progresso, restaurar de um código (serve para trocar de celular) e "Recomeçar do zero" (duas confirmações). O desbloqueio pago NUNCA é apagado ao recomeçar nem entra no código (evita compartilhar o desbloqueio).
+- `apagarProgressoLocal()`: apaga conta, save e backup e zera `jogoIniciado` para o salvamento ao sair não recriar o save; usado também em `reiniciarAposFalencia()`.
+- Número da versão agora vem de `VERSAO_APP` (tela de carregamento e configurações) e vai dentro do save (`versaoApp`).
+- Regra para as próximas versões: qualquer mudança em `salvarGameState`/`restaurarGameState` deve continuar lendo saves antigos (usar `??`/valores padrão) e rodar o teste de regressão do save (arquivo `claude/teste-regressao-save.js` no Projeto).
+- Testado em Chromium: backup criado; save principal corrompido volta pelo backup; exportar e importar em aparelho novo; código inválido recusado; recomeçar mantém o desbloqueio e apaga o resto; save antigo (sem `versaoApp`) restaura.
+
+## Sessão 66 — v45 (variedade de contratos)
+- Sorteio novo (`escolherArquetipo`): não repete nome visível nos outros slots, memória dos últimos 14 sorteados (`contratosRecentes`, só em sessão), peso maior p/ tipos raros de máquina, penaliza mesma combinação de máquinas já na tela, garante ≥1 contrato cumprível e ≥1 de "aspiração" (máquina que falta).
+- Contratos iniciais agora também sorteados (silencioso, `regenerarContrato(key,true)`).
+- +35 arquétipos (de 42 para 77): mais escavadeira 30t (1→8), motoniveladora, pá carregadeira, combos e retro; reaproveitam as 39 imagens existentes. +10 empresas, +10 cidades.
+- Loja: "N contratos esperam esse tipo de máquina" agora é dinâmico (`recomendadoDinamico`).
+- Testes: distribuição em 3000 sorteios (77/77 usados, 0 duplicados na tela), regressão de save OK.
+- Pendente (etapa 2): novos tipos de máquina (rolo, mini-carregadeira etc.) — precisa fotos.
+
+## Sessão 67 — v46
+- +16 contratos rurais (terraceamento, açude, curral, pastagem, colheita, irrigação, aceiro, galpão avícola, bueiro etc.). Pool: 93 arquétipos. Reaproveitam imagens existentes até chegarem fotos novas.
+
+## Sessão 68 — v47 (fotos novas)
+- 17 fotos enviadas pelo usuário (geradas por IA, sem marca/texto) embutidas (760 px, JPEG q66, ~1,3 MB no total) em `CONTRATO_IMG`: galpão avícola, secador de grãos, pastagem, açude, duplicação de rodovia, barraginhas, bueiro, reservatório de irrigação, silo, canal, cafezal, britador, aceiro, laranja, estrada de terra vermelha, pá carregando brita, escavadeira 30t.
+- 19 contratos agora usam foto própria. Escavadeira 30t na loja usa foto embutida (antes link externo Unsplash).
+- Foto do rolo compactador guardada para a etapa 2 (nova máquina), ainda não usada.
+- app.html agora ~11,2 MB.
