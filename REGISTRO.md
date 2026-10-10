@@ -1522,3 +1522,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 76 (v56)
 - GA_ID definido: G-CKZJJV1B8E (fluxo Web do GA4 criado pelo dono).
+
+## Sessão 77 (v57)
+- GA_ID corrigido para G-EKNM9YXYRV (fluxo Web "Jogo" da propriedade Império das máquinas). O G-CKZJJV1B8E anterior era de outro site.
