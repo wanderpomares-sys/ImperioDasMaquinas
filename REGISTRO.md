@@ -1513,3 +1513,12 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 73 — v53
 - Voz "Parou!" removida a pedido do usuário (a voz sintética não agradou). Fiscalização agora toca só 3 apitos de fiscal. Possível futuro: áudio gravado pelo próprio usuário.
+
+## Sessão 74 (v54)
+- Corrigido plural "missãoões" -> "missões"/"missão" no aviso de boas-vindas; "O Barraço" -> "O Barraco" na sede 1.
+
+## Sessão 75 (v55)
+- Analytics GA4 opt-in: GA_ID vazio (desligado) até o dono colar o ID G-...; banner de aceite (LGPD); eventos inicio_jogo, contrato_aceito, sede_comprada, begin_checkout, purchase.
+
+## Sessão 76 (v56)
+- GA_ID definido: G-CKZJJV1B8E (fluxo Web do GA4 criado pelo dono).
