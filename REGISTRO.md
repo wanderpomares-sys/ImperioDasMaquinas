@@ -1525,3 +1525,9 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 77 (v57)
 - GA_ID corrigido para G-EKNM9YXYRV (fluxo Web "Jogo" da propriedade Império das máquinas). O G-CKZJJV1B8E anterior era de outro site.
+
+## Sessão 78 (v58)
+- Analytics inicia automaticamente (desliga só se o jogador tocar em "Não coletar"). Aviso informativo + privacidade.html com contato Imperiodasmaquinaspesadas@gmail.com.
+
+## Sessão 79 (v59)
+- Aviso de Analytics removido por decisão do dono: GA4 inicia silenciosamente ao abrir. privacidade.html continua publicada (opt-out só via navegador).

@@ -536,9 +536,9 @@ var GA_ID = 'G-EKNM9YXYRV'; // cole aqui o ID de medição do GA4 (formato G-XXX
 var CHAVE_ANALYTICS = 'imperio_analytics'; // 'sim' | 'nao'
 window.dataLayer = window.dataLayer || [];
 function gtag(){ dataLayer.push(arguments); }
-function analyticsAceito(){ try{ return localStorage.getItem(CHAVE_ANALYTICS) === 'sim'; }catch(e){ return false; } }
+function analyticsRecusado(){ try{ return localStorage.getItem(CHAVE_ANALYTICS) === 'nao'; }catch(e){ return false; } }
 function iniciarAnalytics(){
-  if(!GA_ID || !analyticsAceito() || window._gaIniciado) return;
+  if(!GA_ID || analyticsRecusado() || window._gaIniciado) return;
   window._gaIniciado = true;
   var sc = document.createElement('script'); sc.async = true;
   sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
@@ -548,27 +548,11 @@ function iniciarAnalytics(){
   gtag('config', GA_ID, { anonymize_ip: true, user_properties: { modo: standalone ? 'app_instalado' : 'navegador' } });
 }
 function evento(nome, params){ try{ if(window._gaIniciado) gtag('event', nome, params || {}); }catch(e){} }
-function escolherAnalytics(aceitou){
-  try{ localStorage.setItem(CHAVE_ANALYTICS, aceitou ? 'sim' : 'nao'); }catch(e){}
-  var b = document.getElementById('bannerAnalytics'); if(b) b.remove();
-  if(aceitou) iniciarAnalytics();
-}
-function mostrarBannerAnalytics(){
-  if(!GA_ID) return;
-  var r = null; try{ r = localStorage.getItem(CHAVE_ANALYTICS); }catch(e){}
-  if(r === 'sim' || r === 'nao') return;
-  var d = document.createElement('div'); d.id = 'bannerAnalytics';
-  d.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#1a222c;color:#e8edf2;border:1px solid #3a4756;border-radius:12px;padding:12px 14px;font:13px/1.4 system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.5)';
-  d.innerHTML = '<div style="margin-bottom:8px;">📊 Posso coletar dados anônimos de uso (acessos e tempo de jogo) pra melhorar o jogo? Nada pessoal é guardado.</div>' +
-    '<div style="display:flex;gap:8px;justify-content:flex-end;"><button onclick="escolherAnalytics(false)" style="background:none;border:1px solid #3a4756;color:#e8edf2;border-radius:8px;padding:8px 14px;">Agora não</button>' +
-    '<button onclick="escolherAnalytics(true)" style="background:#f5a623;border:0;color:#1a1200;font-weight:700;border-radius:8px;padding:8px 14px;">Pode coletar</button></div>';
-  document.body.appendChild(d);
-}
-window.addEventListener('load', function(){ iniciarAnalytics(); setTimeout(mostrarBannerAnalytics, 6000); });
+window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v57</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v59</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3601,7 +3585,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v57';
+const VERSAO_APP = 'v59';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
