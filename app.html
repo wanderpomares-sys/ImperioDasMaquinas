@@ -595,7 +595,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v65</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v67</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -1178,6 +1178,8 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
         </div>
         <div style="margin-top:12px;border-radius:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);">
           <button id="cfgSomBtn" onclick="alternarSom()" style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:14px;border-radius:12px;padding:12px;">🔊 Efeitos sonoros</button>
+          <button onclick="atualizarJogoAgora()" style="margin-top:8px;width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:14px;border-radius:12px;padding:12px;">🔄 Atualizar o jogo agora</button>
+          <div style="margin-top:6px;font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.4;text-align:center;">Baixa a versão mais nova. Seu progresso não é apagado.</div>
         </div>
         <div style="margin-top:12px;border-radius:14px;padding:14px;background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.25);">
           <div style="font-size:15px;font-weight:800;color:#fff;">🔄 Recomeçar do zero</div>
@@ -3629,7 +3631,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v65';
+const VERSAO_APP = 'v67';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -3721,6 +3723,56 @@ function importarProgresso(){
 document.addEventListener('click', ev => {
   if(ev.target && ev.target.closest && ev.target.closest('.tb-settings')) abrirConfig();
 });
+
+// ===== ATUALIZAÇÃO DO JOGO INSTALADO (v66) =====
+// "Atualizar agora": salva o progresso, remove o service worker e o cache de arquivos (NÃO mexe no
+// localStorage, onde ficam conta e progresso) e recarrega já com a versão mais nova do servidor.
+async function atualizarJogoAgora(){
+  const st = document.getElementById('cfgStatus');
+  if(st) st.textContent = '⏳ Atualizando... seu progresso fica salvo.';
+  try{ salvarGameState(); }catch(e){}
+  try{ if('serviceWorker' in navigator){ const regs = await navigator.serviceWorker.getRegistrations(); for(const r of regs) await r.unregister(); } }catch(e){}
+  try{ if(window.caches){ const ns = await caches.keys(); for(const n of ns) await caches.delete(n); } }catch(e){}
+  setTimeout(() => { window.location.replace(window.location.pathname + '?atualizado=' + Date.now()); }, 400);
+}
+// Compara a versão publicada (arquivo versao.json, minúsculo) com a que está rodando. Se for diferente,
+// mostra uma faixa pequena com o botão Atualizar. Se o arquivo não existir ou a rede falhar, não faz nada.
+// Atualização AUTOMÁTICA: ao detectar versão nova, salva o progresso e atualiza sozinho (sem pedir nada).
+// Trava: no máximo 1 tentativa por versão a cada 10 minutos (evita loop se o servidor ainda estiver
+// entregando o arquivo antigo) — nesse caso cai na faixa com botão. Não atualiza no meio do retorno
+// do pagamento nem com um aviso do jogo aberto na tela.
+function aplicarAtualizacaoAutomatica(nova){
+  try{
+    const ocupado = /[?&]pagamento=/.test(window.location.search) ||
+      (document.getElementById('resultModalOverlay') && document.getElementById('resultModalOverlay').classList.contains('show'));
+    if(ocupado) return;
+    const chave = 'imperio_auto_update', agora = Date.now();
+    let ult = null; try{ ult = JSON.parse(localStorage.getItem(chave) || 'null'); }catch(e){}
+    if(ult && ult.versao === nova && agora - ult.quando < 600000){ mostrarAvisoAtualizacao(nova); return; }
+    try{ localStorage.setItem(chave, JSON.stringify({ versao: nova, quando: agora })); }catch(e){}
+    atualizarJogoAgora();
+  }catch(e){ mostrarAvisoAtualizacao(nova); }
+}
+let _avisoAtualizacaoMostrado = false;
+function verificarNovaVersao(){
+  try{
+    fetch('versao.json?_=' + Date.now(), { cache:'no-store' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => { if(j && j.versao && j.versao !== VERSAO_APP) aplicarAtualizacaoAutomatica(j.versao); })
+      .catch(() => {});
+  }catch(e){}
+}
+function mostrarAvisoAtualizacao(nova){
+  if(_avisoAtualizacaoMostrado || document.getElementById('avisoAtualizacao')) return;
+  _avisoAtualizacaoMostrado = true;
+  const d = document.createElement('div'); d.id = 'avisoAtualizacao';
+  d.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:99998;display:flex;align-items:center;gap:10px;background:#1A2028;color:#e8edf2;border:1px solid rgba(255,205,17,.5);border-radius:12px;padding:10px 12px;font:13.5px/1.35 system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.5)';
+  d.innerHTML = '<div style="flex:1;">🔄 Nova versão disponível (' + nova + ')</div><button style="background:linear-gradient(180deg,#FFE266,#E8871E);border:0;color:#1A1200;font-weight:800;border-radius:8px;padding:8px 14px;">Atualizar</button>';
+  d.querySelector('button').onclick = atualizarJogoAgora;
+  document.body.appendChild(d);
+}
+window.addEventListener('load', () => { setTimeout(verificarNovaVersao, 3000); });
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') verificarNovaVersao(); });
 
 function salvarGameState(){
   if(!jogoIniciado) return false; // nada a salvar antes de escolher a primeira máquina

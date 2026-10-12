@@ -1550,3 +1550,10 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 85 (v65)
 - Corrigido percentual de progresso sem arredondar no cartão do contrato em andamento ("15.478694205748152%" -> "15%"). Banner com foto da obra validado no fluxo real (aceitar contrato -> aba Em andamento). Cache v65.
+
+## Sessão 86 (v66)
+- Atualização do app instalado: novo botão "🔄 Atualizar o jogo agora" em Configurações (salva, remove service worker e cache de arquivos, recarrega; NÃO apaga localStorage/progresso) e faixa "Nova versão disponível" quando versao.json (novo arquivo na raiz) difere da versão rodando.
+- REGRA DE PUBLICAÇÃO: a cada versão nova, subir também versao.json com o mesmo número da VERSAO_APP (hoje {"versao":"v66"}). Cache v66.
+
+## Sessão 87 (v67)
+- Atualização AUTOMÁTICA: ao abrir/voltar ao jogo, compara versao.json com VERSAO_APP; se diferente, salva e atualiza sozinho (sem clicar). Trava: 1 tentativa por versão a cada 10 min (depois mostra a faixa com botão); não atualiza durante retorno de pagamento nem com aviso do jogo aberto. Mantém localStorage. Cache v67. Lembrete: subir versao.json junto a cada versão.
