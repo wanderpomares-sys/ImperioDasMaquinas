@@ -1564,3 +1564,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 89 (v69)
 - Foto da obra aceita (banner "Em andamento" e "Ver obra") agora sai do catálogo pelo NOME da obra (função imagemDaObra), não do slot do contrato, que é reaproveitado. Teste: mesmo com o slot trocado para a foto de Nivelamento, Contenção de Encosta mostra a foto certa.
 - Kit promocional publicado (Docs).
+
+## Sessão 90 (v70)
+- Atualização automática também confere a cada 60 s com o jogo aberto (antes só ao abrir/voltar ao app).

@@ -3633,7 +3633,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v69';
+const VERSAO_APP = 'v70';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -3775,6 +3775,8 @@ function mostrarAvisoAtualizacao(nova){
 }
 window.addEventListener('load', () => { setTimeout(verificarNovaVersao, 3000); });
 document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') verificarNovaVersao(); });
+// Também confere a cada 60 s enquanto o jogo está aberto na tela (não só ao abrir/voltar).
+setInterval(() => { if(document.visibilityState === 'visible') verificarNovaVersao(); }, 60000);
 
 function salvarGameState(){
   if(!jogoIniciado) return false; // nada a salvar antes de escolher a primeira máquina
