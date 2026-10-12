@@ -595,7 +595,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v64</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v65</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3629,7 +3629,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v64';
+const VERSAO_APP = 'v65';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4757,7 +4757,7 @@ function renderContratosAndamento(){
           ${produtividadePct === 0 ? `<div style="font-size:13.5px;font-weight:800;color:var(--danger);margin-top:6px;background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.4);border-radius:8px;padding:7px 9px;">🚫 OBRA PARADA — nenhuma máquina em condição de trabalhar aqui. Progresso não avança até você repor ou reparar uma máquina, ou cancelar o contrato.</div>` : ''}
           ${ac.state === 'EM_RISCO' ? `<div style="font-size:13.5px;color:var(--amber-2);margin-top:5px;background:rgba(255,150,50,.1);border-radius:7px;padding:5px 7px;">⚠️ ${ac.eventoAtivo}</div>` : ''}
         </div>
-        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(232,135,30,.15);color:var(--amber-1);white-space:nowrap;">${ac.progress}%</div>
+        <div style="font-size:13px;font-weight:800;padding:3px 8px;border-radius:7px;background:rgba(232,135,30,.15);color:var(--amber-1);white-space:nowrap;">${Math.round(ac.progress)}%</div>
       </div>
       <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:9px;position:relative;">
         <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:3px;"></div>
@@ -5558,7 +5558,7 @@ function renderFinancas(){
         <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;">
           <div style="height:100%;width:${ac.progress}%;background:linear-gradient(90deg,var(--amber-1),var(--amber-2));border-radius:3px;"></div>
         </div>
-        <span style="font-size:13.5px;font-weight:700;color:var(--text-dim);">${ac.progress}%</span>
+        <span style="font-size:13.5px;font-weight:700;color:var(--text-dim);">${Math.round(ac.progress)}%</span>
       </div>
     </div>`).join('')
     : '<div style="font-size:15.5px;color:var(--text-faint);padding:4px 2px;">Nenhum contrato em andamento.</div>';

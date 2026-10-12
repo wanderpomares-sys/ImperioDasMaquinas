@@ -1547,3 +1547,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 84 (v64)
 - Aba Contratos > "Em andamento": o banner "Escolha bem, lucre melhor" passa a mostrar a foto da obra em andamento (nome + dia X/Y); com 2+ obras, toque troca de obra e aparecem pontinhos. Nas outras abas (ou sem obra em andamento) volta o banner de texto. Função atualizarHeroContratos(). Cache v64.
+
+## Sessão 85 (v65)
+- Corrigido percentual de progresso sem arredondar no cartão do contrato em andamento ("15.478694205748152%" -> "15%"). Banner com foto da obra validado no fluxo real (aceitar contrato -> aba Em andamento). Cache v65.
