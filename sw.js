@@ -12,7 +12,7 @@
 // CACHE_NAME precisa subir a cada atualização publicada (v1, v2, v3...) — é isso que faz o
 // service worker antigo perceber que existe uma versão nova e trocar de vez o cache guardado.
 
-const CACHE_NAME = 'imperio-das-maquinas-v59';
+const CACHE_NAME = 'imperio-das-maquinas-v60';
 const ARQUIVOS_ESSENCIAIS = [
   './index.html',
   './manifest.json',
@@ -40,6 +40,10 @@ self.addEventListener('activate', (event) => {
 // service worker), cai pro cache guardado só se estiver offline. Assim, atualização do jogo
 // aparece na próxima visita com internet, sem exigir que ninguém limpe cache manualmente.
 self.addEventListener('fetch', (event) => {
+  // Só mexe em GET do próprio site. Pedidos de outros domínios (Google Analytics, Mercado Pago,
+  // Vercel) e qualquer POST passam direto, sem passar pelo service worker — assim o
+  // service worker nunca atrapalha o envio dos dados do Analytics.
+  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     fetch(event.request, { cache: 'no-store' })
       .then((resposta) => {

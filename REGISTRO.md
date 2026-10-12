@@ -1531,3 +1531,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 79 (v59)
 - Aviso de Analytics removido por decisão do dono: GA4 inicia silenciosamente ao abrir. privacidade.html continua publicada (opt-out só via navegador).
+
+## Sessão 80 (v60)
+- Analytics marcando zero com 3 aparelhos: o service worker interceptava TODOS os pedidos (inclusive Google Analytics e POST). Agora o sw.js só trata GET do próprio domínio; o resto passa direto. Cache v60.
