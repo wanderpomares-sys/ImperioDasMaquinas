@@ -93,7 +93,9 @@
   .screen-hero.hero-red::after{background:linear-gradient(105deg, rgba(25,10,10,.8) 30%, rgba(229,72,77,.18) 100%);}
   .screen-hero.hero-purple::after{background:linear-gradient(105deg, rgba(15,10,20,.8) 30%, rgba(155,140,255,.16) 100%);}
   /* banner de contratos: foto da obra em andamento (v64) */
-  #heroContratos.com-obra{height:150px;cursor:pointer;}
+  .obra-card{transition:box-shadow .2s;}
+  .obra-card.sel{box-shadow:0 0 0 2px rgba(242,169,62,.75);}
+  #heroContratos.com-obra{height:150px;}
   #heroContratos.com-obra::after{background:linear-gradient(0deg, rgba(9,11,14,.88) 0%, rgba(9,11,14,.15) 65%);}
   #heroContratos.com-obra .screen-hero-text{justify-content:flex-end;padding:0 16px 12px;}
   .hero-eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--amber-2);margin-bottom:3px;text-shadow:0 1px 6px rgba(0,0,0,.7);}
@@ -595,7 +597,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v67</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v68</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3631,7 +3633,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v67';
+const VERSAO_APP = 'v68';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4743,10 +4745,12 @@ function atualizarHeroContratos(){
   const img = cat.hero || cat.photo || poster || '';
   hero.classList.add('com-obra');
   hero.style.backgroundImage = img ? `url('${img}')` : '';
-  hero.onclick = lista.length > 1 ? () => { _heroObraIdx = (_heroObraIdx + 1) % lista.length; atualizarHeroContratos(); } : null;
+  hero.onclick = null;
+  document.querySelectorAll('#contratosAndamentoList .obra-card').forEach(c => c.classList.toggle('sel', lista.length > 1 && Number(c.dataset.obraIdx) === _heroObraIdx));
   const pontos = lista.length > 1 ? '<div class="hero-dots">' + lista.map((_,i)=>`<i class="${i===_heroObraIdx?'on':''}"></i>`).join('') + '</div>' : '';
-  hero.innerHTML = pontos + `<div class="screen-hero-text"><div class="hero-eyebrow">🏗️ OBRA EM ANDAMENTO</div><div class="sh-title">${ac.name}</div><div class="sh-sub">Dia ${ac.diasDecorridos}/${ac.prazoDias}${lista.length>1 ? ' · toque para ver as outras obras' : ''}</div></div>`;
+  hero.innerHTML = pontos + `<div class="screen-hero-text"><div class="hero-eyebrow">🏗️ OBRA EM ANDAMENTO</div><div class="sh-title">${ac.name}</div><div class="sh-sub">Dia ${ac.diasDecorridos}/${ac.prazoDias}${lista.length>1 ? ' · toque noutra obra abaixo' : ''}</div></div>`;
 }
+function selecionarObraHero(i){ _heroObraIdx = i; atualizarHeroContratos(); }
 function switchContratoTab(tab){
   document.querySelectorAll('.tab[data-tab]').forEach(t => {
     const active = t.dataset.tab === tab;
@@ -4797,7 +4801,7 @@ function renderContratosAndamento(){
     else ritmo = { icon:'🔴', texto:'Bem atrás do esperado — risco real de atraso', cor:'var(--danger)' };
 
     return `
-    <div style="background:rgba(255,255,255,.03);border:1.5px solid ${ac.state==='EM_RISCO'?'rgba(255,138,61,.4)':ac.state==='ATRASADO'?'rgba(229,72,77,.4)':'rgba(232,135,30,.25)'};border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:0 3px 10px ${ac.state==='EM_RISCO'?'rgba(255,138,61,.3)':ac.state==='ATRASADO'?'rgba(229,72,77,.3)':'rgba(232,135,30,.22)'};">
+    <div class="obra-card" data-obra-idx="${idx}" onclick="selecionarObraHero(${idx})" style="cursor:pointer;background:rgba(255,255,255,.03);border:1.5px solid ${ac.state==='EM_RISCO'?'rgba(255,138,61,.4)':ac.state==='ATRASADO'?'rgba(229,72,77,.4)':'rgba(232,135,30,.25)'};border-radius:15px;padding:12px 13px;margin-bottom:12px;box-shadow:0 3px 10px ${ac.state==='EM_RISCO'?'rgba(255,138,61,.3)':ac.state==='ATRASADO'?'rgba(229,72,77,.3)':'rgba(232,135,30,.22)'};">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
           <div style="font-size:18.5px;font-weight:800;">${ac.name}</div>
@@ -4827,6 +4831,7 @@ function renderContratosAndamento(){
       <button onclick="abrirConfirmacaoCancelamento(${idx})" style="width:100%;margin-top:7px;background:${produtividadePct===0?'rgba(229,72,77,.12)':'rgba(255,255,255,.04)'};border:1px solid ${produtividadePct===0?'rgba(229,72,77,.35)':'var(--surface-border)'};color:${produtividadePct===0?'var(--danger)':'var(--text-faint)'};font-weight:700;font-size:13px;border-radius:9px;padding:7px 0;">🚪 Cancelar contrato</button>
     </div>`;
   }).join('');
+  atualizarHeroContratos();
 }
 
 function abrirObra(idx){

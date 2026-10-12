@@ -1557,3 +1557,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 87 (v67)
 - Atualização AUTOMÁTICA: ao abrir/voltar ao jogo, compara versao.json com VERSAO_APP; se diferente, salva e atualiza sozinho (sem clicar). Trava: 1 tentativa por versão a cada 10 min (depois mostra a faixa com botão); não atualiza durante retorno de pagamento nem com aviso do jogo aberto. Mantém localStorage. Cache v67. Lembrete: subir versao.json junto a cada versão.
+
+## Sessão 88 (v68)
+- Banner da aba "Em andamento": agora a foto troca conforme a obra tocada na lista (cartão selecionado ganha contorno dourado; vale também ao tocar nos botões do cartão). Removido o toque no próprio banner. Cache v68; versao.json = v68.
