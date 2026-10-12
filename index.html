@@ -3633,7 +3633,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v68';
+const VERSAO_APP = 'v69';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4730,6 +4730,14 @@ function despesasDoContrato(machineKeys){
 }
 
 // Banner da aba Contratos: em "Em andamento" mostra a foto da obra (toque troca de obra se houver mais de uma).
+// A foto da obra aceita sai SEMPRE do catálogo pelo NOME da obra (não pelo "slot" do contrato, que é
+// reaproveitado e sorteado de novo) — assim a foto nunca pode trocar por outra obra.
+function imagemDaObra(ac){
+  const a = CONTRACT_POOL.find(x => x.nome === ac.name);
+  if(a) return a.hero || a.photo || '';
+  const cat = CONTRACTS[ac.key] || {};
+  return cat.hero || cat.photo || '';
+}
 let _heroObraIdx = 0;
 function atualizarHeroContratos(){
   const hero = document.getElementById('heroContratos'); if(!hero) return;
@@ -4742,7 +4750,7 @@ function atualizarHeroContratos(){
   if(_heroObraIdx >= lista.length) _heroObraIdx = 0;
   const ac = lista[_heroObraIdx], cat = CONTRACTS[ac.key] || {};
   const poster = VIDEO_POR_CONTRATO[ac.name] && VIDEO_POR_CONTRATO[ac.name].poster;
-  const img = cat.hero || cat.photo || poster || '';
+  const img = imagemDaObra(ac) || poster || '';
   hero.classList.add('com-obra');
   hero.style.backgroundImage = img ? `url('${img}')` : '';
   hero.onclick = null;
@@ -4854,7 +4862,7 @@ function abrirObra(idx){
     // tendo foto própria desde a sessão 46). Usa a foto real do contrato como alternativa só de ver,
     // em vez de um ícone genérico sem relação nenhuma com o que está acontecendo ali.
     videoWrap.innerHTML = `<div class="obra-video-wrap">
-      <img src="${catalog.hero}" style="width:100%;height:100%;object-fit:cover;" alt="${ac.name}">
+      <img src="${imagemDaObra(ac) || catalog.hero}" style="width:100%;height:100%;object-fit:cover;" alt="${ac.name}">
       <div class="obra-video-label">${ac.name}</div>
     </div>`;
   } else {

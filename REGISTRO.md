@@ -1560,3 +1560,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 88 (v68)
 - Banner da aba "Em andamento": agora a foto troca conforme a obra tocada na lista (cartão selecionado ganha contorno dourado; vale também ao tocar nos botões do cartão). Removido o toque no próprio banner. Cache v68; versao.json = v68.
+
+## Sessão 89 (v69)
+- Foto da obra aceita (banner "Em andamento" e "Ver obra") agora sai do catálogo pelo NOME da obra (função imagemDaObra), não do slot do contrato, que é reaproveitado. Teste: mesmo com o slot trocado para a foto de Nivelamento, Contenção de Encosta mostra a foto certa.
+- Kit promocional publicado (Docs).
