@@ -1534,3 +1534,13 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 80 (v60)
 - Analytics marcando zero com 3 aparelhos: o service worker interceptava TODOS os pedidos (inclusive Google Analytics e POST). Agora o sw.js só trata GET do próprio domínio; o resto passa direto. Cache v60.
+
+## Sessão 81 (v61)
+- Apito de fiscalização: agora 1 apito (era ×3).
+- Fim de obra (som 'vitoria'): trocado o arpejo retrô por fanfarra de metais + tímpano + prato com reverb (~3 s, pico 0,71 sem distorcer). Cache v61.
+
+## Sessão 82 (v62)
+- Fanfarra rejeitada pelo dono: fim de obra ('vitoria') agora sem som. Apito de fiscal continua único. Cache v62.
+
+## Sessão 83 (v63)
+- Fim de obra ('Sucesso! Contrato concluído!'): confetes removidos; novo efeito dourado (foto real evento_time_feliz, brilho, cantos, varredura, faíscas) — tipo 'conclusao' em showResultModal + efeitoConclusaoDourado(). Sem som. Outras telas intactas (compra de máquina e evolução de sede mantêm confete). Cache v63.

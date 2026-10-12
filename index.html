@@ -367,6 +367,39 @@
   .result-modal-box.success .result-modal-btn{
     box-shadow:0 3px 10px rgba(0,0,0,.3);
   }
+
+  /* ===== FIM DE OBRA — efeito dourado com foto real (v63) ===== */
+  .rm-tag{display:none;font:700 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.22em;color:#FFCD11;padding:5px 9px;border:1px solid rgba(255,205,17,.45);border-radius:4px;margin:0 auto 10px;width:max-content;position:relative;z-index:3;}
+  .result-modal-box.conclusao{overflow:hidden;background:linear-gradient(165deg,rgba(255,205,17,.10),var(--bg-2) 55%);border:1.5px solid rgba(255,205,17,.55);
+    box-shadow:0 0 0 1px rgba(255,205,17,.12),0 0 38px rgba(255,205,17,.28),0 20px 50px rgba(0,0,0,.55);
+    animation:successPop .45s cubic-bezier(.2,1.3,.4,1) both, fxcPulso 2.4s ease-in-out .6s infinite;}
+  .result-modal-box.conclusao .result-modal-icon{display:none;}
+  .result-modal-box.conclusao .rm-tag{display:block;opacity:0;animation:fxcFade .5s .55s forwards;}
+  .result-modal-box.conclusao #resultModalImg{position:relative;width:calc(100% + 40px) !important;max-width:none !important;height:168px !important;max-height:none !important;margin:-22px -20px 14px !important;border-radius:16px 16px 0 0 !important;object-fit:cover;object-position:50% 35%;animation:fxcFoto .9s .1s cubic-bezier(.2,1,.3,1) both;}
+  .result-modal-box.conclusao .result-modal-title{position:relative;z-index:3;opacity:0;animation:fxcTitulo .6s .5s forwards;text-shadow:0 0 18px rgba(255,205,17,.5);}
+  .result-modal-box.conclusao .result-modal-text{position:relative;z-index:3;opacity:0;animation:fxcFade .6s .85s forwards;}
+  .result-modal-box.conclusao .result-modal-btn{position:relative;z-index:3;opacity:0;animation:fxcFade .5s 1.1s forwards;background:linear-gradient(180deg,#FFE266,#E8871E);color:#1A1200;box-shadow:0 0 22px rgba(255,205,17,.4);}
+  @keyframes fxcPulso{0%,100%{box-shadow:0 0 0 1px rgba(255,205,17,.12),0 0 30px rgba(255,205,17,.22),0 20px 50px rgba(0,0,0,.55);}50%{box-shadow:0 0 0 1px rgba(255,205,17,.25),0 0 52px rgba(255,205,17,.45),0 20px 50px rgba(0,0,0,.55);}}
+  @keyframes fxcFade{to{opacity:1;}}
+  @keyframes fxcTitulo{0%{opacity:0;letter-spacing:.25em;filter:blur(5px);}100%{opacity:1;letter-spacing:0;filter:none;}}
+  @keyframes fxcFoto{0%{opacity:0;filter:brightness(2.4) saturate(.4);transform:scale(1.14);}100%{opacity:1;filter:none;transform:scale(1);}}
+  .fxc{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2;}
+  .fxc-grade{position:absolute;inset:0;opacity:0;animation:fxcGrade 1.2s .1s ease-out forwards;background-image:linear-gradient(rgba(255,205,17,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(255,205,17,.10) 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0,transparent 70%);mask-image:radial-gradient(circle at 50% 30%,#000 0,transparent 70%);}
+  @keyframes fxcGrade{0%{opacity:0;}40%{opacity:1;}100%{opacity:.55;}}
+  .fxc-fade{position:absolute;left:0;right:0;top:98px;height:70px;background:linear-gradient(transparent,var(--bg-2));}
+  .fxc-brilho{position:absolute;left:0;right:0;top:0;height:168px;background:radial-gradient(circle at 50% 120%,rgba(255,205,17,.35),transparent 60%);opacity:0;animation:fxcFade 1s .3s forwards;}
+  .fxc-fb{position:absolute;top:0;height:168px;width:70px;left:-90px;background:linear-gradient(90deg,transparent,rgba(255,226,102,.55) 50%,transparent);transform:skewX(-18deg);animation:fxcFb 1.2s .5s ease-in-out forwards;}
+  @keyframes fxcFb{to{left:110%;}}
+  .fxc-feixe{position:absolute;left:-10%;right:-10%;height:70px;top:-80px;background:linear-gradient(180deg,transparent,rgba(255,205,17,0) 20%,rgba(255,205,17,.35) 50%,rgba(255,255,255,.5) 52%,transparent);animation:fxcVarre 1.3s .25s cubic-bezier(.4,0,.2,1) forwards;}
+  @keyframes fxcVarre{0%{top:-80px;opacity:1;}90%{opacity:1;}100%{top:105%;opacity:0;}}
+  .fxc-c{position:absolute;width:18px;height:18px;border:2px solid #FFCD11;opacity:0;animation:fxcCanto .5s .5s forwards;filter:drop-shadow(0 0 4px rgba(255,205,17,.8));}
+  .fxc-c.a{top:10px;left:10px;border-right:0;border-bottom:0;}.fxc-c.b{top:10px;right:10px;border-left:0;border-bottom:0;}
+  .fxc-c.c{top:128px;left:10px;border-right:0;border-top:0;}.fxc-c.d{top:128px;right:10px;border-left:0;border-top:0;}
+  @keyframes fxcCanto{from{opacity:0;transform:scale(1.8);}to{opacity:.95;transform:scale(1);}}
+  .fxc-p{position:absolute;bottom:-10px;opacity:0;background:#FFCD11;box-shadow:0 0 8px #FFCD11,0 0 14px rgba(255,205,17,.6);animation:fxcSobe linear forwards;}
+  .fxc-p.o{background:#F2A93E;box-shadow:0 0 8px #F2A93E;}
+  @keyframes fxcSobe{0%{transform:translateY(0) rotate(45deg);opacity:0;}15%{opacity:1;}100%{transform:translateY(-330px) rotate(45deg);opacity:0;}}
+  @media (prefers-reduced-motion:reduce){.fxc *{animation:none!important;}}
   .result-modal-icon{font-size:54.5px;margin-bottom:10px;}
   .result-modal-title{font-size:21.5px;font-weight:800;color:var(--text);margin-bottom:8px;}
   .result-modal-text{font-size:18px;color:var(--text-dim);line-height:1.6;margin-bottom:18px;white-space:pre-line;}
@@ -552,7 +585,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v60</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v63</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -995,6 +1028,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
         <div class="confete-container confete-mini" id="miniConfeteContainer"></div>
         <img id="resultModalImg" src="" alt="" style="display:none;width:100%;border-radius:14px;margin-bottom:10px;object-fit:cover;max-height:180px;">
         <div class="result-modal-icon" id="resultModalIcon">⚠️</div>
+        <div class="rm-tag" id="resultModalTag">CONTRATO CONCLUÍDO</div>
         <div class="result-modal-title" id="resultModalTitle">Título</div>
         <div class="result-modal-text" id="resultModalText">Mensagem</div>
         <button class="result-modal-btn" onclick="closeResultModal()">Entendi, continuar</button>
@@ -3585,7 +3619,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v60';
+const VERSAO_APP = 'v63';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4202,15 +4236,15 @@ const SONS = {
     tr.connect(lp); lp.connect(gt); gt.connect(ctx.destination); tr.start(t+0.9); tr.stop(t+3.1);
   },
   caixa(ctx,t){ _tom(ctx,'sine',1568,t,0.5,0.22); _tom(ctx,'sine',2093,t+0.12,0.9,0.2); },
-  vitoria(ctx,t){ [523,659,784,1047].forEach((f,i)=>_tom(ctx,'triangle',f,t+i*0.14,0.6,0.2)); },
+  vitoria(ctx,t){ /* fim de obra: sem som (decisão do dono) */ },
   alerta(ctx,t){ _tom(ctx,'square',440,t,0.28,0.1); _tom(ctx,'square',440,t+0.38,0.28,0.1); },
   falha(ctx,t){ _tom(ctx,'sawtooth',330,t,0.5,0.12,160); _tom(ctx,'sawtooth',220,t+0.45,0.9,0.12,90); },
-  fiscalizacao(ctx,t){ // apito de fiscal ×3 (sem voz)
-    for(let i=0;i<3;i++){
+  fiscalizacao(ctx,t){ // apito de fiscal ×1 (sem voz)
+    for(let i=0;i<1;i++){
       const t0 = t+i*0.5, o = ctx.createOscillator(), l = ctx.createOscillator(), lg = ctx.createGain(), g = ctx.createGain();
       o.type = 'sine'; o.frequency.value = 2850; l.frequency.value = 38; lg.gain.value = 90;
-      l.connect(lg); lg.connect(o.frequency); _env(g, t0, 0.02, 0.35, 0.2);
-      o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+0.4); l.start(t0); l.stop(t0+0.4);
+      l.connect(lg); lg.connect(o.frequency); _env(g, t0, 0.02, 0.55, 0.2);
+      o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+0.6); l.start(t0); l.stop(t0+0.6);
     }
   },
   quebra(ctx,t){ // pancada metálica
@@ -4242,6 +4276,9 @@ function showResultModal(icon, title, text, onContinue, tipo, confete, imagemUrl
   resultModalCallback = onContinue || null;
   const box = document.querySelector('.result-modal-box');
   box.classList.toggle('success', tipo === 'success');
+  box.classList.toggle('conclusao', tipo === 'conclusao');
+  const fxAntigo = box.querySelector('.fxc'); if(fxAntigo) fxAntigo.remove();
+  if(tipo === 'conclusao') efeitoConclusaoDourado(box);
   // Nível MÉDIO de celebração (Fase 1, item 3) — só quando explicitamente pedido, nunca
   // nos eventos de sabor frequentes (22%/dia), pra não virar confete toda hora e perder o efeito.
   const miniConfete = document.getElementById('miniConfeteContainer');
@@ -4256,6 +4293,19 @@ function showResultModal(icon, title, text, onContinue, tipo, confete, imagemUrl
     else { imgEl.style.display = 'none'; imgEl.src = ''; }
   }
   document.getElementById('resultModalOverlay').classList.add('show');
+}
+// Efeito dourado de fim de obra (substitui os confetes): grade, varredura, brilho na foto, cantos e faíscas subindo.
+function efeitoConclusaoDourado(box){
+  const fx = document.createElement('div'); fx.className = 'fxc';
+  fx.innerHTML = '<div class="fxc-grade"></div><div class="fxc-brilho"></div><div class="fxc-fade"></div><div class="fxc-fb"></div><div class="fxc-feixe"></div>' +
+    '<span class="fxc-c a"></span><span class="fxc-c b"></span><span class="fxc-c c"></span><span class="fxc-c d"></span>';
+  for(let i=0;i<22;i++){
+    const p = document.createElement('i'); p.className = 'fxc-p' + (i%4===0 ? ' o' : '');
+    const t = 3 + Math.random()*3;
+    p.style.cssText = `left:${4+Math.random()*92}%;width:${t}px;height:${t}px;animation-duration:${1.4+Math.random()*1.5}s;animation-delay:${0.2+Math.random()*1.1}s;`;
+    fx.appendChild(p);
+  }
+  box.appendChild(fx);
 }
 function closeResultModal(){
   document.getElementById('resultModalOverlay').classList.remove('show');
@@ -5215,7 +5265,7 @@ function avancarContrato(idx){
     switchContratoTab('concluidos');
     renderContratosList();
     renderMaquinasList(); renderManutList();
-    const resumoFinanceiro = () => showResultModal('🏆', 'Sucesso! Contrato concluído!', `${ac.name} — ${noPrazo?'entregue no prazo':'entregue com atraso'}.\n\nLíquido de custos operacionais: +${fmt(ac.value - custos.total)}\nImposto provisionado: ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`, null, 'success', true);
+    const resumoFinanceiro = () => showResultModal('🏆', 'Sucesso! Contrato concluído!', `${ac.name} — ${noPrazo?'entregue no prazo':'entregue com atraso'}.\n\nLíquido de custos operacionais: +${fmt(ac.value - custos.total)}\nImposto provisionado: ${fmt(impostoContrato)} (${Math.round(aliquota*100)}%)`, null, 'conclusao', false, EVENTO_IMG.evento_time_feliz);
     if(ac.cliente){
       const msgConclusao = sortear(MENSAGENS_CONCLUSAO_CLIENTE[noPrazo ? 'noPrazo' : 'atrasado']);
       abrirMensagemCliente(ac.cliente, msgConclusao, resumoFinanceiro);
