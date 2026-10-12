@@ -1544,3 +1544,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 83 (v63)
 - Fim de obra ('Sucesso! Contrato concluído!'): confetes removidos; novo efeito dourado (foto real evento_time_feliz, brilho, cantos, varredura, faíscas) — tipo 'conclusao' em showResultModal + efeitoConclusaoDourado(). Sem som. Outras telas intactas (compra de máquina e evolução de sede mantêm confete). Cache v63.
+
+## Sessão 84 (v64)
+- Aba Contratos > "Em andamento": o banner "Escolha bem, lucre melhor" passa a mostrar a foto da obra em andamento (nome + dia X/Y); com 2+ obras, toque troca de obra e aparecem pontinhos. Nas outras abas (ou sem obra em andamento) volta o banner de texto. Função atualizarHeroContratos(). Cache v64.

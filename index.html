@@ -92,6 +92,16 @@
   .screen-hero.hero-teal::after{background:linear-gradient(105deg, rgba(8,20,16,.8) 30%, rgba(63,166,107,.18) 100%);}
   .screen-hero.hero-red::after{background:linear-gradient(105deg, rgba(25,10,10,.8) 30%, rgba(229,72,77,.18) 100%);}
   .screen-hero.hero-purple::after{background:linear-gradient(105deg, rgba(15,10,20,.8) 30%, rgba(155,140,255,.16) 100%);}
+  /* banner de contratos: foto da obra em andamento (v64) */
+  #heroContratos.com-obra{height:150px;cursor:pointer;}
+  #heroContratos.com-obra::after{background:linear-gradient(0deg, rgba(9,11,14,.88) 0%, rgba(9,11,14,.15) 65%);}
+  #heroContratos.com-obra .screen-hero-text{justify-content:flex-end;padding:0 16px 12px;}
+  .hero-eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--amber-2);margin-bottom:3px;text-shadow:0 1px 6px rgba(0,0,0,.7);}
+  #heroContratos.com-obra .sh-title{text-shadow:0 1px 8px rgba(0,0,0,.8);}
+  #heroContratos.com-obra .sh-sub{max-width:none;color:#d6dae0;text-shadow:0 1px 6px rgba(0,0,0,.8);}
+  .hero-dots{position:absolute;top:10px;right:12px;z-index:2;display:flex;gap:5px;}
+  .hero-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);display:block;}
+  .hero-dots i.on{background:var(--amber-2);box-shadow:0 0 6px rgba(242,169,62,.8);}
   .screen-hero-text{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:0 16px;}
   .sh-title{font-size:20px;font-weight:800;color:var(--text);}
   .sh-sub{font-size:13.5px;color:var(--text-faint);margin-top:3px;max-width:220px;line-height:1.4;}
@@ -585,7 +595,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v63</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v64</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -746,7 +756,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
           <div class="topbar"><div class="tb-back hidden">←</div><div class="tb-spacer"></div><button class="tb-settings">⚙️</button></div>
           <div class="screen-scroll">
             <div class="hub-header"><div class="hub-title">📋 Contratos</div></div>
-            <div class="screen-hero hero-amber">
+            <div class="screen-hero hero-amber" id="heroContratos">
               <div class="screen-hero-text">
                 <div class="sh-title">Escolha bem, lucre melhor</div>
                 <div class="sh-sub">Todo contrato paga um preço em risco — avalie antes de aceitar.</div>
@@ -3619,7 +3629,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v63';
+const VERSAO_APP = 'v64';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4665,6 +4675,26 @@ function despesasDoContrato(machineKeys){
   return { total: itens.reduce((s, i) => s + i.price, 0), itens };
 }
 
+// Banner da aba Contratos: em "Em andamento" mostra a foto da obra (toque troca de obra se houver mais de uma).
+let _heroObraIdx = 0;
+function atualizarHeroContratos(){
+  const hero = document.getElementById('heroContratos'); if(!hero) return;
+  if(hero._orig === undefined) hero._orig = hero.innerHTML;
+  const aba = document.getElementById('tabContentAndamento');
+  const lista = (typeof acceptedContracts !== 'undefined' && acceptedContracts) || [];
+  if(!aba || aba.style.display !== 'block' || !lista.length){
+    hero.classList.remove('com-obra'); hero.style.backgroundImage = ''; hero.onclick = null; hero.innerHTML = hero._orig; return;
+  }
+  if(_heroObraIdx >= lista.length) _heroObraIdx = 0;
+  const ac = lista[_heroObraIdx], cat = CONTRACTS[ac.key] || {};
+  const poster = VIDEO_POR_CONTRATO[ac.name] && VIDEO_POR_CONTRATO[ac.name].poster;
+  const img = cat.hero || cat.photo || poster || '';
+  hero.classList.add('com-obra');
+  hero.style.backgroundImage = img ? `url('${img}')` : '';
+  hero.onclick = lista.length > 1 ? () => { _heroObraIdx = (_heroObraIdx + 1) % lista.length; atualizarHeroContratos(); } : null;
+  const pontos = lista.length > 1 ? '<div class="hero-dots">' + lista.map((_,i)=>`<i class="${i===_heroObraIdx?'on':''}"></i>`).join('') + '</div>' : '';
+  hero.innerHTML = pontos + `<div class="screen-hero-text"><div class="hero-eyebrow">🏗️ OBRA EM ANDAMENTO</div><div class="sh-title">${ac.name}</div><div class="sh-sub">Dia ${ac.diasDecorridos}/${ac.prazoDias}${lista.length>1 ? ' · toque para ver as outras obras' : ''}</div></div>`;
+}
 function switchContratoTab(tab){
   document.querySelectorAll('.tab[data-tab]').forEach(t => {
     const active = t.dataset.tab === tab;
@@ -4677,6 +4707,7 @@ function switchContratoTab(tab){
   document.getElementById('tabContentConcluidos').style.display = tab === 'concluidos' ? 'block' : 'none';
   if(tab === 'andamento') renderContratosAndamento();
   if(tab === 'concluidos') renderContratosConcluidos();
+  atualizarHeroContratos();
 }
 
 const ESTADO_VISUAL = {
@@ -4687,6 +4718,7 @@ const ESTADO_VISUAL = {
 
 function renderContratosAndamento(){
   const el = document.getElementById('contratosAndamentoList');
+  atualizarHeroContratos();
   if(acceptedContracts.length === 0){
     el.innerHTML = '<div style="font-size:15.5px;color:var(--text-faint);padding:10px 2px;">Nenhum contrato em andamento. Aceite um contrato na aba Disponíveis.</div>';
     return;
