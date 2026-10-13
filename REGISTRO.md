@@ -1567,3 +1567,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 90 (v70)
 - Atualização automática também confere a cada 60 s com o jogo aberto (antes só ao abrir/voltar ao app).
+
+## Sessão 91 (v71)
+- Som de contrato perdido (ícone 💥): agora é uma explosão grave e longa (~4 s, sem estalo agudo), com a tela tremendo (~2 s) e vibração do celular quando os efeitos sonoros estão ligados.
+- Tela de abertura passa a mostrar v71.

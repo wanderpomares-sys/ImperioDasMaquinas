@@ -52,6 +52,8 @@
   /* ===== SCREEN SWITCHING ===== */
   .app-body{flex:1;min-height:0;position:relative;}
   .screen{position:absolute;inset:0;display:none;flex-direction:column;min-height:0;}
+  @keyframes tremerTela{0%,100%{transform:translate(0,0)}8%{transform:translate(-9px,5px)}16%{transform:translate(10px,-6px)}26%{transform:translate(-8px,-4px)}36%{transform:translate(7px,6px)}48%{transform:translate(-5px,3px)}60%{transform:translate(4px,-3px)}74%{transform:translate(-2px,2px)}88%{transform:translate(1px,-1px)}}
+  .device.tremendo{animation:tremerTela 2.2s cubic-bezier(.2,.7,.3,1) 1;}
   .screen.active{display:flex;}
   .screen-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
   .subview{display:none;}
@@ -597,7 +599,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v68</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v71</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3633,7 +3635,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v70';
+const VERSAO_APP = 'v71';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4304,7 +4306,24 @@ const SONS = {
   caixa(ctx,t){ _tom(ctx,'sine',1568,t,0.5,0.22); _tom(ctx,'sine',2093,t+0.12,0.9,0.2); },
   vitoria(ctx,t){ /* fim de obra: sem som (decisão do dono) */ },
   alerta(ctx,t){ _tom(ctx,'square',440,t,0.28,0.1); _tom(ctx,'square',440,t+0.38,0.28,0.1); },
-  falha(ctx,t){ _tom(ctx,'sawtooth',330,t,0.5,0.12,160); _tom(ctx,'sawtooth',220,t+0.45,0.9,0.12,90); },
+  falha(ctx,t){ // contrato perdido: EXPLOSÃO grave e longa (sem estalo agudo), com retumbar que demora a sumir
+    const m = ctx.createGain(); m.gain.value = 0.5; m.connect(ctx.destination);
+    // 1) sub-grave: o "corpo" do estrondo, desce devagar e dura ~3,5 s
+    const b = ctx.createOscillator(), bg = ctx.createGain();
+    b.type = 'sine'; b.frequency.setValueAtTime(75,t); b.frequency.exponentialRampToValueAtTime(26,t+3);
+    bg.gain.setValueAtTime(0.0001,t); bg.gain.linearRampToValueAtTime(1,t+0.06); bg.gain.setValueAtTime(0.9,t+0.5); bg.gain.exponentialRampToValueAtTime(0.0001,t+3.6);
+    b.connect(bg); bg.connect(m); b.start(t); b.stop(t+3.7);
+    // 2) segunda camada grave, um pouco mais alta, para dar peso
+    const c = ctx.createOscillator(), cg = ctx.createGain();
+    c.type = 'triangle'; c.frequency.setValueAtTime(52,t+0.03); c.frequency.exponentialRampToValueAtTime(30,t+2.4);
+    cg.gain.setValueAtTime(0.0001,t); cg.gain.linearRampToValueAtTime(0.45,t+0.08); cg.gain.exponentialRampToValueAtTime(0.0001,t+2.6);
+    c.connect(cg); cg.connect(m); c.start(t); c.stop(t+2.7);
+    // 3) retumbar: ruído só de graves, o filtro vai fechando e o som vai morrendo
+    const r = _ruido(ctx,4), lp = ctx.createBiquadFilter(), rg = ctx.createGain();
+    lp.type = 'lowpass'; lp.Q.value = 0.7; lp.frequency.setValueAtTime(420,t); lp.frequency.exponentialRampToValueAtTime(45,t+3.6);
+    rg.gain.setValueAtTime(0.0001,t); rg.gain.linearRampToValueAtTime(1,t+0.1); rg.gain.setValueAtTime(0.85,t+0.7); rg.gain.exponentialRampToValueAtTime(0.0001,t+3.8);
+    r.connect(lp); lp.connect(rg); rg.connect(m); r.start(t); r.stop(t+4);
+  },
   fiscalizacao(ctx,t){ // apito de fiscal ×1 (sem voz)
     for(let i=0;i<1;i++){
       const t0 = t+i*0.5, o = ctx.createOscillator(), l = ctx.createOscillator(), lg = ctx.createGain(), g = ctx.createGain();
@@ -4320,7 +4339,16 @@ const SONS = {
     _tom(ctx,'sine',140,t,0.7,0.35,45);
   }
 };
+function tremerTela(){ // explosão: a tela treme e o celular vibra (a vibração respeita o botão de efeitos sonoros)
+  try{
+    const d = document.querySelector('.device'); if(!d) return;
+    d.classList.remove('tremendo'); void d.offsetWidth; d.classList.add('tremendo');
+    setTimeout(() => d.classList.remove('tremendo'), 2300);
+    if(somLigado() && navigator.vibrate) navigator.vibrate([200,60,260,60,200,60,150,60,100]);
+  }catch(e){}
+}
 function tocarSom(nome){
+  if(nome === 'falha') tremerTela();
   if(!somLigado()) return;
   const ctx = _ctxAudio(); if(!ctx || !SONS[nome]) return;
   try{ SONS[nome](ctx, ctx.currentTime+0.02); }catch(e){}
