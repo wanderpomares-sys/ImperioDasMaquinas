@@ -1571,3 +1571,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 91 (v71)
 - Som de contrato perdido (ícone 💥): agora é uma explosão grave e longa (~4 s, sem estalo agudo), com a tela tremendo (~2 s) e vibração do celular quando os efeitos sonoros estão ligados.
 - Tela de abertura passa a mostrar v71.
+
+## Sessão 92 (v72)
+- Analytics: teste de diagnóstico — abrir o site com ?ga_debug=1 mostra na tela se o GA carregou ou foi bloqueado e liga o DebugView do GA4. Sem essa opção nada muda.

@@ -588,18 +588,22 @@ function iniciarAnalytics(){
   if(!GA_ID || analyticsRecusado() || window._gaIniciado) return;
   window._gaIniciado = true;
   var sc = document.createElement('script'); sc.async = true;
+  var dbg = /[?&]ga_debug=1/.test(location.search); // teste: abra o site com ?ga_debug=1 para ver o resultado na tela e no DebugView do GA4
+  sc.onload = function(){ window._gaStatus = 'ok'; };
+  sc.onerror = function(){ window._gaStatus = 'bloqueado'; };
   sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
   document.head.appendChild(sc);
+  if(dbg) setTimeout(function(){ try{ showToast(window._gaStatus === 'ok' ? 'Analytics: carregou ✅ (veja no DebugView do GA)' : 'Analytics: BLOQUEADO ou sem internet ❌'); }catch(e){ alert('Analytics: ' + (window._gaStatus || 'sem resposta')); } }, 5000);
   gtag('js', new Date());
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
-  gtag('config', GA_ID, { anonymize_ip: true, user_properties: { modo: standalone ? 'app_instalado' : 'navegador' } });
+  gtag('config', GA_ID, { anonymize_ip: true, debug_mode: dbg, user_properties: { modo: standalone ? 'app_instalado' : 'navegador' } });
 }
 function evento(nome, params){ try{ if(window._gaIniciado) gtag('event', nome, params || {}); }catch(e){} }
 window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v71</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v72</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3635,7 +3639,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v71';
+const VERSAO_APP = 'v72';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
