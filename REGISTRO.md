@@ -1574,3 +1574,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 92 (v72)
 - Analytics: teste de diagnóstico — abrir o site com ?ga_debug=1 mostra na tela se o GA carregou ou foi bloqueado e liga o DebugView do GA4. Sem essa opção nada muda.
+
+## Sessão 93 (v73)
+- Teste do Analytics (?ga_debug=1) reforçado: faixa fixa própria (não depende do jogo), ignora recusa antiga e informa o motivo se o Analytics não iniciar.
