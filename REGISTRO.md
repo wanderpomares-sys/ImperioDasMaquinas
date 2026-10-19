@@ -1583,3 +1583,10 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 95 (v75)
 - Analytics volta a enviar só para a propriedade mantida pelo dono: G-CKZJJV1B8E (final 558330735). GA_ID_2 desligado; o dono apaga a duplicada (final 558327122) no Analytics.
+
+## Sessão 96 (v76)
+- VERSÃO EM INGLÊS: seletor PT | EN na tela de cadastro/login e em Configurações ("Idioma / Language"). Escolha fica em localStorage `imperio_idioma`; sem escolha, segue o idioma do aparelho (pt* = português, resto = inglês); ?lang=en / ?lang=pt força. Trocar de idioma salva o progresso e recarrega — o save continua o mesmo (o jogo por dentro segue em português).
+- Como funciona: camada de tradução em tempo de execução (script no <head>, dicionário de ~1.370 textos + padrões com ${n} + MutationObserver). Em português ela nem liga. Em inglês: valores em dólar ($ 60,000), números no formato americano, cidades/empresas dos EUA, alert/confirm traduzidos, meta description em inglês. O preço do desbloqueio continua em reais (BRL 9.90) porque o Mercado Pago cobra em reais.
+- Novo: privacy-en.html (política de privacidade em inglês) e link cruzado na privacidade.html. Analytics: propriedade de usuário `idioma` (pt/en).
+- Para adicionar texto novo ao jogo: escrever em português normalmente e incluir o par PT→EN no dicionário (se faltar, aparece em português no modo inglês, sem quebrar nada).
+- Cache v76; versao.json {"versao":"v76"}.
