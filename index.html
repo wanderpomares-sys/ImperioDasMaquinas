@@ -736,7 +736,7 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){ dataLayer.push(arguments); }
 function analyticsRecusado(){ try{ return localStorage.getItem(CHAVE_ANALYTICS) === 'nao'; }catch(e){ return false; } }
 function iniciarAnalytics(){
-  var dbg = /[?&]ga_debug=1/.test(location.search); // teste: abra o site com ?ga_debug=1 para ver o resultado na tela e no DebugView do GA4
+  var dbg = false; // teste: abra o site com ?ga_debug=1 para ver o resultado na tela e no DebugView do GA4
   var recusado = analyticsRecusado();
   if(dbg && recusado){ try{ localStorage.removeItem(CHAVE_ANALYTICS); }catch(e){} recusado = false; } // no teste, ignora recusa antiga
   if(!GA_ID || recusado || window._gaIniciado){ if(dbg) _gaAviso('Analytics NÃO iniciou: ' + (!GA_ID ? 'sem ID' : recusado ? 'recusado neste aparelho' : 'já iniciado')); return; }
@@ -766,7 +766,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v76</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v77</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3803,7 +3803,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v76';
+const VERSAO_APP = 'v77';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';

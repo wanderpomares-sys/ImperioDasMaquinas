@@ -1590,3 +1590,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - Novo: privacy-en.html (política de privacidade em inglês) e link cruzado na privacidade.html. Analytics: propriedade de usuário `idioma` (pt/en).
 - Para adicionar texto novo ao jogo: escrever em português normalmente e incluir o par PT→EN no dicionário (se faltar, aparece em português no modo inglês, sem quebrar nada).
 - Cache v76; versao.json {"versao":"v76"}.
+
+## Sessão 97 (v77)
+- Removida a faixa amarela de teste do Analytics (?ga_debug=1 não mostra mais nada na tela). O Analytics continua enviando normalmente para G-CKZJJV1B8E.
