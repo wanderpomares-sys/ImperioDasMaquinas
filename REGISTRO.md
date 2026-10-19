@@ -1577,3 +1577,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 93 (v73)
 - Teste do Analytics (?ga_debug=1) reforçado: faixa fixa própria (não depende do jogo), ignora recusa antiga e informa o motivo se o Analytics não iniciar.
+
+## Sessão 94 (v74)
+- Analytics: o jogo agora envia para as DUAS propriedades "Império das máquinas" (G-CKZJJV1B8E, final 558330735, fluxo "Jogo" com a URL do site; e G-EKNM9YXYRV, final 558327122), porque o dono tem duas com o mesmo nome e o Tempo real estava zerado na que ele olhava. Depois que ele apagar a duplicada, remover GA_ID_2.

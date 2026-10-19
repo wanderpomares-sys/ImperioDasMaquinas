@@ -579,7 +579,8 @@ try{ var __c = JSON.parse(localStorage.getItem('imperioDasMaquinas_conta')); if(
 
 <script>
 /* ===== Analytics (Google Analytics 4) — só carrega com ID preenchido E com o aceite do jogador ===== */
-var GA_ID = 'G-EKNM9YXYRV'; // cole aqui o ID de medição do GA4 (formato G-XXXXXXXXXX). Vazio = analytics desligado.
+var GA_ID_2 = 'G-EKNM9YXYRV'; // propriedade duplicada "Império das máquinas" (final 558327122): recebe os mesmos dados até o dono apagar uma delas
+var GA_ID = 'G-CKZJJV1B8E'; // cole aqui o ID de medição do GA4 (formato G-XXXXXXXXXX). Vazio = analytics desligado.
 var CHAVE_ANALYTICS = 'imperio_analytics'; // 'sim' | 'nao'
 window.dataLayer = window.dataLayer || [];
 function gtag(){ dataLayer.push(arguments); }
@@ -597,7 +598,7 @@ function iniciarAnalytics(){
   document.head.appendChild(sc);
   gtag('js', new Date());
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
-  gtag('config', GA_ID, { anonymize_ip: true, debug_mode: dbg, user_properties: { modo: standalone ? 'app_instalado' : 'navegador' } });
+  [GA_ID, GA_ID_2].forEach(function(id){ if(id) gtag('config', id, { anonymize_ip: true, debug_mode: dbg, user_properties: { modo: standalone ? 'app_instalado' : 'navegador' } }); });
   if(dbg){
     _gaAviso('Analytics: iniciando... (' + GA_ID + ')');
     setTimeout(function(){ _gaAviso(window._gaStatus === 'ok' ? 'Analytics: carregou ✅ — veja no DebugView do GA' : window._gaStatus === 'bloqueado' ? 'Analytics: BLOQUEADO ❌ (bloqueador de anúncios, DNS ou rede)' : 'Analytics: sem resposta ainda ⏳ (internet lenta?)'); }, 6000);
@@ -615,7 +616,7 @@ window.addEventListener('load', function(){ iniciarAnalytics(); });
 </script>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v73</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v74</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -3651,7 +3652,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v73';
+const VERSAO_APP = 'v74';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
