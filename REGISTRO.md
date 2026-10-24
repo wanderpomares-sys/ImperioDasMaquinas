@@ -1658,3 +1658,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 112 (v92)
 - Perfil/Configurações (overlay do botão Perfil/engrenagem) redesenhado conforme mockup (patch_perfil.py + perfil.css): herói com logo/empresa/dono/nível de sede, 3 números (reputação, contratos feitos, máquinas), idioma PT/EN, backup recolhido (exportar/importar com os mesmos ids), efeitos sonoros, atualizar, privacidade (PT/EN), recomeçar. Termos de uso omitido (não existe página). Handlers inalterados.
+
+
+## Sessão 113 (v93)
+- Avisos de resultado (modal #resultModalOverlay) no novo estilo (patch_avisos.py + avisos.css): cartão creme com ilustração por tipo (sucesso/atenção/evento/conquista, escolhida pelo ícone da chamada), selo, botão único 'Continuar'. showResultModal embrulhada sem mudar assinatura; avisos sem tipo mapeado ficam neutros com o emoji. Fotos reais (imagemUrl) continuam aparecendo no lugar da ilustração. Resumo em pílulas do mockup não aplicado (texto vem como string única).
