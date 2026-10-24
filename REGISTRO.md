@@ -1627,3 +1627,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 104 (v84)
 - Arte das máquinas agora segue o tipo: Escavadeira, Trator de Esteira, Caminhão e Guindaste têm arte própria; Retroescavadeira, Pá Carregadeira e Motoniveladora ainda não têm arte e mostram um ícone neutro (engrenagem) em vez da máquina errada. Quando existirem m_retro.png, m_pa.png e m_moto.png na pasta de arte, entram automaticamente no próximo build. Cache v84.
+
+## Sessão 105 (v85)
+- SEDES refeita pelo mockup: foto grande da sede, título "Melhorias da Sede", faixa de 5 estágios (ícones dourados com ✓ nos conquistados, cinza com cadeado nos bloqueados), cartão "Próxima sede" com foto, requisitos (caixa, reputação, missões), progresso e botão Melhorar. Lista completa dos níveis ficou em "Ver todos os níveis". Missões e Sedes ganharam a barra do topo (caixa, sino, engrenagem).
+- Arte nova de Pá Carregadeira, Retroescavadeira e Motoniveladora (enviadas pelo usuário) entrando em Máquinas e Oficina. Sem mudança de regras/save. Cache v85.
