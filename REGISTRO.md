@@ -1654,3 +1654,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 111 (v91)
 - Notícias (overlay do sino) redesenhada conforme mockup (patch_noticias.py + noticias.css): banner, chips de filtro (Tudo/Contratos/Máquinas/Missões/Sedes), cartões por tipo com tom verde/vermelho, ponto de não lida, estado vazio. registrarNoticia/abrirNoticias/save inalterados. EN ok.
+
+
+## Sessão 112 (v92)
+- Perfil/Configurações (overlay do botão Perfil/engrenagem) redesenhado conforme mockup (patch_perfil.py + perfil.css): herói com logo/empresa/dono/nível de sede, 3 números (reputação, contratos feitos, máquinas), idioma PT/EN, backup recolhido (exportar/importar com os mesmos ids), efeitos sonoros, atualizar, privacidade (PT/EN), recomeçar. Termos de uso omitido (não existe página). Handlers inalterados.
