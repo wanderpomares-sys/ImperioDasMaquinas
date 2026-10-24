@@ -1639,3 +1639,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 107 (v87)
 - INÍCIO (escolha da primeira máquina) refeito a partir do HTML do usuário: hero ilustrado com título, cartão de narrativa, pílula de capital, cartões de máquina com arte, selo de risco, preço e financiamento, seleção com anel dourado e ✓. Botão de comprar grande em amarelo. Lógica de escolha/compra inalterada.
 - Retroescavadeira e Pá Carregadeira Edição Fundador com arte dourada própria (enviada pelo usuário). Arte da Motoniveladora Ouro e da Escavadeira Ouro guardada para futuros itens. Cache v87.
+
+## Sessão 108 (v88)
+- DETALHE DO CONTRATO refeito a partir do HTML do usuário: banner ilustrado, título com valor em moeda, cartões Requisitos / Prazo & Logística / Risco (selo de risco, seleção de seguro em 3 opções) / Penalidades, botão verde "Aceitar contrato". Os números detalhados (probabilidade, impacto, receita, custos, margem) ficaram recolhidos em "Ver números do contrato". Aceite, seguro e travas de máquina inalterados. Cache v88.
