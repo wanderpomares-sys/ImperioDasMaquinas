@@ -1621,3 +1621,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - CONTRATOS refeita: cartões limpos (foto, empresa, valor, selo de risco, "Ver contrato"), abas em pílulas, obras em andamento com detalhes recolhidos.
 - FINANÇAS refeita pelo mockup: porquinho com caixa total, Entradas/Saídas, gráfico dos últimos 7 resultados, linhas Impostos/Empréstimos/Equipe. Todo o conteúdo antigo continua dentro de "Ver todos os detalhes" (mesmos IDs).
 - Sem mudança de regras ou save. Textos novos com tradução EN. Cache v82.
+
+## Sessão 103 (v83)
+- OFICINA refeita a partir do HTML do usuário (banner ilustrado da oficina ao pôr do sol, título, subtítulo "N máquinas precisam de reparo", cartões com selo, barra de condição e botão Reparar/Revisar com custo, cartão de dica). Os botões abrem o mesmo detalhe de manutenção de antes; nenhuma regra mudou. Cache v83.
