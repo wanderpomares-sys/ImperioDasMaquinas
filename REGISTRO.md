@@ -1646,3 +1646,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 109 (v89)
 - Todas as fotos de MÁQUINAS (Loja, detalhe da Loja, detalhe da máquina, comemoração de compra, aviso de quebra) agora usam a arte ilustrada por tipo, sem fotos reais.
 - Gancho para trocar as demais fotos por ilustrações sem mexer no código: arquivos na pasta de arte "over" — ct_<chave>.jpg (obras), ev_<nome>.jpg (eventos), sede_N.jpg (sedes), contato_N.jpg (clientes) — entram no próximo build. Pacote de prompts v2 (Disney/Pixar refinado) com os nomes dos arquivos. Cache v89.
+
+
+## Sessão 110 (v90)
+- Detalhe da Máquina/Manutenção redesenhado conforme mockup (patch_maquina.py + maquina.css): palco com pílula de estado, Condição, Escolha a peça, Plano, botão verde; quebrada = card Reparo de emergência + botão vermelho. Info extra recolhida em 'Mais informações'. Handlers/IDs mantidos. EN ok.
