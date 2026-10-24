@@ -1260,10 +1260,15 @@ details.dt-num>summary::-webkit-details-marker{display:none}
 .dt-pen p{margin:0;font-size:13.5px;font-weight:700;color:#7A3A1E}
 #contratos-detail-view .action-zone .action-btn:not(.locked){background:linear-gradient(#8FD072,#3E9A38) !important;border:2.5px solid #2E7A2A !important;box-shadow:0 4px 0 #2E7A2A !important;color:#fff !important;border-radius:30px !important;font-family:var(--fonte-titulo) !important;font-size:20px !important;text-shadow:0 1px 0 rgba(0,0,0,.25)}
 #contratos-detail-view .action-zone .action-btn .sub{color:rgba(255,255,255,.92) !important;font-size:11.5px !important}
+
+.cat-art{background-size:contain !important;background-repeat:no-repeat !important;background-position:center !important;background-color:#FFF6DA !important}
+.cat-art::after{display:none !important}
+.cat-card.premium .cat-art,.cat-card[style*="20,16,8"] .cat-art{background-color:#2B1D0A !important}
+#quebraFotoMaquina,#compraFoto{background-size:contain !important;background-repeat:no-repeat !important;background-position:center !important}
 </style>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v88</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v89</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -4324,7 +4329,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v88';
+const VERSAO_APP = 'v89';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -5176,7 +5181,7 @@ function mostrarQuebraMaquina(machineKey, descricao, custo, impactoTexto){
   tocarSom('quebra');
   _maquinaQuebradaAtual = machineKey;
   const m = MACHINES[machineKey];
-  document.getElementById('quebraFotoMaquina').style.backgroundImage = `url('${m.thumb}')`;
+  document.getElementById('quebraFotoMaquina').style.backgroundImage = `url('${window.__arteMaq(m)}')`;
   document.getElementById('quebraNomeMaquina').textContent = m.name;
   document.getElementById('quebraDescricao').textContent = descricao;
   document.getElementById('quebraCusto').textContent = `Custo emergencial: ${fmt(custo)} (reboque + diagnóstico)`;
@@ -6461,7 +6466,7 @@ function renderMaintDetail(){
   const m = MACHINES[currentMaintKey];
   const part = m[currentMaintPart];
   document.getElementById('manutDetailScroll').innerHTML = `
-    <div class="d-photo" style="background-image:url('${m.photo}');${m.quebrada ? 'filter:grayscale(.4) brightness(.6);' : ''}"></div>
+    <div class="d-photo cat-art" style="background-image:url('${window.__arteMaq(m)}');${m.quebrada ? 'filter:grayscale(.4) brightness(.6);' : ''}"></div>
     <div class="d-title-row">
       <div class="d-name">${m.name} <span style="opacity:.65;font-style:italic;font-size:.85em;">"${m.apelido||'Sem apelido'}"</span></div>
       ${m.quebrada
@@ -6606,7 +6611,7 @@ function renderLojaList(){
       ? 'border-color:rgba(255,200,80,.6);background:linear-gradient(135deg,rgba(20,16,8,.9),rgba(10,8,4,.95));box-shadow:0 3px 14px rgba(255,200,80,.25);'
       : (recDin ? 'border-color:rgba(232,135,30,.55);background:linear-gradient(135deg,rgba(232,135,30,.1),rgba(255,255,255,.02));box-shadow:0 3px 10px rgba(232,135,30,.3);' : '');
     return `<div class="cat-card card-accent-teal ${recDin?'recommended':''}" style="${estiloCard}" onclick="openLojaDetail('${key}')">
-      <div class="cat-photo" style="background-image:url('${c.photo}');">${c.premium?'<div style="position:absolute;top:4px;left:4px;background:linear-gradient(135deg,#F2C14E,#B8860B);color:#1a1200;font-size:9.5px;font-weight:900;padding:2px 6px;border-radius:5px;letter-spacing:.03em;">👑 PREMIUM</div>':''}</div>
+      <div class="cat-photo cat-art" style="background-image:url('${window.__arteMaq(c)}');">${c.premium?'<div style="position:absolute;top:4px;left:4px;background:linear-gradient(135deg,#F2C14E,#B8860B);color:#1a1200;font-size:9.5px;font-weight:900;padding:2px 6px;border-radius:5px;letter-spacing:.03em;">👑 PREMIUM</div>':''}</div>
       <div class="cat-body">
         <div class="cat-cat">${c.cat}</div>
         <div class="cat-name">${c.name}</div>
@@ -6656,7 +6661,7 @@ function renderLojaDetail(){
     <div class="box-text" style="margin-top:6px;">Dias de operação: <b>${diasAntes}</b> → <b style="color:${diasDepois<diasAntes*0.5?'var(--danger)':'var(--ok)'};">${diasDepois}</b></div>`;
 
   document.getElementById('lojaDetailScroll').innerHTML = `
-    <div class="d-photo" style="background-image:url('${c.photo}');"></div>
+    <div class="d-photo cat-art" style="background-image:url('${window.__arteMaq(c)}');"></div>
     <div class="d-title-row">
       <div class="cat-cat">${c.cat}</div>
       <div class="d-name">${c.name}</div>
@@ -6775,7 +6780,7 @@ function confirmarTroca(modo){
   renderFinancas();
   renderMaquinasList(); renderManutList();
   recomputarDisponibilidadeContratos();
-  showCompraCelebration(tpl.name, tpl.photo);
+  showCompraCelebration(tpl.name, window.__arteMaq(tpl));
 }
 
 function buyMachine(){
@@ -6822,7 +6827,7 @@ function buyMachine(){
 
   const tpl = MACHINE_TEMPLATES[currentLojaKey];
   let nomeMaquina = c.name;
-  let fotoCelebracao = c.photo;
+  let fotoCelebracao = window.__arteMaq(c);
   if(tpl){
     const novaChave = chooseMachineKey(tpl.tipoKey);
     MACHINES[novaChave] = {
@@ -6839,7 +6844,7 @@ function buyMachine(){
       premium: !!tpl.premium, bonusProdutividade: tpl.bonusProdutividade||0, reducaoChanceQuebra: tpl.reducaoChanceQuebra||0
     };
     nomeMaquina = tpl.name;
-    fotoCelebracao = tpl.photo;
+    fotoCelebracao = window.__arteMaq(tpl);
     renderMaquinasList(); renderManutList();
     recomputarDisponibilidadeContratos();
   }
@@ -7762,5 +7767,13 @@ window.addEventListener('pagehide', () => {
   setInterval(render,1000); setTimeout(render,300);
 })();
 </script>
+<script>(function(){var O={"ct": {}, "ev": {}, "sede": {}, "contato": {}};
+try{
+Object.keys(O.ct).forEach(function(k){var old=CONTRATO_IMG[k];CONTRATO_IMG[k]=O.ct[k];CONTRACT_POOL.forEach(function(p){if(p.photo===old)p.photo=O.ct[k];if(p.hero===old)p.hero=O.ct[k];});Object.keys(CONTRACTS).forEach(function(q){var c=CONTRACTS[q];if(c.photo===old)c.photo=O.ct[k];if(c.hero===old)c.hero=O.ct[k];});});
+Object.keys(O.ev).forEach(function(k){EVENTO_IMG["evento_"+k]=O.ev[k];});
+Object.keys(O.sede).forEach(function(n){if(SEDES_DATA[n])SEDES_DATA[n].foto=O.sede[n];});
+Object.keys(O.contato).forEach(function(n){var i=parseInt(n,10)-1;if(CONTATOS_CLIENTE[i])CONTATOS_CLIENTE[i].foto=O.contato[n];});
+}catch(e){console.warn("art override",e);}
+})();</script>
 </body>
 </html>

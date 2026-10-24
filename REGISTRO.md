@@ -1642,3 +1642,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 108 (v88)
 - DETALHE DO CONTRATO refeito a partir do HTML do usuário: banner ilustrado, título com valor em moeda, cartões Requisitos / Prazo & Logística / Risco (selo de risco, seleção de seguro em 3 opções) / Penalidades, botão verde "Aceitar contrato". Os números detalhados (probabilidade, impacto, receita, custos, margem) ficaram recolhidos em "Ver números do contrato". Aceite, seguro e travas de máquina inalterados. Cache v88.
+
+## Sessão 109 (v89)
+- Todas as fotos de MÁQUINAS (Loja, detalhe da Loja, detalhe da máquina, comemoração de compra, aviso de quebra) agora usam a arte ilustrada por tipo, sem fotos reais.
+- Gancho para trocar as demais fotos por ilustrações sem mexer no código: arquivos na pasta de arte "over" — ct_<chave>.jpg (obras), ev_<nome>.jpg (eventos), sede_N.jpg (sedes), contato_N.jpg (clientes) — entram no próximo build. Pacote de prompts v2 (Disney/Pixar refinado) com os nomes dos arquivos. Cache v89.
