@@ -1598,3 +1598,9 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - NOVO VISUAL "animação 3D cartoon": camada de tema (CSS `#tema3d`, no fim do <head>) por cima do jogo — azul céu vivo, cartões grossos com "borda de brinquedo" e sombra, botões amarelos gordinhos que afundam ao tocar, selos de risco coloridos, barras brilhantes, barra de navegação arredondada com ícone que "pula", tipografia arredondada (Fredoka/Nunito), animações de entrada. Não mexe em regras, save nem textos; respeita "reduzir movimento".
 - Pacote de prompts de imagem (91 imagens, nomes de arquivo definidos) está no projeto: claude/prompts-imagens-estilo-3d.md. Quando as artes chegarem, entram nos mesmos lugares das fotos atuais.
 - Cache v78; versao.json {"versao":"v78"}.
+
+## Sessão 99 (v79)
+- Visual trocado de azul para CREME E DOURADO, seguindo os mockups do usuário (fundo creme, cartões com borda dourada, botões amarelos, fontes arredondadas).
+- HUB refeito: barra do topo com caixa/sino/engrenagem, foto grande da empresa, grade de 8 atalhos (Contratos, Máquinas, Oficina, Finanças, Loja, Sede, Missões, Notícias) com selos de aviso; as seções antigas continuam abaixo.
+- Menu de baixo agora com 5 abas (Hub, Máquinas, Contratos, Admin., Loja); Manutenção, Sedes e Missões abrem pelos atalhos do Hub. Barra do topo com caixa e sino em todas as telas.
+- Sem mudança de regras, save ou textos (novos rótulos já têm tradução EN). Cache v79.
