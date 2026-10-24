@@ -1593,3 +1593,8 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 97 (v77)
 - Removida a faixa amarela de teste do Analytics (?ga_debug=1 não mostra mais nada na tela). O Analytics continua enviando normalmente para G-CKZJJV1B8E.
+
+## Sessão 98 (v78)
+- NOVO VISUAL "animação 3D cartoon": camada de tema (CSS `#tema3d`, no fim do <head>) por cima do jogo — azul céu vivo, cartões grossos com "borda de brinquedo" e sombra, botões amarelos gordinhos que afundam ao tocar, selos de risco coloridos, barras brilhantes, barra de navegação arredondada com ícone que "pula", tipografia arredondada (Fredoka/Nunito), animações de entrada. Não mexe em regras, save nem textos; respeita "reduzir movimento".
+- Pacote de prompts de imagem (91 imagens, nomes de arquivo definidos) está no projeto: claude/prompts-imagens-estilo-3d.md. Quando as artes chegarem, entram nos mesmos lugares das fotos atuais.
+- Cache v78; versao.json {"versao":"v78"}.
