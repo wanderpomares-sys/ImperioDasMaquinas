@@ -1604,3 +1604,8 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - HUB refeito: barra do topo com caixa/sino/engrenagem, foto grande da empresa, grade de 8 atalhos (Contratos, Máquinas, Oficina, Finanças, Loja, Sede, Missões, Notícias) com selos de aviso; as seções antigas continuam abaixo.
 - Menu de baixo agora com 5 abas (Hub, Máquinas, Contratos, Admin., Loja); Manutenção, Sedes e Missões abrem pelos atalhos do Hub. Barra do topo com caixa e sino em todas as telas.
 - Sem mudança de regras, save ou textos (novos rótulos já têm tradução EN). Cache v79.
+
+## Sessão 100 (v80)
+- Telas refeitas seguindo os mockups do usuário: LOJA (abas Padrão/Premium Gold, título, grade de 2 colunas com cartão claro e cartão preto-dourado com faixa PREMIUM, preço com moeda e botão "comprar"; o filtro só esconde/mostra cartões, a compra é a mesma), MISSÕES (capa do troféu, título centralizado, cartões com ícone, barra e baú de prêmio) e capa do HUB (imagem recortada do mockup do usuário).
+- Aviso de missão ("bem-vindo de volta") com fundo escuro e botão amarelo.
+- Sem mudança de regras/save. Cache v80.
