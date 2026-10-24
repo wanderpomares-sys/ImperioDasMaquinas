@@ -1650,3 +1650,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 110 (v90)
 - Detalhe da Máquina/Manutenção redesenhado conforme mockup (patch_maquina.py + maquina.css): palco com pílula de estado, Condição, Escolha a peça, Plano, botão verde; quebrada = card Reparo de emergência + botão vermelho. Info extra recolhida em 'Mais informações'. Handlers/IDs mantidos. EN ok.
+
+
+## Sessão 111 (v91)
+- Notícias (overlay do sino) redesenhada conforme mockup (patch_noticias.py + noticias.css): banner, chips de filtro (Tudo/Contratos/Máquinas/Missões/Sedes), cartões por tipo com tom verde/vermelho, ponto de não lida, estado vazio. registrarNoticia/abrirNoticias/save inalterados. EN ok.
