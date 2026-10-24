@@ -1624,3 +1624,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 103 (v83)
 - OFICINA refeita a partir do HTML do usuário (banner ilustrado da oficina ao pôr do sol, título, subtítulo "N máquinas precisam de reparo", cartões com selo, barra de condição e botão Reparar/Revisar com custo, cartão de dica). Os botões abrem o mesmo detalhe de manutenção de antes; nenhuma regra mudou. Cache v83.
+
+## Sessão 104 (v84)
+- Arte das máquinas agora segue o tipo: Escavadeira, Trator de Esteira, Caminhão e Guindaste têm arte própria; Retroescavadeira, Pá Carregadeira e Motoniveladora ainda não têm arte e mostram um ícone neutro (engrenagem) em vez da máquina errada. Quando existirem m_retro.png, m_pa.png e m_moto.png na pasta de arte, entram automaticamente no próximo build. Cache v84.
