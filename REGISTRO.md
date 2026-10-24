@@ -1635,3 +1635,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 106 (v86)
 - Acentos corrigidos nos textos de Missões e Sedes (missão, reputação, você, até...).
 - Máquinas premium com visual próprio: Edição Fundador (Ouro) com carroceria dourada, brilho dourado e cartão dourado; Black Elite com carroceria preta. Arte feita por recolorização da arte padrão; pode ser trocada por arte própria depois. Cache v86.
+
+## Sessão 107 (v87)
+- INÍCIO (escolha da primeira máquina) refeito a partir do HTML do usuário: hero ilustrado com título, cartão de narrativa, pílula de capital, cartões de máquina com arte, selo de risco, preço e financiamento, seleção com anel dourado e ✓. Botão de comprar grande em amarelo. Lógica de escolha/compra inalterada.
+- Retroescavadeira e Pá Carregadeira Edição Fundador com arte dourada própria (enviada pelo usuário). Arte da Motoniveladora Ouro e da Escavadeira Ouro guardada para futuros itens. Cache v87.
