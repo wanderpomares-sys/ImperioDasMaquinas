@@ -1631,3 +1631,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 105 (v85)
 - SEDES refeita pelo mockup: foto grande da sede, título "Melhorias da Sede", faixa de 5 estágios (ícones dourados com ✓ nos conquistados, cinza com cadeado nos bloqueados), cartão "Próxima sede" com foto, requisitos (caixa, reputação, missões), progresso e botão Melhorar. Lista completa dos níveis ficou em "Ver todos os níveis". Missões e Sedes ganharam a barra do topo (caixa, sino, engrenagem).
 - Arte nova de Pá Carregadeira, Retroescavadeira e Motoniveladora (enviadas pelo usuário) entrando em Máquinas e Oficina. Sem mudança de regras/save. Cache v85.
+
+## Sessão 106 (v86)
+- Acentos corrigidos nos textos de Missões e Sedes (missão, reputação, você, até...).
+- Máquinas premium com visual próprio: Edição Fundador (Ouro) com carroceria dourada, brilho dourado e cartão dourado; Black Elite com carroceria preta. Arte feita por recolorização da arte padrão; pode ser trocada por arte própria depois. Cache v86.
