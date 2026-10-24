@@ -1614,3 +1614,10 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 - HUB reconstruído do zero a partir do mockup do usuário (mesmas medidas, artes recortadas do mockup, em unidades relativas à largura da tela): barra do topo, cena da empresa, grade de 8 atalhos com selos, cartão "Próximo objetivo", cartões de Máquina e Contrato, tudo ligado aos dados reais do jogo (caixa, empresa, missões, primeira máquina, contrato em andamento/disponível). Cartão de desbloqueio R$ 9,90 e alertas pendentes continuam no Hub.
 - Menu de baixo novo igual ao mockup: Pátio, Trabalho (Contratos), Finanças, Loja, Perfil (configurações). Máquinas, Oficina, Sede, Missões e Notícias abrem pelos atalhos do Hub.
 - Blocos antigos do Hub ficam ocultos no DOM (#hubLegado) para o jogo seguir escrevendo neles; nada de regra/save mudou. Cache v81.
+
+## Sessão 102 (v82)
+- Barra do topo nova (caixa em pílula, sino, engrenagem) em todas as telas, igual ao mockup.
+- MÁQUINAS refeita pelo mockup: banner, título "Frota", cartões com arte, selo de situação, barra de condição e botão Detalhes.
+- CONTRATOS refeita: cartões limpos (foto, empresa, valor, selo de risco, "Ver contrato"), abas em pílulas, obras em andamento com detalhes recolhidos.
+- FINANÇAS refeita pelo mockup: porquinho com caixa total, Entradas/Saídas, gráfico dos últimos 7 resultados, linhas Impostos/Empréstimos/Equipe. Todo o conteúdo antigo continua dentro de "Ver todos os detalhes" (mesmos IDs).
+- Sem mudança de regras ou save. Textos novos com tradução EN. Cache v82.
