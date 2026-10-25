@@ -1717,3 +1717,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 129 — v112
 - Últimas 5 imagens Pixar de contratos: bueiro/ponte, galpão avícola, canal de irrigação, aceiro corta-fogo, reservatório de irrigação. Contratos completos (55 chaves com arte nova).
+
+## Sessão 130 — v113
+- 6 retratos Pixar dos contatos de clientes (Fernanda, Marcos, Juliana, Roberto, Camila, Eduardo), 420x420, substituindo as fotos externas do Pexels (o jogo não depende mais de imagem externa para os contatos).
