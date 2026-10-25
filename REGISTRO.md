@@ -1693,3 +1693,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 121 — v103
 - Cadastro redesenhado conforme mockup (patch_cadastro.py / cadastro.css): céu dourado com retroescavadeira de brinquedo, card de formulário, 10 logos novas (padrão 🚜), botão verde. Ids e confirmSignup() mantidos. Pares EN adicionados.
+
+## Sessão 122 — v104
+- 15 imagens de eventos Pixar (ev_*.jpg via art/over): acidente, chuva, contrato cancelado, falência, ferramenta quebrada, inspeção, enferrujada, máquina nova, roubada, prejuízo, projeto completo, time feliz.
