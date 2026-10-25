@@ -1726,3 +1726,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 132 — v115
 - Loja: aba Premium Gold aparecia vazia (filtro dependia do texto do estilo, que o navegador reescreve com espaços). Corrigido.
+
+## Sessão 133 — v116
+- Contratos: garantido ao menos 1 contrato disponível e cumprível para cada tipo de máquina da frota (antes só 1 no total; quem comprava caminhão/retro ficava sem contrato). Roda ao abrir a lista de contratos.
