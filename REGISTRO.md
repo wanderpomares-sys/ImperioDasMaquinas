@@ -1683,3 +1683,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 118 (v100)
 - Evento "Peça demorou para chegar" ganhou a cena Pixar de imprevisto (EVENTO_IMG.evento_imprevisto). Os HTMLs reenviados do Evento do Dia e do Detalhe da Loja eram o mesmo design já integrado.
+
+
+## Sessão 119 (v101)
+- Compra concluída (#compraOverlay) no novo estilo (patch_compra.py + compra.css): máquina toy sobre pedestal dourado com laço e faixa NOVA, "Bem-vinda à frota!", resumo à vista (pago, caixa restante, frota) ou financiado (entrada, parcelas, frota) via window.__compraInfo definido em buyMachine, botão verde "Começar a operar". Pedestal teve a franja rosa removida. Lógica de compra inalterada.
