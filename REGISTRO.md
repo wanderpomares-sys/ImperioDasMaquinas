@@ -1666,3 +1666,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 114 (v94)
 - Bug de abertura: o lembrete de missão (nó dourado) abria, a checagem de versão (3 s depois) recarregava a página e ele abria de novo. Agora a checagem roda em 150 ms e o lembrete 'início' espera o resultado (máx. 2,5 s). patch_boot.py.
+
+
+## Sessão 115 (v95)
+- Mensagem de cliente/consultor e lembrete de missão agora abrem com fundo translúcido (Hub visível por trás, blur leve), sem tela escura cheia que piscava entre mudanças de tela. CSS em avisos.css.
