@@ -1696,3 +1696,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 122 — v104
 - 15 imagens de eventos Pixar (ev_*.jpg via art/over): acidente, chuva, contrato cancelado, falência, ferramenta quebrada, inspeção, enferrujada, máquina nova, roubada, prejuízo, projeto completo, time feliz.
+
+## Sessão 123 — v106
+- Sedes 2–5 em Pixar (sede_N.jpg via art/over); prévia da Sede Grande agora usa a nova imagem.
