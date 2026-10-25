@@ -1702,3 +1702,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 124 — v107
 - 8 imagens de contratos em Pixar (ct_*.jpg via art/over): aterro, estrada rural, estrada vicinal, extração de pedra, terraplenagem loteamento, desmatamento (2), demolição de galpão. Faltam: terraplenagem_loteamento_grande e demolicao_controlada do lote 1.
+
+## Sessão 125 — v108
+- 12 imagens de contratos Pixar (lote 2 + as 2 faltantes): limpeza pós-incêndio, pavimentação, drenagem, preparo de solo, fundações (2), campo agrícola, loteamento grande, dragagem, vala, desassoreamento, demolição controlada. Total ct_*: 20.
