@@ -1690,3 +1690,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 120 — v102
 - Regime Tributário e Falência redesenhados conforme mockups (patch_fiscal.py / fiscal.css). Funções mantidas: pagarImpostos, closeRegimeTributario, declararFalencia, reiniciarAposFalencia. Pares EN adicionados.
+
+## Sessão 121 — v103
+- Cadastro redesenhado conforme mockup (patch_cadastro.py / cadastro.css): céu dourado com retroescavadeira de brinquedo, card de formulário, 10 logos novas (padrão 🚜), botão verde. Ids e confirmSignup() mantidos. Pares EN adicionados.
