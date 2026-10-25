@@ -1699,3 +1699,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 123 — v106
 - Sedes 2–5 em Pixar (sede_N.jpg via art/over); prévia da Sede Grande agora usa a nova imagem.
+
+## Sessão 124 — v107
+- 8 imagens de contratos em Pixar (ct_*.jpg via art/over): aterro, estrada rural, estrada vicinal, extração de pedra, terraplenagem loteamento, desmatamento (2), demolição de galpão. Faltam: terraplenagem_loteamento_grande e demolicao_controlada do lote 1.
