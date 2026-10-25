@@ -1705,3 +1705,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 125 — v108
 - 12 imagens de contratos Pixar (lote 2 + as 2 faltantes): limpeza pós-incêndio, pavimentação, drenagem, preparo de solo, fundações (2), campo agrícola, loteamento grande, dragagem, vala, desassoreamento, demolição controlada. Total ct_*: 20.
+
+## Sessão 126 — v109
+- 10 novas imagens Pixar de contratos: cobertura de aterro sanitário, campo esportivo, faixa de servidão, cemitério, usina solar, lastro de ferrovia, piscina de contenção, campo de golfe, pátio industrial, parque eólico (30 de 55 chaves com arte nova).
