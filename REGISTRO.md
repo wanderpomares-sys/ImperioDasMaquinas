@@ -1687,3 +1687,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 119 (v101)
 - Compra concluída (#compraOverlay) no novo estilo (patch_compra.py + compra.css): máquina toy sobre pedestal dourado com laço e faixa NOVA, "Bem-vinda à frota!", resumo à vista (pago, caixa restante, frota) ou financiado (entrada, parcelas, frota) via window.__compraInfo definido em buyMachine, botão verde "Começar a operar". Pedestal teve a franja rosa removida. Lógica de compra inalterada.
+
+## Sessão 120 — v102
+- Regime Tributário e Falência redesenhados conforme mockups (patch_fiscal.py / fiscal.css). Funções mantidas: pagarImpostos, closeRegimeTributario, declararFalencia, reiniciarAposFalencia. Pares EN adicionados.
