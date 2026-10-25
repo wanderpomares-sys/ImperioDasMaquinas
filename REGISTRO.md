@@ -1723,3 +1723,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 131 — v114
 - Tela "Escolha sua Oficina" refeita: anfitrião com balão ("Esses são nossos parceiros! Onde vai reformar?"), cartões com ícone da marca, preço, prazo, barra de eficiência, bônus de 30 dias, fidelidade n/10, estado bloqueado (Caixa insuficiente), rodapé fixo Voltar/Contratar. Regras de manutenção inalteradas. Corrigido "R$ R$".
+
+## Sessão 132 — v115
+- Loja: aba Premium Gold aparecia vazia (filtro dependia do texto do estilo, que o navegador reescreve com espaços). Corrigido.
