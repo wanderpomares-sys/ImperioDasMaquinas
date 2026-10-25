@@ -1720,3 +1720,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 130 — v113
 - 6 retratos Pixar dos contatos de clientes (Fernanda, Marcos, Juliana, Roberto, Camila, Eduardo), 420x420, substituindo as fotos externas do Pexels (o jogo não depende mais de imagem externa para os contatos).
+
+## Sessão 131 — v114
+- Tela "Escolha sua Oficina" refeita: anfitrião com balão ("Esses são nossos parceiros! Onde vai reformar?"), cartões com ícone da marca, preço, prazo, barra de eficiência, bônus de 30 dias, fidelidade n/10, estado bloqueado (Caixa insuficiente), rodapé fixo Voltar/Contratar. Regras de manutenção inalteradas. Corrigido "R$ R$".
