@@ -1662,3 +1662,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 113 (v93)
 - Avisos de resultado (modal #resultModalOverlay) no novo estilo (patch_avisos.py + avisos.css): cartão creme com ilustração por tipo (sucesso/atenção/evento/conquista, escolhida pelo ícone da chamada), selo, botão único 'Continuar'. showResultModal embrulhada sem mudar assinatura; avisos sem tipo mapeado ficam neutros com o emoji. Fotos reais (imagemUrl) continuam aparecendo no lugar da ilustração. Resumo em pílulas do mockup não aplicado (texto vem como string única).
+
+
+## Sessão 114 (v94)
+- Bug de abertura: o lembrete de missão (nó dourado) abria, a checagem de versão (3 s depois) recarregava a página e ele abria de novo. Agora a checagem roda em 150 ms e o lembrete 'início' espera o resultado (máx. 2,5 s). patch_boot.py.

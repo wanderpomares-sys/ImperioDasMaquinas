@@ -1400,7 +1400,7 @@ details.md-mais .info-box{margin-left:0;margin-right:0}
 </style>
 </head>
 <body>
-<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v93</div></div>
+<div id="bootSplash"><div class="bs-t">Império das Máquinas</div><div class="bs-s">Carregando jogo...</div><div class="bs-s" style="font-size:11px;opacity:.6;">v94</div></div>
 <script>setTimeout(function(){var e=document.getElementById('bootSplash');if(e)e.remove();},9000);</script>
 
 <div class="device">
@@ -4406,7 +4406,7 @@ function goTo(screen){
     if(typeof lembreteMissaoState !== 'undefined' && !lembreteMissaoState.jaMostrouNoInicio){
       lembreteMissaoState.jaMostrouNoInicio = true;
       lembreteMissaoState.consultorAposFechar = true;
-      setTimeout(() => abrirLembreteMissao('inicio'), 700);
+      setTimeout(function esperaVer(t0){ t0 = t0 || Date.now(); if(window.__verOk || Date.now() - t0 > 2500) abrirLembreteMissao('inicio'); else setTimeout(function(){ esperaVer(t0); }, 150); }, 700);
     } else {
       setTimeout(tentarFalarComConsultor, 600);
     }
@@ -4490,7 +4490,7 @@ function showSignupFromLogin(){
 // lançava ReferenceError, o try/catch engolia o erro, e o auto-save NUNCA
 // gravou nada — em silêncio, desde que foi escrito.
 // ============ PROTEÇÃO DO PROGRESSO (backup, exportar/importar, armazenamento persistente) ============
-const VERSAO_APP = 'v93';
+const VERSAO_APP = 'v94';
 const CHAVE_SAVE = 'IMPERIO_GAME_STATE';
 const CHAVE_SAVE_BAK = 'IMPERIO_GAME_STATE_BAK';
 const CHAVE_SAVE_BAK_QUANDO = 'IMPERIO_GAME_STATE_BAK_QUANDO';
@@ -4631,8 +4631,8 @@ function verificarNovaVersao(){
   try{
     fetch('versao.json?_=' + Date.now(), { cache:'no-store' })
       .then(r => r.ok ? r.json() : null)
-      .then(j => { if(j && j.versao && j.versao !== VERSAO_APP) aplicarAtualizacaoAutomatica(j.versao); })
-      .catch(() => {});
+      .then(j => { window.__verOk = true; if(j && j.versao && j.versao !== VERSAO_APP) aplicarAtualizacaoAutomatica(j.versao); })
+      .catch(() => { window.__verOk = true; });
   }catch(e){}
 }
 function mostrarAvisoAtualizacao(nova){
@@ -4644,7 +4644,7 @@ function mostrarAvisoAtualizacao(nova){
   d.querySelector('button').onclick = atualizarJogoAgora;
   document.body.appendChild(d);
 }
-window.addEventListener('load', () => { setTimeout(verificarNovaVersao, 3000); });
+window.addEventListener('load', () => { setTimeout(verificarNovaVersao, 150); });
 document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') verificarNovaVersao(); });
 // Também confere a cada 60 s enquanto o jogo está aberto na tela (não só ao abrir/voltar).
 setInterval(() => { if(document.visibilityState === 'visible') verificarNovaVersao(); }, 60000);
