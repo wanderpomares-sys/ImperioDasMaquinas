@@ -1674,3 +1674,8 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 116 (v96)
 - Evento do dia (tela cheia #eventoOverlay) no novo estilo (patch_evento.py + evento.css): cena Pixar (chuva), título, texto, 'Por que isso está acontecendo' recolhido, 3 opções com impactos e selo Recomendado na 1ª, botão verde. Handlers/ids/EVENTO_CONSEQUENCIAS inalterados. Imagens EVENTO_IMG evento_chuva_forte e evento_inspecao trocadas pelas cenas Pixar. Cena 'imprevisto' (art/ev_imprevisto.jpg) salva, ainda sem uso.
+
+
+## Sessão 117 (v97–v99)
+- v97/v98: janelas que montavam o modal à mão (decisão de engenharia/acidente, crédito, realocar, saída) agora usam o estilo dos avisos (window.__rmEstilo), opções em cartões compactos, foto realista de acidente removida (ilustração Pixar); botões de decisão do cliente e toasts restilizados (variante ok/erro); fix EN 'Option N selected'; modal rola se alto.
+- v99: Detalhe da máquina na Loja no novo estilo (patch_loja.py + loja.css): palco com selo Nova/Bloqueada, cartões de preço/caixa/retorno, toggle à vista/financiar/trocar, botão verde. Arte toy do mockup substitui m_escav, m_retro e cacamba (originais em art/old/). Lógica de compra/financiamento/troca inalterada.
