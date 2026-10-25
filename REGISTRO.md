@@ -1679,3 +1679,7 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 ## Sessão 117 (v97–v99)
 - v97/v98: janelas que montavam o modal à mão (decisão de engenharia/acidente, crédito, realocar, saída) agora usam o estilo dos avisos (window.__rmEstilo), opções em cartões compactos, foto realista de acidente removida (ilustração Pixar); botões de decisão do cliente e toasts restilizados (variante ok/erro); fix EN 'Option N selected'; modal rola se alto.
 - v99: Detalhe da máquina na Loja no novo estilo (patch_loja.py + loja.css): palco com selo Nova/Bloqueada, cartões de preço/caixa/retorno, toggle à vista/financiar/trocar, botão verde. Arte toy do mockup substitui m_escav, m_retro e cacamba (originais em art/old/). Lógica de compra/financiamento/troca inalterada.
+
+
+## Sessão 118 (v100)
+- Evento "Peça demorou para chegar" ganhou a cena Pixar de imprevisto (EVENTO_IMG.evento_imprevisto). Os HTMLs reenviados do Evento do Dia e do Detalhe da Loja eram o mesmo design já integrado.
