@@ -1735,3 +1735,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 135 — v118
 - Textos de compartilhamento/SEO: "Jogue grátis" (era "Joga"), simulador de gestão de máquinas pesadas (era "jogo de estratégia"/"gestão de obras"), título da aba sem "— App".
+
+## Sessão 136 — v119
+- Prévia no WhatsApp/Facebook não aparecia: as tags OG estavam a 1,7 MB do início do HTML (depois de scripts grandes) e os robôs só leem os primeiros KB. Agora description/OG/Twitter ficam logo após o <title> (primeiros ~1,3 KB), garantido no build.
