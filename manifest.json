@@ -1,8 +1,8 @@
 {
   "name": "Império das Máquinas",
   "short_name": "Império",
-  "description": "Jogo de estratégia e gestão de máquinas pesadas — risco não é sorte, é gestão.",
-  "start_url": "./index.html",
+  "description": "Simulador de gestão de máquinas pesadas — risco não é sorte, é gestão.",
+  "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#120E1E",
   "theme_color": "#120E1E",

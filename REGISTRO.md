@@ -1738,3 +1738,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 136 — v119
 - Prévia no WhatsApp/Facebook não aparecia: as tags OG estavam a 1,7 MB do início do HTML (depois de scripts grandes) e os robôs só leem os primeiros KB. Agora description/OG/Twitter ficam logo após o <title> (primeiros ~1,3 KB), garantido no build.
+
+## Sessão 137 — v120
+- Prévia WhatsApp/Facebook: a página (28 MB) era grande demais para os robôs. index.html agora é uma página leve (2 KB) com título, descrição e imagem de prévia, que redireciona para app.html (o jogo inteiro, mesma origem: progresso salvo mantido). sw.js passa a guardar app.html e manifest.json abre direto em app.html. Prévia NÃO foi testada num WhatsApp real.
