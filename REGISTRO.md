@@ -1741,3 +1741,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 137 — v120
 - Prévia WhatsApp/Facebook: a página (28 MB) era grande demais para os robôs. index.html agora é uma página leve (2 KB) com título, descrição e imagem de prévia, que redireciona para app.html (o jogo inteiro, mesma origem: progresso salvo mantido). sw.js passa a guardar app.html e manifest.json abre direto em app.html. Prévia NÃO foi testada num WhatsApp real.
+
+## Sessão 138 — v121
+- Imagem de prévia refeita (og-jogue-agora-2.jpg, 1200x1200): arte inteira centralizada com fundo desfocado, para não cortar o "JOGUE AGORA!" no corte quadrado do Facebook. Nome novo para furar o cache.
