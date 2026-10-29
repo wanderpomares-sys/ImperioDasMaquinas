@@ -1732,3 +1732,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 134 — v117
 - Prévia de compartilhamento (Facebook, WhatsApp, X): nova imagem "Jogue agora!" (og-jogue-agora.jpg, 1200x630). Nome novo para furar o cache das redes.
+
+## Sessão 135 — v118
+- Textos de compartilhamento/SEO: "Jogue grátis" (era "Joga"), simulador de gestão de máquinas pesadas (era "jogo de estratégia"/"gestão de obras"), título da aba sem "— App".
