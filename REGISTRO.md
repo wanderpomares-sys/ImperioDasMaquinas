@@ -1729,3 +1729,6 @@ Criação do roadmap de 12 fases (depois consolidado em A–G), desenho do siste
 
 ## Sessão 133 — v116
 - Contratos: garantido ao menos 1 contrato disponível e cumprível para cada tipo de máquina da frota (antes só 1 no total; quem comprava caminhão/retro ficava sem contrato). Roda ao abrir a lista de contratos.
+
+## Sessão 134 — v117
+- Prévia de compartilhamento (Facebook, WhatsApp, X): nova imagem "Jogue agora!" (og-jogue-agora.jpg, 1200x630). Nome novo para furar o cache das redes.
