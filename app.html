@@ -193,6 +193,7 @@
     background:#000; color:var(--text);
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     -webkit-font-smoothing:antialiased; width:100%; overflow-x:hidden;
+    overscroll-behavior-y:none; /* impede o puxar-para-atualizar do navegador (recarregava o jogo ao rolar demais) */
   }
   body{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:5px 3px;}
   .device{
